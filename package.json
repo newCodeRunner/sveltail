@@ -1,0 +1,32 @@
+{
+  "name": "sveltail",
+  "version": "0.0.1",
+  "description": "Cross platform development from a single code base making use of Svelte, NativeScript, Electron and Cordova",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/newCodeRunner/sveltail.git"
+  },
+  "keywords": [
+    "svelte",
+    "cross-platform",
+    "nativescript",
+    "electron",
+    "cordova",
+    "tailwind",
+    "ui",
+    "cross",
+    "platform",
+    "tailwindcss",
+    "svelte-native"
+  ],
+  "author": "newCodeRunner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/newCodeRunner/sveltail/issues"
+  },
+  "homepage": "https://github.com/newCodeRunner/sveltail#readme"
+}
