@@ -2,7 +2,10 @@
   "name": "sveltail",
   "version": "0.0.1",
   "description": "Cross platform development from a single code base making use of Svelte, NativeScript, Electron and Cordova",
-  "main": "index.js",
+  "main": "bin/index.js",
+  "bin": {
+    "sveltail": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -28,5 +31,13 @@
   "bugs": {
     "url": "https://github.com/newCodeRunner/sveltail/issues"
   },
-  "homepage": "https://github.com/newCodeRunner/sveltail#readme"
+  "homepage": "https://github.com/newCodeRunner/sveltail#readme",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "clear": "^0.1.0",
+    "inquirer": "^7.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.13.0"
+  }
 }
