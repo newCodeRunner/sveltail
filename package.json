@@ -1,6 +1,6 @@
 {
   "name": "sveltail",
-  "version": "0.0.7",
+  "version": "0.0.12",
   "description": "Cross platform development from a single code base making use of Svelte, NativeScript, Electron and Cordova",
   "app": {
     "id": "app.web.sveltail",
@@ -40,24 +40,26 @@
   "homepage": "https://github.com/newCodeRunner/sveltail#readme",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
+    "@svgr/webpack": "^5.5.0",
     "autoprefixer": "^10.0.2",
     "chalk": "^4.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "clear": "^0.1.0",
     "copy-webpack-plugin": "^6.3.2",
     "fs-extra": "^9.0.1",
-    "html-webpack-plugin": "^4.5.0",
+    "html-webpack-plugin": "^5.0.0-alpha.6",
     "inquirer": "^7.3.3",
     "mini-css-extract-plugin": "^1.3.1",
     "plist": "^3.0.1",
     "postcss": "^8.1.9",
     "sharp": "^0.26.3",
     "svelte": "^3.29.7",
-    "svg-sprite-loader": "^5.0.0",
+    "svelte-loader": "^2.13.6",
     "tailwindcss": "^2.0.1",
     "webpack": "^5.6.0",
     "webpack-cli": "^4.2.0",
-    "workbox-webpack-plugin": "^5.1.4",
+    "webpack-dev-server": "^3.11.0",
+    "workbox-webpack-plugin": "^6.0.0-alpha.3",
     "xml2js": "^0.4.23",
     "yargs": "^16.1.1"
   },
@@ -70,7 +72,7 @@
   "scripts": {
     "sveltail-config": "sveltail config",
     "sveltail-icons": "sveltail icons --path src/assets/logo.png",
-    "sveltail-dev": "",
-    "sveltail-build": ""
+    "sveltail-dev": "sveltail dev",
+    "sveltail-build": "veltail build"
   }
 }

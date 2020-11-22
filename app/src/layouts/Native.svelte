@@ -1,3 +1,5 @@
 <script>
-  import {  } from "sveltail/lib";
+  import LayoutNative from 'sveltail/lib/components/LayoutNative.svelte';
 </script>
+
+<LayoutNative />

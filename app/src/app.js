@@ -2,7 +2,7 @@
 let appSvelte;
 
 if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-  import('sveltail/lib/layouts/Web.svelte').then(async (module) => {
+  import('./layouts/Web.svelte').then(async (module) => {
     const App = module.default;
 
     if (process.env.platform === 'PWA') {
@@ -16,7 +16,7 @@ if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') 
 }
 
 if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
-  import('sveltail/lib/layouts/Native.svelte').then((module) => {
+  import('./layouts/Native.svelte').then((module) => {
     appSvelte = module.default;
   });
 }

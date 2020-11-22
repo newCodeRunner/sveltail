@@ -1,8 +1,10 @@
 /* eslint-disable no-console */
 const { resolve } = require('path');
 const { copySync } = require('fs-extra');
-const { writeFileSync, existsSync, rmdirSync } = require('fs');
+// eslint-disable-next-line object-curly-newline
+const { writeFileSync, existsSync, rmdirSync, readFileSync } = require('fs');
 const inquirer = require('inquirer');
+const { execSync } = require('child_process');
 
 const currDirectory = process.cwd();
 
@@ -16,6 +18,28 @@ exports.addPlatform = (chalk, platform) => {
   } else if (platform === 'electron') {
     copySync(resolve(__dirname, '../app/src-electron'), resolve(currDirectory, 'src-electron'));
     console.log(chalk.green(' Added Electron to the project. Please use "svelte dev --electron" to start electron in dev mode.'));
+
+    // Add project dependencies and devDependencies
+    const devDeps = ['electron', 'electron-builder'];
+    const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
+
+    let command = '';
+    devDeps.forEach((cmd) => {
+      if (!packageJSON.devDependencies[cmd]) {
+        if (command === '') {
+          if (existsSync(resolve(currDirectory, 'package-lock.json'))) command = 'npm install';
+          else command = 'yarn add';
+        }
+        command += ` ${cmd}`;
+      }
+    });
+
+    if (command.trim() !== '') {
+      console.log(chalk.grey(' Adding Electron dependencies to the project.'));
+      command += ' --dev';
+      console.log(' Adding project dependencies');
+      execSync(command, { cwd: currDirectory, stdio: 'inherit' });
+    }
   } else if (platform === 'pwa') {
     copySync(resolve(__dirname, '../app/src-pwa'), resolve(currDirectory, 'src-pwa'));
     console.log(chalk.green(' Added PWA support to the project. Please use "svelte dev --pwa" to start developing in PWA mode.'));

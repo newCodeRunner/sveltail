@@ -11,7 +11,7 @@ if (existsSync(resolve(__dirname, 'package.json'))) {
 }
 
 // eslint-disable-next-line arrow-body-style
-exports = (/* cfg */) => {
+exports.default = (/* cfg */) => {
   // Your code to change the config here
 
   return {
@@ -52,7 +52,7 @@ exports = (/* cfg */) => {
     pwa: {
       manifest: {
         background_color: '#fdfdfd',
-        theme_color: this.tailwindcss.theme.extend.brand,
+        theme_color: '#68b0ab',
         name: packageJSON.app.name,
         description: packageJSON.description,
         short_name: packageJSON.app.name,

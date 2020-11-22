@@ -5,7 +5,6 @@ const inquirer = require('inquirer');
 const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 const { copySync } = require('fs-extra');
-const { exec } = require('child_process');
 const plist = require('plist');
 const XML = require('xml2js');
 
@@ -44,10 +43,6 @@ exports.default = (chalk) => {
       id: 'app.web.sveltail', name: 'Sveltail App', email: 'awesome@svetail.com', website: 'svetail.com',
     };
   }
-
-  if (!packageJSON.scripts) packageJSON.scripts = {};
-  if (!packageJSON.devDependencies) packageJSON.devDependencies = {};
-  if (!packageJSON.dependencies) packageJSON.devDependencies = {};
 
   inquirer
     .prompt([
@@ -181,8 +176,7 @@ exports.default = (chalk) => {
               { key: 'sveltail-build', script: 'veltail build' },
             ];
 
-            console.log('\n');
-
+            if (packageJSON.scripts === undefined) packageJSON.scripts = {};
             scripts.forEach((obj) => {
               packageJSON.scripts[obj.key] = obj.script;
               if (!packageJSON.scripts[obj.key]) {
@@ -191,8 +185,6 @@ exports.default = (chalk) => {
                 );
               }
             });
-
-            console.log('\n');
 
             // Add sveltail.config.js
             if (!existsSync(resolve(currDirectory, 'sveltail.config.js'))) {
@@ -309,47 +301,6 @@ exports.default = (chalk) => {
                 *.njsproj
                 *.sln`.replace(/^ +| +$/gm, ''),
               );
-            }
-
-            // Add project dependencies and devDependencies
-            const deps = [];
-            const devDeps = [];
-
-            let command = '';
-            devDeps.forEach((cmd) => {
-              if (!packageJSON.devDependencies[cmd]) {
-                if (command === '') {
-                  if (existsSync(resolve(currDirectory, 'package-lock.json'))) command = 'npm install';
-                  else command = 'yarn add';
-                }
-                command += ` ${cmd}`;
-              }
-            });
-
-            let firstDep = true;
-            deps.forEach((cmd) => {
-              if (!packageJSON.devDependencies[cmd]) {
-                if (firstDep) {
-                  firstDep = false;
-                  if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' --dev && npm install';
-                  else command += ' --dev && yarn add';
-                }
-                command += ` ${cmd}`;
-              }
-            });
-
-            if (command.trim() !== '') {
-              console.log(' Adding project dependencies');
-              const child = exec(command, { cwd: currDirectory });
-              child.stdout.setEncoding('utf8');
-              child.stdout.on('data', (data) => {
-                console.log(chalk.grey(data));
-              });
-
-              child.stderr.setEncoding('utf8');
-              child.stderr.on('data', (data) => {
-                throw new Error(data);
-              });
             }
           } else {
             console.log(chalk.red('\n Configuration cancelled by User. Please run the config command again.\n'));

@@ -1,5 +1,6 @@
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -7,24 +8,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const { resolve } = require('path');
-const { readFileSync, writeFileSync } = require('fs');
+// eslint-disable-next-line object-curly-newline
+const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 
 const currDirectory = process.cwd();
-const packageJSON = readFileSync(resolve(currDirectory, 'package.json'));
+const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
 const { app, description, version } = packageJSON;
 
-// eslint-disable-next-line import/no-dynamic-require
-const { tailwindcss, pwa, framework } = require(resolve(currDirectory, 'sveltail.config.js'))();
+const svelteConfig = require(resolve(currDirectory, 'sveltail.config.js'));
+const { tailwindcss, pwa, framework } = svelteConfig.default();
+if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
 writeFileSync(resolve(currDirectory, '.sveltail', 'tailwind.config.js'), JSON.stringify(tailwindcss));
 const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
 
 module.exports = (env) => {
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
-  const include = [resolve(currDirectory, 'src')];
-  const bundle = ['./src/app.js'];
+  const include = [resolve(currDirectory, 'src'), resolve(currDirectory, 'node_modules', 'sveltail')];
+  const bundle = [resolve(currDirectory, 'src', 'app.js')];
+
+  process.env.platform = platform;
+  process.env.PROD = PROD;
 
   const plugins = [
     new CleanWebpackPlugin(),
@@ -64,7 +69,6 @@ module.exports = (env) => {
       chunkFilename: 'css/[name].[id].css',
       ignoreOrder: false,
     }),
-    new SpriteLoaderPlugin({ plainSprite: true }),
     new EnvironmentPlugin(['platform', 'PROD']),
   ];
 
@@ -117,21 +121,7 @@ module.exports = (env) => {
           compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
             setTimeout(() => {
               console.log('\n Running Cordova');
-              const processCordova = exec(`(cd src-cordova && cordova run ${type})`);
-
-              processCordova.stdout.setEncoding('utf8');
-              processCordova.stdout.on('data', (data) => {
-                console.log(data);
-              });
-
-              processCordova.stderr.setEncoding('utf8');
-              processCordova.stderr.on('data', (data) => {
-                console.log(data);
-              });
-
-              processCordova.on('close', (code) => {
-                console.log(`Cordova process exited with code ${code}`);
-              });
+              execSync(`(cd src-cordova && cordova run ${type})`, { stdio: 'inherit' });
             }, 1000);
           });
         }
@@ -180,23 +170,14 @@ module.exports = (env) => {
     },
     {
       test: /\.svg$/,
-      use: {
-        loader: 'svg-sprite-loader',
-        options: {
-          extract: true,
-          spriteFilename: (file) => {
-            let fileName = file.replace(/\\/g, '/').split('/').pop();
-
-            if (file.indexOf('fontawesome') > -1) {
-              if (file.indexOf('brands') > -1) fileName = 'fa-brands.svg';
-              else if (file.indexOf('regular') > -1) fileName = 'fa-regular.svg';
-              else if (file.indexOf('solid') > -1) fileName = 'fa-solid.svg';
-            } else if (file.indexOf('css.gg') > -1) fileName = 'css-gg.svg';
-
-            return `svg/${fileName}`;
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            native: true,
           },
         },
-      },
+      ],
     },
   ];
 
@@ -215,6 +196,7 @@ module.exports = (env) => {
         timings: true,
         version: true,
         warnings: true,
+        colors: true,
       },
     },
     entry: {
@@ -222,7 +204,8 @@ module.exports = (env) => {
     },
     resolve: {
       alias: {
-        svelte: resolve('node_modules', 'svelte'),
+        svelte: resolve(currDirectory, 'node_modules', 'svelte'),
+        '~': resolve(currDirectory),
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],

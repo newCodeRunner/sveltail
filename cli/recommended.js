@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 const { existsSync, writeFileSync, readFileSync } = require('fs');
 const { resolve } = require('path');
-const { exec } = require('child_process');
+const { execSync } = require('child_process');
 
 exports.default = (chalk) => {
   const currDirectory = process.cwd();
@@ -35,16 +35,7 @@ exports.default = (chalk) => {
     });
 
     if (command.trim() !== '') {
-      const child = exec(command, { cwd: currDirectory });
-      child.stdout.setEncoding('utf8');
-      child.stdout.on('data', (data) => {
-        console.log(chalk.grey(data));
-      });
-
-      child.stderr.setEncoding('utf8');
-      child.stderr.on('data', (data) => {
-        throw new Error(data);
-      });
+      execSync(command, { cwd: currDirectory, stdio: 'inherit' });
     }
   } else {
     console.log(chalk.yellow(' No package.json file found in root folder.'));
