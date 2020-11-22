@@ -4,6 +4,8 @@ const clear = require('clear');
 const inquirer = require('inquirer');
 const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
+const { copySync } = require('fs-extra');
+const { exec } = require('child_process');
 const plist = require('plist');
 const XML = require('xml2js');
 
@@ -175,8 +177,8 @@ exports.default = (chalk) => {
             const scripts = [
               { key: 'sveltail-config', script: 'sveltail config' },
               { key: 'sveltail-icons', script: 'sveltail icons --path src/assets/logo.png' },
-              { key: 'sveltail-dev', script: '' },
-              { key: 'sveltail-build', script: '' },
+              { key: 'sveltail-dev', script: 'sveltail dev' },
+              { key: 'sveltail-build', script: 'veltail build' },
             ];
 
             console.log('\n');
@@ -281,8 +283,36 @@ exports.default = (chalk) => {
               console.log(chalk.green(' Updated Nativescript iOS values'));
             }
 
+            // Add src folder if not exsists
+            if (!existsSync(resolve(currDirectory, 'src'))) {
+              copySync(resolve(__dirname, '../app/src'), resolve(currDirectory, 'src'));
+            }
+
+            // Add .gitignore file if not exsists
+            if (!existsSync(resolve(currDirectory, '.gitignore'))) {
+              writeFileSync(
+                resolve(currDirectory, '.gitignore'),
+                `# Common
+                *.DS_Store
+                *.thumbs.db
+                *node_modules*
+
+                # Log files
+                *npm-debug.log*
+                *yarn-debug.log*
+                *yarn-error.log*
+
+                # Editor directories and files
+                .idea
+                *.suo
+                *.ntvs*
+                *.njsproj
+                *.sln`.replace(/^ +| +$/gm, ''),
+              );
+            }
+
             // Add project dependencies and devDependencies
-            const deps = ['@fortawesome/fontawesome-free', 'svelte', 'tailwindcss'];
+            const deps = [];
             const devDeps = [];
 
             let command = '';
@@ -301,8 +331,8 @@ exports.default = (chalk) => {
               if (!packageJSON.devDependencies[cmd]) {
                 if (firstDep) {
                   firstDep = false;
-                  if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' && npm install';
-                  else command += '  && yarn add';
+                  if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' --dev && npm install';
+                  else command += ' --dev && yarn add';
                 }
                 command += ` ${cmd}`;
               }
@@ -310,6 +340,16 @@ exports.default = (chalk) => {
 
             if (command.trim() !== '') {
               console.log(' Adding project dependencies');
+              const child = exec(command, { cwd: currDirectory });
+              child.stdout.setEncoding('utf8');
+              child.stdout.on('data', (data) => {
+                console.log(chalk.grey(data));
+              });
+
+              child.stderr.setEncoding('utf8');
+              child.stderr.on('data', (data) => {
+                throw new Error(data);
+              });
             }
           } else {
             console.log(chalk.red('\n Configuration cancelled by User. Please run the config command again.\n'));

@@ -14,16 +14,13 @@ exports.default = (chalk) => {
 
   if (existsSync(resolve(currDirectory, 'package.json'))) {
     const packageJSON = JSON.parse(resolve(currDirectory, 'package.json'));
-    const { dependencies, devDependencies } = packageJSON;
+    const { devDependencies } = packageJSON;
 
     const devDeps = [
       'eslint',
       'eslint-config-airbnb-base',
       'eslint-plugin-import',
       'eslint-plugin-svelte3',
-    ];
-    const deps = [
-      '',
     ];
 
     let command = '';
@@ -37,28 +34,18 @@ exports.default = (chalk) => {
       }
     });
 
-    let firstDep = true;
-    deps.forEach((cmd) => {
-      if (!dependencies[cmd]) {
-        if (firstDep) {
-          firstDep = false;
-          if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' && npm install';
-          else command += '  && yarn add';
-        }
-        command += ` ${cmd}`;
-      }
-    });
+    if (command.trim() !== '') {
+      const child = exec(command, { cwd: currDirectory });
+      child.stdout.setEncoding('utf8');
+      child.stdout.on('data', (data) => {
+        console.log(chalk.grey(data));
+      });
 
-    const child = exec(command, { cwd: currDirectory });
-    child.stdout.setEncoding('utf8');
-    child.stdout.on('data', (data) => {
-      console.log(chalk.grey(data));
-    });
-
-    child.stderr.setEncoding('utf8');
-    child.stderr.on('data', (data) => {
-      throw new Error(data);
-    });
+      child.stderr.setEncoding('utf8');
+      child.stderr.on('data', (data) => {
+        throw new Error(data);
+      });
+    }
   } else {
     console.log(chalk.yellow(' No package.json file found in root folder.'));
   }

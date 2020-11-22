@@ -149,13 +149,22 @@ yargs(hideBin(process.argv))
     `,
     () => {},
     (arg) => {
+      const dev = require('../cli/dev');
       if (arg.cordova) {
         if (arg.android || arg.ios) {
-          const dev = require('../cli/dev');
           dev.devCordova(chalk, { mode: arg.android ? 'android' : 'ios' });
         } else usageAlert();
+      } else if (arg.nativescript) {
+        if (arg.android || arg.ios) {
+          dev.devNS(chalk, { mode: arg.android ? 'android' : 'ios' });
+        } else usageAlert();
+      } else if (arg.electron) {
+        dev.devElectron(chalk);
+      } else if (arg.pwa) {
+        dev.devPWA(chalk);
+      } else {
+        dev.devWeb(chalk);
       }
-      console.log(arg);
     },
   )
   .command(

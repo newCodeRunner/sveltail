@@ -6,24 +6,25 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const tailwind = require('tailwindcss')('./src-framework/build/tailwindcss/config.js');
 const autoprefixer = require('autoprefixer');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const { resolve } = require('path');
-const { readFileSync } = require('fs');
+const { readFileSync, writeFileSync } = require('fs');
 
 const currDirectory = process.cwd();
 const packageJSON = readFileSync(resolve(currDirectory, 'package.json'));
-const { app } = packageJSON;
+const { app, description, version } = packageJSON;
+
+// eslint-disable-next-line import/no-dynamic-require
+const { tailwindcss, pwa, framework } = require(resolve(currDirectory, 'sveltail.config.js'))();
+writeFileSync(resolve(currDirectory, '.sveltail', 'tailwind.config.js'), JSON.stringify(tailwindcss));
+const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
 
 module.exports = (env) => {
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
-  const include = [path.resolve(__dirname, '../../../src')];
+  const include = [resolve(currDirectory, 'src')];
   const bundle = ['./src/app.js'];
-
-  process.env.platform = platform;
-  process.env.PROD = PROD;
 
   const plugins = [
     new CleanWebpackPlugin(),
@@ -31,26 +32,32 @@ module.exports = (env) => {
       patterns: [
         {
           from: '**/*',
-          context: path.resolve(__dirname, '../../../src/assets'),
-          to: path.resolve(__dirname, '../../../public', platform, 'assets'),
+          context: resolve(currDirectory, 'src/assets'),
+          to: resolve(currDirectory, 'public', platform, 'assets'),
         },
       ],
     }),
     new HtmlWebpackPlugin({
       template: './src/index.template.html',
       templateParameters: {
-        productName,
-        productDescription,
+        productName: app.name,
+        productDescription: description,
         cordova: platform === 'Cordova',
       },
     }),
     new DefinePlugin({
-      'process.APP_CONFIG': JSON.stringify({
-        productName,
-        productDescription,
-        productVersion,
-        productReleaseNotes,
-      }),
+      'process.APP_ENV': JSON.stringify(
+        Object.assign(
+          framework.APP_ENV,
+          {
+            productName: app.name,
+            productDescription: description,
+            productVersion: version,
+            platform,
+            PROD,
+          },
+        ),
+      ),
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
@@ -66,8 +73,8 @@ module.exports = (env) => {
       new CopyPlugin({
         patterns: [
           {
-            from: path.resolve(__dirname, '../../../public', platform),
-            to: path.resolve(__dirname, '../../../dist', platform),
+            from: resolve(currDirectory, 'public', platform),
+            to: resolve(currDirectory, 'dist', platform),
           },
         ],
       }),
@@ -79,23 +86,10 @@ module.exports = (env) => {
       new CopyPlugin({
         patterns: [
           {
-            from: path.resolve(__dirname, '../../../package.json'),
-            to: path.resolve(__dirname, '../../../dist', platform, 'manifest.json'),
-            transform(content) {
-              const manifest = {};
-
-              manifest.background_color = '#fdfdfd';
-              manifest.theme_color = productTheme.brand;
-              manifest.name = productName;
-              manifest.description = productDescription;
-              manifest.short_name = productDetails.ShortName;
-              manifest.start_url = 'index.html';
-
-              const valObject = JSON.parse(content.toString()).manifestPWA;
-              Object.keys(valObject).forEach((key) => {
-                manifest[key] = valObject[key];
-              });
-              const manifestJSON = JSON.stringify(manifest, null, 2);
+            from: resolve(currDirectory, 'package.json'),
+            to: resolve(currDirectory, 'dist', platform, 'manifest.json'),
+            transform() {
+              const manifestJSON = JSON.stringify(pwa.manifest, null, 2);
               return manifestJSON;
             },
           },
@@ -210,7 +204,7 @@ module.exports = (env) => {
     devServer: PROD ? undefined : {
       writeToDisk: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
-      contentBase: path.resolve(__dirname, '../../../public', platform),
+      contentBase: resolve(currDirectory, 'public', platform),
       stats: {
         assets: true,
         children: false,
@@ -228,14 +222,14 @@ module.exports = (env) => {
     },
     resolve: {
       alias: {
-        svelte: path.resolve('node_modules', 'svelte'),
+        svelte: resolve('node_modules', 'svelte'),
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],
       symlinks: false,
     },
     output: {
-      path: path.resolve(__dirname, '../../../dist', platform),
+      path: resolve(currDirectory, 'dist', platform),
       filename: PROD ? 'js/[name].js' : undefined,
       chunkFilename: PROD ? 'js/[id].js' : undefined,
       pathinfo: !PROD,
