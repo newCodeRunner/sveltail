@@ -9,16 +9,12 @@ const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const tailwind = require('tailwindcss')('./src-framework/build/tailwindcss/config.js');
 const autoprefixer = require('autoprefixer');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
-const path = require('path');
+const { resolve } = require('path');
+const { readFileSync } = require('fs');
 
-const {
-  productName,
-  productDescription,
-  productVersion,
-  productReleaseNotes,
-  productDetails,
-  productTheme,
-} = require('../../../package.json');
+const currDirectory = process.cwd();
+const packageJSON = readFileSync(resolve(currDirectory, 'package.json'));
+const { app } = packageJSON;
 
 module.exports = (env) => {
   const { platform, mode, type } = env;

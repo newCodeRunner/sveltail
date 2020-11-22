@@ -1,57 +1,193 @@
-const { resolve, dirname } = require('path');
-const clear = require('clear');
+#! /usr/bin/env node
+
+/* eslint-disable global-require */
+/* eslint-disable no-console */
+
 const chalk = require('chalk');
-const inquirer = require('inquirer');
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
 
-// Clears the command prompt
-clear();
-
-console.log(chalk.bgBlue('Welcome to Sveltail CLI! Sveltail will help you setup your cross platform project in a jiffy!'));
-
-let repo = '';
-const packageJSON = {
-  name: dirname(resolve(__dirname, '../../../')).replace(/\\/g, '/').split('/').pop(),
-  version: '0.0.1',
-  description: 'A Sveltail Project!',
-  main: 'index.js',
-  scripts: {
-    test: 'echo \"Error: no test specified\" && exit 1'
-  },
-  repository: {
-    type: 'git',
-    url: "git+https://github.com/newCodeRunner/sveltail.git"
-  },
-  author: 'Sveltail',
-  license: 'MIT',
-  bugs: {
-    url: "https://github.com/newCodeRunner/sveltail/issues"
-  },
-  homepage: 'https://github.com/newCodeRunner/sveltail#readme',
+const usageAlert = () => {
+  console.log(chalk.red('\n Error: Incorrect command usage. Run "sveltail --help" for more info'));
 };
 
-inquirer.prompt([
-  {
-    name: 'projectName',
-    type: 'input',
-    message: `Please enter your project name (${packageJSON.name}?)`,
-    validate: (answer) => {
-      const formattedAnswer = String(answer).trim();
-      if (formattedAnswer.length > 0) {
-        packageJSON.name = formattedAnswer;
-      }
-      return true;
+// CLI Options
+// eslint-disable-next-line no-unused-expressions
+yargs(hideBin(process.argv))
+  .command(
+    '$0',
+    'Sveltail CLI',
+    () => {},
+    () => {
+      console.log(
+        chalk.green(
+          `
+            Welcome to Sveltail CLI.
+            Please run "sveltail --help" for more information on List of Commands and how to use them.
+          `,
+        ),
+      );
     },
-  },
-  {
-    name: 'projectName',
-    type: 'input',
-    message: `Please enter your project version (${packageJSON.version}?)`,
-    validate: (answer) => {
-      const formattedAnswer = String(answer).trim();
-      if (new RegExp.ma('/^(\d+\.)?(\d+\.)?(\*|\d+)$/', $string).length > 0) {
-        packageJSON.version = formattedAnswer;
-      }
-      return true;
+  )
+  .command(
+    'config',
+    "Update your project's name, description, author and other necessary information",
+    () => {},
+    (arg) => {
+      const config = require('../cli/config');
+      config.default(chalk, arg);
     },
-  },
-]);
+  )
+  .command(
+    'icons',
+    `Generate your project's icons in default folders according to Sveltail Folder Structure.
+    (Supported formats [.png, .jpg, .svg])
+
+    Options:
+
+      --logo [relative logo path]
+      Run with Custom logo path
+      (defaults to [project root]/src/assets/logo.png)
+
+      --splash [relative splashscreen logo path]
+      Run with Custom Splash logo path.
+      This allows you to have different app and splashscreen logos.
+      If no splash logo is defined, default logo is used.
+      (defaults to [project root]/src/assets/logo.png)
+
+      --background [hex color]
+      Specify custom hex color for splashscreen background.
+      (defaults to #FFFFFF)
+
+    `,
+    () => {},
+    ({ logo, splash, background }) => {
+      const icons = require('../cli/icons');
+      icons.default(
+        chalk,
+        {
+          logoPath: logo || 'src/assets/logo.png',
+          splashPath: splash || 'src/assets/logo.png',
+          background: background || '#FFFFFF',
+        },
+      );
+    },
+  )
+  .command(
+    'add',
+    `Add different platforms supported by Sveltail out of the box!
+    
+    Options:
+
+    --electron        [boolean]
+    --cordova         [boolean]
+    --pwa             [boolean]
+    --nativescript    [boolean]
+    --firebase        [boolean]  Adds firebase support out of the box
+    `,
+    () => {},
+    (arg) => {
+      let platform = null;
+      if (arg.electron) platform = 'electron';
+      else if (arg.cordova) platform = 'cordova';
+      else if (arg.pwa) platform = 'pwa';
+      else if (arg.nativescript) platform = 'nativescript';
+      else if (arg.firebase) platform = 'firebase';
+
+      if (platform) {
+        const platforms = require('../cli/platforms');
+        platforms.addPlatform(chalk, platform);
+      } else usageAlert();
+    },
+  )
+  .command(
+    'remove',
+    `Remove different platforms added by Sveltail.
+    This will remove all the files added by Sveltail, regardless of whether they have been modified by you.
+    Please be careful!
+    
+    Options:
+
+    --electron        [boolean]
+    --cordova         [boolean]
+    --pwa             [boolean]
+    --nativescript    [boolean]
+    --firebase        [boolean]  Removes firebase support
+    `,
+    () => {},
+    (arg) => {
+      let platform = null;
+      if (arg.electron) platform = 'electron';
+      else if (arg.cordova) platform = 'cordova';
+      else if (arg.pwa) platform = 'pwa';
+      else if (arg.nativescript) platform = 'nativescript';
+      else if (arg.firebase) platform = 'firebase';
+
+      if (platform) {
+        const platforms = require('../cli/platforms');
+        platforms.removePlatform(chalk, platform);
+      } else usageAlert();
+    },
+  )
+  .command(
+    'dev',
+    `Runs the development mode for specified platform.
+    
+    Options:
+
+    --electron        [boolean]
+    --cordova         [boolean]
+      Cordova Specific:
+        --ios         [boolean]
+        --andorid     [boolean]
+
+    --pwa             [boolean]
+    --nativescript    [boolean]
+      NS Specific:
+        --ios         [boolean]
+        --andorid     [boolean]
+    `,
+    () => {},
+    (arg) => {
+      if (arg.cordova) {
+        if (arg.android || arg.ios) {
+          const dev = require('../cli/dev');
+          dev.devCordova(chalk, { mode: arg.android ? 'android' : 'ios' });
+        } else usageAlert();
+      }
+      console.log(arg);
+    },
+  )
+  .command(
+    'build',
+    `Builds the code for specified platform.
+    
+    Options:
+
+    --electron        [boolean]
+    --cordova         [boolean]
+      Cordova Specific:
+        --ios         [boolean]
+        --andorid     [boolean]
+
+    --pwa             [boolean]
+    --nativescript    [boolean]
+      NS Specific:
+        --ios         [boolean]
+        --andorid     [boolean]
+    `,
+    () => {},
+    (arg) => {
+      console.log(arg);
+    },
+  )
+  .command(
+    'recommended',
+    'Adds the recommended linters and settings to the project.',
+    () => {},
+    () => {
+      const recommended = require('../cli/recommended');
+      recommended.default(chalk);
+    },
+  )
+  .argv;

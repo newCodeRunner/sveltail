@@ -1,14 +1,15 @@
 {
   "name": "sveltail",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Cross platform development from a single code base making use of Svelte, NativeScript, Electron and Cordova",
+  "app": {
+    "id": "app.web.sveltail",
+    "name": "Sveltail App",
+    "email": "awesome@svetail.com",
+    "website": "svetail.com"
+  },
   "main": "bin/index.js",
-  "bin": {
-    "sveltail": "./bin/index.js"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "bin": "bin/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/newCodeRunner/sveltail.git"
@@ -20,11 +21,16 @@
     "electron",
     "cordova",
     "tailwind",
+    "tailwind css",
+    "lightweight ui components",
     "ui",
     "cross",
     "platform",
     "tailwindcss",
-    "svelte-native"
+    "svelte-native",
+    "sveltail-cli",
+    "sveltail cli command line interface",
+    "sveltail"
   ],
   "author": "newCodeRunner",
   "license": "MIT",
@@ -35,9 +41,23 @@
   "dependencies": {
     "chalk": "^4.1.0",
     "clear": "^0.1.0",
-    "inquirer": "^7.3.3"
+    "fs-extra": "^9.0.1",
+    "inquirer": "^7.3.3",
+    "plist": "^3.0.1",
+    "sharp": "^0.26.3",
+    "xml2js": "^0.4.23",
+    "yargs": "^16.1.1"
   },
   "devDependencies": {
-    "eslint": "^7.13.0"
+    "eslint": "^7.13.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-svelte3": "^2.7.3"
+  },
+  "scripts": {
+    "sveltail-config": "sveltail config",
+    "sveltail-icons": "sveltail icons --path src/assets/logo.png",
+    "sveltail-dev": "",
+    "sveltail-build": ""
   }
 }
