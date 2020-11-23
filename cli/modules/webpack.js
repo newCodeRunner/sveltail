@@ -19,17 +19,21 @@ const { app, description, version } = packageJSON;
 const svelteConfig = require(resolve(currDirectory, 'sveltail.config.js'));
 const { tailwindcss, pwa, framework } = svelteConfig.default();
 if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
-writeFileSync(resolve(currDirectory, '.sveltail', 'tailwind.config.js'), JSON.stringify(tailwindcss));
+writeFileSync(
+  resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
+  `module.exports = ${JSON.stringify(tailwindcss, null, 2)}`,
+);
 const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
 
 module.exports = (env) => {
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
-  const include = [resolve(currDirectory, 'src'), resolve(currDirectory, 'node_modules', 'sveltail')];
   const bundle = [resolve(currDirectory, 'src', 'app.js')];
 
   process.env.platform = platform;
   process.env.PROD = PROD;
+  process.env.colors = JSON.stringify(Object.assign(tailwindcss.theme.colors, tailwindcss.theme.extend.colors));
+  process.env.screens = JSON.stringify(tailwindcss.theme.screens);
 
   const plugins = [
     new CleanWebpackPlugin(),
@@ -69,7 +73,7 @@ module.exports = (env) => {
       chunkFilename: 'css/[name].[id].css',
       ignoreOrder: false,
     }),
-    new EnvironmentPlugin(['platform', 'PROD']),
+    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens']),
   ];
 
   if (PROD) {
@@ -134,7 +138,6 @@ module.exports = (env) => {
   const rules = [
     {
       test: /\.svelte$/,
-      include,
       use: {
         loader: 'svelte-loader',
         options: {
@@ -169,22 +172,32 @@ module.exports = (env) => {
       ],
     },
     {
+      test: /\.s[ac]ss$/i,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+      ],
+    },
+    {
       test: /\.svg$/,
       use: {
-        loader: 'svg-sprite-loader',
+        loader: 'file-loader',
         options: {
-          extract: true,
-          spriteFilename: (file) => {
-            let fileName = file.replace(/\\/g, '/').split('/').pop();
-
-            if (file.indexOf('brands') > -1) fileName = 'fa-brands.svg';
-            else if (file.indexOf('regular') > -1) fileName = 'fa-regular.svg';
-            else if (file.indexOf('solid') > -1) fileName = 'fa-solid.svg';
-
-            return `svg/${fileName}`;
-          },
+          name: 'svg/[name].[ext]',
         },
       },
+    },
+    {
+      test: /\.(woff(2)?|ttf|eot)$/,
+      use: [
+        {
+          loader: 'file-loader',
+          options: {
+            name: 'fonts/[name].[ext]',
+          },
+        },
+      ],
     },
   ];
 
@@ -212,7 +225,8 @@ module.exports = (env) => {
     resolve: {
       alias: {
         svelte: resolve(currDirectory, 'node_modules', 'svelte'),
-        '~': resolve(currDirectory, '/'),
+        sveltail: resolve(currDirectory, 'node_modules', 'sveltail'),
+        '~': currDirectory,
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],

@@ -1,4 +1,6 @@
 <script>
+  import { getContext } from 'svelte';
+
   // Global
   const { helpers } = getContext('$$app');
   const props = {

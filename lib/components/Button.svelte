@@ -60,15 +60,11 @@
       "
     >
       {#if props.icon}
-        <div class="h-full {props.width} {props.circle ? 'p-2' : ''}">
-          <Icon icon={props.icon} class="h-full w-full" />
-        </div>
+        <Icon icon={props.icon} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
       {/if}
       {#if props.label}<div class="h-fit px-3 {props.textSize}">{props.label}</div>{/if}
       {#if props.iconRight}
-        <div class="h-full {props.width} {props.circle ? 'p-2' : ''}">
-          <Icon icon={props.iconRight} class="h-full w-full" />
-        </div>
+        <Icon icon={props.icon} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
       {/if}
     </div>
   </button>

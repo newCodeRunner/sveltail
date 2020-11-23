@@ -1,5 +1,9 @@
 <script>
-  import LayoutNative from 'sveltail/lib/components/LayoutNative.svelte';
+  import { LayoutNative } from 'sveltail';  
 </script>
 
 <LayoutNative />
+
+<style>
+  @import '../../src-nativescript/app/app.css';
+</style>

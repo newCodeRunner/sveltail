@@ -31,6 +31,14 @@ exports.devCordova = (chalk) => {
       const configXml = builderXML.buildObject(jObject);
       writeFileSync(configPath, configXml);
       console.log(chalk.green(' Updated src-cordova/config.xml for Dev Environment'));
+
+      if (entryAvail()) {
+        const webpackPath = resolve(__dirname, './modules/webpack.js');
+        execSync(
+          `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Cordova --env type=android`,
+          { cwd: currDirectory, stdio: 'inherit' },
+        );
+      }
     });
   } else {
     console.log(chalk.red('Error: File "src-cordova/config.xml" not found. Please run "sveltail platform add --cordova"'));
@@ -39,9 +47,9 @@ exports.devCordova = (chalk) => {
 
 exports.devWeb = () => {
   if (entryAvail()) {
-    const configPath = resolve(__dirname, './modules/webpack.js');
+    const webpackPath = resolve(__dirname, './modules/webpack.js');
     execSync(
-      `npx webpack serve --config ${configPath} --env mode=development --env platform=Web`,
+      `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Web`,
       { cwd: currDirectory, stdio: 'inherit' },
     );
   }

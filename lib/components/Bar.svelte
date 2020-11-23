@@ -55,11 +55,11 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <nav class="fixed z-20 w-screen flex py-2 {props.class}">
+  <nav class="fixed z-20 w-screen flex py-2 {props.class} h-16">
     <div class="flex items-center justify-start">
       <!-- Left Menu -->
       {#if props.leftMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars' size="md" flat on:click={leftMenuClicked} />
+        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={leftMenuClicked} />
       {/if}
       
       <!-- Start Slot  -->
@@ -83,7 +83,7 @@
 
       <!-- Left Menu -->
       {#if props.rightMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars' size="md" flat on:click={rightMenuClicked} />
+        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={rightMenuClicked} />
       {/if}
     </div>
   </nav>

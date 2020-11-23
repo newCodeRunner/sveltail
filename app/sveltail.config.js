@@ -44,7 +44,7 @@ exports.default = (/* cfg */) => {
         removeDeprecatedGapUtilities: true,
         purgeLayersByDefault: true,
       },
-      darkMode: true,
+      darkMode: 'media',
       purge: {
         layers: ['base', 'components', 'utilities'],
       },
