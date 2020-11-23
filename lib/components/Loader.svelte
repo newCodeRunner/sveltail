@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
+  import Image from './Image.svelte';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -18,16 +19,7 @@
   }
 
   // Web / Hybrid
-  let Overlay;
-  let Image;
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    import('../ui/Overlay.svelte').then((module) => {
-      Overlay = module.default;
-    });
-    import('../ui/Image.svelte').then((module) => {
-      Image = module.default;
-    });
-
     show = () => {
       const html = document.querySelector('html');
       html.classList.add('overflow-hidden');
@@ -53,15 +45,18 @@
 {#if render}
   {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
     <gridLayout  width="100%" height="100%">
-      <image src="" />
+      <Image img="assets/logo.png" />
     </gridLayout>
   {/if}
 
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <svelte:component this={Overlay}>
-      <div class="w-full h-full flex items-center justify-center">
-        <svelte:component this={Image} class='mx-auto h-16 w-16 animate-bounce bg-loader' img="assets/logo.png" />
+    <div class='relative z-30 h-screen w-screen'>
+      <div class="fixed inset-0 opacity-75" />
+      <div class="fixed h-full w-full overflow-y-auto">
+        <div class="w-full h-full flex items-center justify-center">
+          <Image class='mx-auto h-16 w-16 animate-bounce bg-loader' img="assets/logo.png" />
+        </div>
       </div>
-    </svelte:component>
+    </div>
   {/if}
 {/if}

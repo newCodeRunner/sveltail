@@ -1,7 +1,7 @@
 <script>
   import { onMount, setContext } from 'svelte';
 
-  import languages from '~src/18n/index';
+  import languages from '~src/i18n/index';
   import hooks from '~src/router/hooks';
   import routes from '~src/router/routes';
   import state from '~src/store/state';

@@ -170,14 +170,21 @@ module.exports = (env) => {
     },
     {
       test: /\.svg$/,
-      use: [
-        {
-          loader: '@svgr/webpack',
-          options: {
-            native: true,
+      use: {
+        loader: 'svg-sprite-loader',
+        options: {
+          extract: true,
+          spriteFilename: (file) => {
+            let fileName = file.replace(/\\/g, '/').split('/').pop();
+
+            if (file.indexOf('brands') > -1) fileName = 'fa-brands.svg';
+            else if (file.indexOf('regular') > -1) fileName = 'fa-regular.svg';
+            else if (file.indexOf('solid') > -1) fileName = 'fa-solid.svg';
+
+            return `svg/${fileName}`;
           },
         },
-      ],
+      },
     },
   ];
 
@@ -205,7 +212,7 @@ module.exports = (env) => {
     resolve: {
       alias: {
         svelte: resolve(currDirectory, 'node_modules', 'svelte'),
-        '~': resolve(currDirectory),
+        '~': resolve(currDirectory, '/'),
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],

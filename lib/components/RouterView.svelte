@@ -34,7 +34,7 @@
     const { path } = ctx;
     const routeIndex = $$props.routes.findIndex((i) => i.path === path);
     const { name } = $$props.routes[routeIndex > -1 ? routeIndex : $$props.routes.length - 1];
-    import(`../../src/pages/${name}.svelte`).then((module) => {
+    import(`~src/pages/${name}.svelte`).then((module) => {
       Route = module.default;
       currPath = path;
       next();

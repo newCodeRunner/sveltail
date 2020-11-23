@@ -290,16 +290,20 @@ exports.default = (chalk) => {
                 *node_modules*
 
                 # Log files
-                *npm-debug.log*
-                *yarn-debug.log*
-                *yarn-error.log*
+                *npm-debug.log
+                *yarn-debug.log
+                *yarn-error.log
 
                 # Editor directories and files
                 .idea
                 *.suo
                 *.ntvs*
                 *.njsproj
-                *.sln`.replace(/^ +| +$/gm, ''),
+                *.sln
+                .vscode
+                
+                # Framework
+                .sveltail`.replace(/^ +| +$/gm, ''),
               );
             }
           } else {

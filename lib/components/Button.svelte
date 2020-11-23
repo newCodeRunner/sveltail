@@ -30,9 +30,9 @@
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
   <button backgroundColor={props.colorBg} on:tap={onClick} >
     <formattedString color={props.colorText}>
-      {#if props.icon}<span text={String.fromCharCode(props.icon.text)} class="{props.icon.class}" />{/if}
+      {#if props.icon}<Icon icon={props.icon.text} class={props.icon.class} />{/if}
       {#if props.label}<span text={props.label} />{/if}
-      {#if props.iconRight}<span text={String.fromCharCode(props.iconRight.text)} class={props.iconRight.class} />{/if}
+      {#if props.iconRight}<Icon icon={props.iconRight.text} class={props.iconRight.class} />{/if}
     </formattedString>
   </button>
 {/if}
