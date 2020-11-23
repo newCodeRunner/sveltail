@@ -5,8 +5,9 @@ const inquirer = require('inquirer');
 const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 const { copySync } = require('fs-extra');
-const plist = require('plist');
-const XML = require('xml2js');
+
+const updateCordova = require('./modules/updateCordova.js');
+const updateNS = require('./modules/updateNS.js');
 
 exports.default = (chalk) => {
   // Clears the command prompt
@@ -170,10 +171,10 @@ exports.default = (chalk) => {
         .then(({ confirm }) => {
           if (confirm) {
             const scripts = [
-              { key: 'sveltail-config', script: 'sveltail config' },
-              { key: 'sveltail-icons', script: 'sveltail icons --path src/assets/logo.png' },
-              { key: 'sveltail-dev', script: 'sveltail dev' },
-              { key: 'sveltail-build', script: 'veltail build' },
+              { key: 'st-config', script: 'sveltail config' },
+              { key: 'st-icons', script: 'sveltail icons --path src/assets/logo.png' },
+              { key: 'st-dev', script: 'sveltail dev' },
+              { key: 'st-build', script: 'sveltail build' },
             ];
 
             if (packageJSON.scripts === undefined) packageJSON.scripts = {};
@@ -196,84 +197,10 @@ exports.default = (chalk) => {
             writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
 
             // Update Cordova Project Info
-            if (existsSync(resolve(currDirectory, 'src-cordova/package.json'))) {
-              const cordovaPkg = JSON.parse(readFileSync(resolve(currDirectory, 'src-cordova/package.json'), 'utf-8'));
-
-              cordovaPkg.name = packageJSON.app.id;
-              cordovaPkg.displayName = packageJSON.app.name;
-              cordovaPkg.version = packageJSON.version;
-              cordovaPkg.description = packageJSON.description;
-              writeFileSync('src-cordova/package.json', JSON.stringify(cordovaPkg, null, 2));
-              console.log(chalk.green(' Updated src-cordova/package.json'));
-
-              const builderXML = new XML.Builder();
-
-              const config = readFileSync(resolve(currDirectory, 'src-cordova/config.xml'), 'utf-8');
-              let jObject = {};
-              XML.parseString(config, (err, res) => {
-                if (err) console.log(chalk.red('Unable to update src-cordova/config.xml'));
-                else {
-                  jObject = { ...res };
-                  jObject.widget.$.id = packageJSON.app.id;
-                  jObject.widget.$.version = packageJSON.version;
-                  jObject.widget.name[0] = packageJSON.app.name;
-                  jObject.widget.description[0] = packageJSON.description;
-                  jObject.widget.author[0]._ = packageJSON.author;
-                  jObject.widget.author[0].$.email = packageJSON.app.email;
-                  jObject.widget.author[0].$.href = packageJSON.app.website;
-                }
-
-                const configXml = builderXML.buildObject(jObject);
-                writeFileSync('src-cordova/config.xml', configXml);
-                console.log(chalk.green(' Updated src-cordova/config.xml'));
-              });
-            }
+            updateCordova.default(chalk, currDirectory, packageJSON);
 
             // Update NativeScript Project Info
-            if (existsSync(resolve(currDirectory, 'src-nativescript/package.json'))) {
-              const nativePkg = readFileSync(resolve(currDirectory, 'src-nativescript/package.json'), 'utf-8');
-              nativePkg.name = packageJSON.name;
-              nativePkg.version = packageJSON.version;
-              nativePkg.author = packageJSON.author;
-              nativePkg.description = packageJSON.description;
-              writeFileSync('src-nativescript/package.json', JSON.stringify(nativePkg, null, 2));
-              console.log(chalk.green(' Updated src-nativescript/package.json'));
-
-              const stringsObject = {
-                resources: {
-                  string: [
-                    {
-                      _: packageJSON.app.name,
-                      $: { name: 'app_name' },
-                    },
-                    {
-                      _: packageJSON.app.id,
-                      $: { name: 'app_id' },
-                    },
-                    {
-                      _: `${packageJSON.app.id}.activity`,
-                      $: { name: 'activity_id' },
-                    },
-                    {
-                      _: packageJSON.app.name,
-                      $: { name: 'title_activity_kimera' },
-                    },
-                  ],
-                },
-              };
-              const builderXML = new XML.Builder();
-              const stringsXml = builderXML.buildObject(stringsObject);
-              writeFileSync('src-nativescript/App_Resources/Android/src/main/res/values/strings.xml', stringsXml);
-              console.log(chalk.green(' Updated Nativescript Android Values'));
-
-              const info = plist.parse(readFileSync('./src-nativescript/App_Resources/iOS/Info.plist', 'utf8'));
-              info.CFBundleDisplayName = packageJSON.app.name;
-              info.CFBundleName = packageJSON.id;
-              info.CFBundleShortVersionString = packageJSON.version;
-              info.CFBundleVersion = packageJSON.version;
-              writeFileSync('src-nativescript/App_Resources/iOS/Info.plist', plist.build(info));
-              console.log(chalk.green(' Updated Nativescript iOS values'));
-            }
+            updateNS.default(chalk, currDirectory, packageJSON);
 
             // Add src folder if not exsists
             if (!existsSync(resolve(currDirectory, 'src'))) {
