@@ -39,7 +39,7 @@ exports.addPlatform = (chalk, platform) => {
         }
       });
 
-      writeFileSync(resolve(__dirname, '../app/src-electron'), JSON.stringify(packageJSON, null, 2));
+      writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
     }
 
     // Update Cordova Project Info

@@ -8,7 +8,7 @@ const currDirectory = process.cwd();
 
 const entryAvail = () => existsSync(resolve(currDirectory, 'src/app.js'));
 
-exports.devCordova = (chalk) => {
+exports.devCordova = (chalk, { mode }) => {
   const configPath = resolve(currDirectory, 'src-cordova/config.xml');
   if (existsSync(configPath)) {
     const config = readFileSync(configPath, 'utf-8');
@@ -35,7 +35,7 @@ exports.devCordova = (chalk) => {
       if (entryAvail()) {
         const webpackPath = resolve(__dirname, './modules/webpack.js');
         execSync(
-          `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Cordova --env type=android`,
+          `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Cordova --env type=${mode}`,
           { cwd: currDirectory, stdio: 'inherit' },
         );
       }

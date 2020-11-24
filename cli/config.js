@@ -230,7 +230,9 @@ exports.default = (chalk) => {
                 .vscode
                 
                 # Framework
-                .sveltail`.replace(/^ +| +$/gm, ''),
+                .sveltail
+                src-cordova/platforms
+                src-cordova/plugins`.replace(/^ +| +$/gm, ''),
               );
             }
           } else {
