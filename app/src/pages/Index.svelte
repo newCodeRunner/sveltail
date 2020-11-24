@@ -1,6 +1,7 @@
 <script>
   import { Button } from 'sveltail';
   import { getContext } from 'svelte';
+  import Examples from '../components/Examples.svelte';
 
   const { router } = getContext('$$app');
 
@@ -14,3 +15,4 @@
 <Button on:click={gotoErrorPage} />
 <h2>Examples</h2>
 <p>Please see the examples below to see the UI in action.</p>
+<Examples />
