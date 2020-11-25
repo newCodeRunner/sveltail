@@ -8,6 +8,7 @@
     class: helpers.isString($$props.class) ? $$props.class : '',
     fontSize: helpers.getFontSize($$props.size, 'md'), 
   };
+  if ($$props.fontSize) props.fontSize = $$props.fontSize;
 </script>
 
 {#if props.icon}
@@ -16,6 +17,6 @@
   {/if}
 
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <i class="text-{props.color} {props.class} {props.icon}" style="font-size: {props.fontSize}px;" />
+    <i class="{props.class} {props.icon}" style="font-size: {props.fontSize}px;" />
   {/if}
 {/if}

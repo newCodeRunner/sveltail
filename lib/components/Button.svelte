@@ -40,7 +40,6 @@
   <div>
     <button
       class="
-        p-2
         flex
         justify-center
         items-center
@@ -52,7 +51,8 @@
         {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
         {props.rounded || props.pill ? 'rounded' : ''}
         {props.pill || props.circle ? 'rounded-full' : ''}
-        {props.circle ? '' : ''}
+        {props.pill ? 'p-4' : 'p-2'}
+        {props.circle ? props.width : ''}
         {props.height}
         {props.class}
       "
