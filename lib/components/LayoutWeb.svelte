@@ -33,9 +33,15 @@
       app = Object.assign(app, detail);
     };
     $: setContext('$$app', app);
+
+    // Globals
+    const props = {
+      fixedHeader: app.helpers.getBoolean($$props.fixedHeader), 
+    };
   
     // App Ready
     let isReady = false;
+    let headerHeight = 0;
     onMount(() => {
       isReady = true;
 
@@ -49,17 +55,26 @@
   </section>
   
   {#if isReady}
-    <section class="{app.platform === 'Cordova' ? 'cordova' : ''} safe-area">
-      <header class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top">
-        <slot name="header" />
-      </header>
+    <section class="{app.platform === 'Cordova' ? 'cordova' : ''} safe-area dark:bg-black dark:text-white">
+      {#if props.fixedHeader}
+        <header bind:clientHeight={headerHeight} class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
+          <slot name="header" />
+        </header>
+      {/if}
       <aside>
         <slot name="right-drawer" />
         <slot name="left-drawer" />
       </aside>
-      <main class="relative z-0">
-        <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateAppContext}  />
-      </main>
+      <section class="relative z-0 w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
+        {#if !props.fixedHeader}
+          <header class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
+            <slot name="header" />
+          </header>
+        {/if}
+        <main>
+          <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateAppContext}  />
+        </main>
+      </section>
       <footer>
         <slot name="footer" />
       </footer>
@@ -70,6 +85,8 @@
     @import "tailwindcss/base";
     @import "tailwindcss/components";
     @import "tailwindcss/utilities";
+
+    @import "../css/effects.css";
   
     .cordova.safe-area {
       padding-right: env(safe-area-inset-right, 20px);
@@ -78,5 +95,9 @@
     }
     .cordova .safe-area-top {
       padding-top: env(safe-area-inset-top, 20px);
+    }
+
+    :global(html) {
+      overflow: hidden;
     }
   </style>

@@ -1,6 +1,7 @@
 <script>
     import { createEventDispatcher, getContext } from 'svelte';
     import Button from './Button.svelte';
+    import Image from './Image.svelte';
 
     // Globals
     const dispatch = createEventDispatcher();
@@ -11,6 +12,7 @@
       title: helpers.isString($$props.title) ? $$props.title : null,
       leftMenu: helpers.getBoolean($$props.leftMenu),
       rightMenu: helpers.getBoolean($$props.rightMenu),
+      dense: helpers.getBoolean($$props.dense),
     };
     const leftMenuClicked = () => {
       dispatch('leftMenuClicked');
@@ -38,7 +40,7 @@
       <!-- Start Slot  -->
       <slot name="nav-middle">
         <!-- Default Logo and Title -->
-        <image src="res://{props.img}" stretch="aspectFill" height="25" class="m-x-10" />
+        <Image src="res://{props.img}" stretch="aspectFill" height="25" class="m-x-10" />
         {#if props.title}<label text={props.title} fontSize="25" for="" color={helpers.getColor('white')} />{/if}
       </slot>
     </stackLayout>
@@ -55,18 +57,18 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <nav class="fixed z-20 w-screen flex py-2 {props.class} h-16">
+  <nav class="z-20 w-full flex items-center py-2 {props.class} {props.dense ? 'h-12' : 'h-16'}">
     <div class="flex items-center justify-start">
       <!-- Left Menu -->
       {#if props.leftMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={leftMenuClicked} />
+        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="{props.dense ? 'sm' : 'md'}" flat on:click={leftMenuClicked} />
       {/if}
       
       <!-- Start Slot  -->
       <slot name="nav-start">
         <!-- Default Logo and Title -->
         <div class="flex items-center justify-start mx-3 cursor-pointer" on:click={brandClicked}>
-          {#if props.img}<span><img src="assets/{props.img}" alt="" class='object-contain mr-2 h-12' /></span>{/if}
+          {#if props.img}<Image img="assets/{props.img}" class="object-contain mr-2 {props.dense ? 'h-8' : 'h-12'}" />{/if}
           {#if props.title}<span class="font-semibold text-xl tracking-tight">{props.title}</span>{/if}
         </div>
       </slot>
@@ -83,9 +85,8 @@
 
       <!-- Left Menu -->
       {#if props.rightMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={rightMenuClicked} />
+        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="{props.dense ? 'sm' : 'md'}" flat on:click={rightMenuClicked} />
       {/if}
     </div>
   </nav>
-  <div class="h-16" />
 {/if}

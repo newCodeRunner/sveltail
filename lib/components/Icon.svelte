@@ -6,7 +6,7 @@
   const props = {
     icon: helpers.isString($$props.icon) ? helpers.getIcon($$props.icon) : null,
     class: helpers.isString($$props.class) ? $$props.class : '',
-    fontSize: helpers.getFontSize($$props.size), 
+    fontSize: helpers.getFontSize($$props.size, 'md'), 
   };
 </script>
 

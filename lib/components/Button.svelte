@@ -16,22 +16,14 @@
     pill: helpers.getBoolean($$props.pill),
     colorBg: helpers.getColor($$props.colorBg, 'primary'),
     colorText: helpers.getColor($$props.colorText, 'white'),
-    height: helpers.getHeight($$props.size),
-    width: helpers.getWidth($$props.size),
-    textSize: helpers.getTextSize($$props.size),
+    height: helpers.getHeight($$props.size, 'md'),
+    width: helpers.getWidth($$props.size, 'md'),
+    textSize: helpers.getTextSize($$props.size, 'md'),
   };
   const onClick = () => {
     dispatch('click');
   };
   export let loading = false;
-
-  let ripple = () => {};
-  if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    import('../js/ripple').then((module) => {
-      console.log(props.colorBg === 'transparent' ? props.colorText : props.colorBg);
-      ripple = module.default(props.colorBg === 'transparent' ? props.colorText : props.colorBg)
-    });
-  }
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
@@ -45,35 +37,37 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <button
-    use:ripple
-    class="outline-none {props.class}"
-    on:click={onClick}
-    aria-label={props.label ? props.label : 'Action Button'}
-    disabled={loading}
-  >
-    <div
+  <div>
+    <button
       class="
-        w-full
-        inline-flex
+        p-2
+        flex
+        justify-center
         items-center
-        hover:opacity-75
+        relative
+        focus:outline-none
+        hover:opacity-90
         bg-{props.colorBg}
-        text-{props.colorText}
-        {props.height}
-        {props.flat ? '' : `border border-${props.colorBg}`}
-        {props.circle ? '' : 'p-2'} 
+        text-{props.colorText}       
+        {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
         {props.rounded || props.pill ? 'rounded' : ''}
         {props.pill || props.circle ? 'rounded-full' : ''}
+        {props.circle ? '' : ''}
+        {props.height}
+        {props.class}
       "
+      on:click={onClick}
+      aria-label={props.label ? `Button ${props.label}` : 'Action Button'}
+      disabled={loading}
     >
+      <div class="ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
       {#if props.icon}
-        <Icon icon={props.icon} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
+        <Icon icon={props.icon} class="mx-1" size={$$props.size} />
       {/if}
-      {#if props.label}<div class="h-fit {props.textSize}">{props.label}</div>{/if}
+      {#if props.label}<div class="{props.textSize}">{props.label}</div>{/if}
       {#if props.iconRight}
-        <Icon icon={props.iconRight} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
+        <Icon icon={props.iconRight} class="mx-1" size={$$props.size} />
       {/if}
-    </div>
-  </button>
+    </button>
+  </div>
 {/if}

@@ -1,3 +1,4 @@
+export { default as Avatar } from './lib/components/Avatar.svelte';
 export { default as Bar } from './lib/components/Bar.svelte';
 export { default as Button } from './lib/components/Button.svelte';
 export { default as Icon } from './lib/components/Icon.svelte';
