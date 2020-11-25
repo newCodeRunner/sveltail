@@ -1,6 +1,5 @@
 <script>
   import { createEventDispatcher, getContext } from 'svelte';
-
   import Icon from './Icon.svelte';
 
   // Globals
@@ -25,6 +24,14 @@
     dispatch('click');
   };
   export let loading = false;
+
+  let ripple = () => {};
+  if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
+    import('../js/ripple').then((module) => {
+      console.log(props.colorBg === 'transparent' ? props.colorText : props.colorBg);
+      ripple = module.default(props.colorBg === 'transparent' ? props.colorText : props.colorBg)
+    });
+  }
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
@@ -39,6 +46,7 @@
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
   <button
+    use:ripple
     class="outline-none {props.class}"
     on:click={onClick}
     aria-label={props.label ? props.label : 'Action Button'}
@@ -62,9 +70,9 @@
       {#if props.icon}
         <Icon icon={props.icon} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
       {/if}
-      {#if props.label}<div class="h-fit px-3 {props.textSize}">{props.label}</div>{/if}
+      {#if props.label}<div class="h-fit {props.textSize}">{props.label}</div>{/if}
       {#if props.iconRight}
-        <Icon icon={props.icon} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
+        <Icon icon={props.iconRight} class="h-full {props.width} {props.circle ? 'p-2' : ''}" size={$$props.size} />
       {/if}
     </div>
   </button>

@@ -35,7 +35,7 @@ exports.devCordova = (chalk, { mode }) => {
       if (entryAvail()) {
         const webpackPath = resolve(__dirname, './modules/webpack.js');
         execSync(
-          `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Cordova --env type=${mode}`,
+          `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=Cordova --env type=${mode}`,
           { cwd: currDirectory, stdio: 'inherit' },
         );
       }
@@ -49,7 +49,7 @@ exports.devWeb = () => {
   if (entryAvail()) {
     const webpackPath = resolve(__dirname, './modules/webpack.js');
     execSync(
-      `npx webpack serve --config ${webpackPath} --env mode=development --env platform=Web`,
+      `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=Web`,
       { cwd: currDirectory, stdio: 'inherit' },
     );
   }
