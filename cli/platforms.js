@@ -69,7 +69,7 @@ exports.addPlatform = (chalk, platform) => {
         }
       });
 
-      writeFileSync(resolve(__dirname, '../app/src-electron'), JSON.stringify(packageJSON, null, 2));
+      writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
 
       // Add project dependencies and devDependencies
       const devDeps = ['electron', 'electron-builder'];
@@ -87,13 +87,34 @@ exports.addPlatform = (chalk, platform) => {
 
       if (command.trim() !== '') {
         console.log(chalk.grey(' Adding Electron dependencies to the project.'));
-        command += ' --dev';
+        if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' --also=dev';
+        else command += ' --dev';
         console.log(' Adding project dependencies');
         execSync(command, { cwd: currDirectory, stdio: 'inherit' });
       }
     }
   } else if (platform === 'pwa') {
+    if (packageJSON) {
+      // Adding PWA related scripts
+      const scripts = [
+        { key: 'st-dev-pwa', script: 'sveltail dev --pwa' },
+        { key: 'st-build-pwa', script: 'sveltail build --pwa' },
+      ];
+
+      if (packageJSON.scripts === undefined) packageJSON.scripts = {};
+      scripts.forEach((obj) => {
+        packageJSON.scripts[obj.key] = obj.script;
+        if (!packageJSON.scripts[obj.key]) {
+          console.log(
+            chalk.yellow(` Overwriting script: ${obj.key} beacuse a script with same name already exists.`),
+          );
+        }
+      });
+
+      writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
+    }
     copySync(resolve(__dirname, '../app/src-pwa'), resolve(currDirectory, 'src-pwa'));
+
     console.log(chalk.green(' Added PWA support to the project. Please use "svelte dev --pwa" to start developing in PWA mode.'));
   } else if (platform === 'nativescript') {
     copySync(resolve(__dirname, '../app/src-nativescript'), resolve(currDirectory, 'src-nativescript'));

@@ -1,0 +1,6 @@
+*.js eol=lf
+*.css eol=lf 
+*.svelte eol=lf 
+*.html eol=lf
+*.scss eol=lf
+*.sass eol=lf 

@@ -187,14 +187,14 @@ exports.default = (chalk) => {
               }
             });
 
+            // Update Root Folder Package Info
+            writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
+
             // Add sveltail.config.js
             if (!existsSync(resolve(currDirectory, 'sveltail.config.js'))) {
               const sveltailConfig = readFileSync(resolve(__dirname, '../app/sveltail.config.js'));
               writeFileSync(resolve(currDirectory, 'sveltail.config.js'), sveltailConfig);
             }
-
-            // Update Root Folder Package Info
-            writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
 
             // Update Cordova Project Info
             updateCordova.default(chalk, currDirectory, packageJSON);
@@ -217,6 +217,7 @@ exports.default = (chalk) => {
                 *node_modules*
 
                 # Log files
+                *debug.log
                 *npm-debug.log
                 *yarn-debug.log
                 *yarn-error.log
@@ -233,6 +234,35 @@ exports.default = (chalk) => {
                 .sveltail
                 src-cordova/platforms
                 src-cordova/plugins`.replace(/^ +| +$/gm, ''),
+              );
+            }
+
+            // Add .gitattributes file if not exsists
+            if (!existsSync(resolve(currDirectory, '.gitattributes'))) {
+              writeFileSync(
+                resolve(currDirectory, '.gitattributes'),
+                `*.js eol=lf
+                *.css eol=lf 
+                *.svelte eol=lf 
+                *.html eol=lf
+                *.scss eol=lf
+                *.sass eol=lf`.replace(/^ +| +$/gm, ''),
+              );
+            }
+
+            // Add .editorconfig file if not exsists
+            if (!existsSync(resolve(currDirectory, '.editorconfig'))) {
+              writeFileSync(
+                resolve(currDirectory, '.editorconfig'),
+                `root = true
+
+                [*]
+                charset = utf-8
+                indent_style = space
+                indent_size = 2
+                end_of_line = lf
+                insert_final_newline = true
+                trim_trailing_whitespace = true`.replace(/^ +| +$/gm, ''),
               );
             }
           } else {

@@ -45,6 +45,26 @@ exports.devCordova = (chalk, { mode }) => {
   }
 };
 
+exports.devElectron = () => {
+  if (entryAvail()) {
+    const webpackPath = resolve(__dirname, './modules/webpack.js');
+    execSync(
+      `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=Electron`,
+      { cwd: currDirectory, stdio: 'inherit' },
+    );
+  }
+};
+
+exports.devPWA = () => {
+  if (entryAvail()) {
+    const webpackPath = resolve(__dirname, './modules/webpack.js');
+    execSync(
+      `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=PWA`,
+      { cwd: currDirectory, stdio: 'inherit' },
+    );
+  }
+};
+
 exports.devWeb = () => {
   if (entryAvail()) {
     const webpackPath = resolve(__dirname, './modules/webpack.js');
