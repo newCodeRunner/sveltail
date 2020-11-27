@@ -75,13 +75,13 @@ exports.addPlatform = (chalk, platform) => {
       const devDeps = ['electron', 'electron-builder'];
 
       let command = '';
-      devDeps.forEach((cmd) => {
-        if (!packageJSON.devDependencies[cmd]) {
+      devDeps.forEach((dep) => {
+        if (!packageJSON.devDependencies[dep]) {
           if (command === '') {
             if (existsSync(resolve(currDirectory, 'package-lock.json'))) command = 'npm install';
             else command = 'yarn add';
           }
-          command += ` ${cmd}`;
+          command += ` ${dep}`;
         }
       });
 
@@ -90,6 +90,7 @@ exports.addPlatform = (chalk, platform) => {
         if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' --also=dev';
         else command += ' --dev';
         console.log(' Adding project dependencies');
+        console.log(chalk.grey(command));
         execSync(command, { cwd: currDirectory, stdio: 'inherit' });
       }
     }
