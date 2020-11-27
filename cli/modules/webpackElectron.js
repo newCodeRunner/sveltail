@@ -1,9 +1,12 @@
+/* eslint-disable no-console */
 /* eslint-disable import/no-dynamic-require */
+const { exec, execSync } = require('child_process');
+const { readdirSync, readFileSync } = require('fs');
+const { resolve } = require('path');
 
+// Webpack and plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { resolve } = require('path');
-const { readdirSync, readFileSync } = require('fs');
 
 const currDirectory = process.cwd();
 const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
@@ -13,8 +16,44 @@ const svelteConfig = require(resolve(currDirectory, 'sveltail.config.js'));
 const { framework } = svelteConfig.default();
 
 module.exports = (env) => {
-  const { mode } = env;
+  const { mode, url } = env;
   const PROD = mode === 'production';
+
+  process.env.platform = 'Electron';
+  process.env.PROD = PROD;
+
+  class OnBuildPlugin {
+    constructor() {
+      this.electronProcess = null;
+      this.exitHandler = () => {
+        console.log('\n Sveltail: Terminating development environment');
+        execSync(`taskkill -F -T -PID ${process.pid}`);
+      };
+      this.start = () => {
+        const electronStartPath = resolve(currDirectory, '.sveltail', 'Electron', 'eM-main.js');
+        this.electronProcess = exec(`npx electron ${electronStartPath}`);
+        this.electronProcess.stdout.pipe(process.stdout);
+        this.electronProcess.on('exit', this.exitHandler);
+      };
+    }
+
+    apply(compiler) {
+      compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
+        setTimeout(() => {
+          if (this.electronProcess) {
+            console.log('\n Sveltail: Closing and Restarting Electron');
+            this.electronProcess.stdout.pause();
+            this.electronProcess.removeAllListeners('exit');
+            execSync(`taskkill -F -T -PID ${this.electronProcess.pid}`);
+            this.start();
+          } else {
+            console.log('\n Sveltail: Starting Electron');
+            this.start();
+          }
+        }, 1000);
+      });
+    }
+  }
 
   const entry = {};
   readdirSync(resolve(currDirectory, 'src-electron', 'main')).forEach((file) => {
@@ -34,6 +73,7 @@ module.exports = (env) => {
   });
 
   return {
+    watch: true,
     entry,
     resolve: {
       alias: {
@@ -47,8 +87,8 @@ module.exports = (env) => {
     target: 'electron-main',
     output: {
       path: PROD ? resolve(currDirectory, 'dist', 'Electron') : resolve(currDirectory, '.sveltail', 'Electron'),
-      filename: PROD ? 'js/[name].js' : undefined,
-      chunkFilename: PROD ? 'js/[id].js' : undefined,
+      filename: PROD ? 'js/e-[name].js' : undefined,
+      chunkFilename: PROD ? 'js/e-[id].js' : undefined,
       pathinfo: !PROD,
     },
     optimization: {
@@ -57,6 +97,18 @@ module.exports = (env) => {
       },
       removeAvailableModules: !PROD,
       removeEmptyChunks: !PROD,
+    },
+    stats: {
+      assets: true,
+      children: false,
+      chunks: false,
+      hash: false,
+      modules: false,
+      publicPath: false,
+      timings: true,
+      version: false,
+      warnings: true,
+      colors: true,
     },
     module: {
       rules: [],
@@ -73,11 +125,13 @@ module.exports = (env) => {
               productVersion: version,
               platform: 'Electron',
               PROD,
+              url,
             },
           ),
         ),
       }),
-      new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens']),
+      new EnvironmentPlugin(['platform', 'PROD']),
+      new OnBuildPlugin(),
     ],
     mode,
     devtool: PROD ? false : 'source-map',

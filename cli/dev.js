@@ -48,10 +48,12 @@ exports.devCordova = (chalk, { mode }) => {
 exports.devElectron = () => {
   if (entryAvail()) {
     const webpackPath = resolve(__dirname, './modules/webpack.js');
-    execSync(
-      `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=Electron`,
-      { cwd: currDirectory, stdio: 'inherit' },
-    );
+    try {
+      execSync(
+        `npx webpack serve --config "${webpackPath}" --env mode=development --env platform=Electron`,
+        { cwd: currDirectory, stdio: 'inherit' },
+      );
+    } catch { /**/ }
   }
 };
 

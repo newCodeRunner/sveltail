@@ -1,16 +1,18 @@
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
-const { execSync } = require('child_process');
+// eslint-disable-next-line object-curly-newline
+const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
+const { resolve } = require('path');
+const { exec, execSync } = require('child_process');
+
+// Webpack and Plugins
+const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const { resolve } = require('path');
-// eslint-disable-next-line object-curly-newline
-const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
 
 const currDirectory = process.cwd();
 const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
@@ -26,6 +28,7 @@ writeFileSync(
 const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
 
 module.exports = (env) => {
+  let url = 'index.html';
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
   const bundle = [resolve(currDirectory, 'src', 'app.js')];
@@ -123,26 +126,41 @@ module.exports = (env) => {
     );
   }
 
-  if (platform === 'Cordova') {
-    class OnBuildPlugin {
-      constructor(options) {
-        this.options = options;
-        this.firstTimeBuild = false;
-      }
-
-      apply(compiler) {
-        if (!this.firstTimeBuild) {
-          this.firstTimeBuild = true;
-          compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
-            setTimeout(() => {
-              console.log('\n Running Cordova');
-              execSync(`(cd src-cordova && cordova run ${type})`, { stdio: 'inherit' });
-            }, 1000);
-          });
-        }
-      }
+  class OnBuildPlugin {
+    constructor(options) {
+      this.options = options;
+      this.firstTimeBuild = false;
     }
 
+    apply(compiler) {
+      compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
+        if (!this.firstTimeBuild) {
+          this.firstTimeBuild = true;
+          setTimeout(() => {
+            if (platform === 'Cordova') {
+              console.log('\n Sveltail: Running Cordova');
+              const child = exec(`(cd src-cordova && cordova run ${type})`);
+              child.stdout.pipe(process.stdout);
+              child.stderr.pipe(process.stderr);
+            } else if (platform === 'Electron') {
+              console.log('\n Sveltail: Starting electron build process');
+              const electronConfigPath = resolve(__dirname, 'webpackElectron.js');
+              const child = exec(`npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`);
+              child.stdout.pipe(process.stdout);
+              child.stderr.pipe(process.stderr);
+              child.on('exit', () => {
+                process.stdout.pause();
+                process.stderr.pause();
+                execSync(`taskkill -F -T -PID ${process.pid}`);
+              });
+            }
+          }, 1000);
+        }
+      });
+    }
+  }
+
+  if (platform === 'Cordova' || platform === 'Electron') {
     plugins.push(new OnBuildPlugin());
   }
 
@@ -217,7 +235,9 @@ module.exports = (env) => {
     devServer: PROD ? undefined : {
       writeToDisk: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
-      contentBase: resolve(currDirectory, 'public', platform),
+      contentBase: platform === 'Electron'
+        ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
+        : resolve(currDirectory, 'public', platform),
       stats: {
         assets: true,
         children: false,
@@ -226,9 +246,12 @@ module.exports = (env) => {
         modules: false,
         publicPath: false,
         timings: true,
-        version: true,
+        version: false,
         warnings: true,
         colors: true,
+      },
+      before(_app, server) {
+        url = `http://${server.options.host}:${server.options.port}/`;
       },
     },
     entry: {

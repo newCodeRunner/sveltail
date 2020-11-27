@@ -12,10 +12,10 @@
 }
 
 .ripple:active:after {
-  top: calc(50% - 5px);
-  left: calc(50% - 5px);
-  width: 10px;
-  height: 10px;
+  top: calc(50% - 1px);
+  left: calc(50% - 1px);
+  width: 2px;
+  height: 2px;
   border-radius: 50%;
   opacity: 0.74;
   transition: 0s
