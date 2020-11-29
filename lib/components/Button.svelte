@@ -45,7 +45,8 @@
         items-center
         relative
         focus:outline-none
-        hover:opacity-90
+        transition ease-in-out
+        transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
         bg-{props.colorBg}
         text-{props.colorText}       
         {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
@@ -60,7 +61,7 @@
       aria-label={props.label ? `Button ${props.label}` : 'Action Button'}
       disabled={loading}
     >
-      <div class="ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
+      <div class="st-effect-ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
       {#if props.icon}
         <Icon icon={props.icon} class="mx-1" size={$$props.size} />
       {/if}

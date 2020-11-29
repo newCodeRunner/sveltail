@@ -36,7 +36,7 @@
 
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <div class='absolute z-10 h-screen w-screen top-0 left-0'>
+    <div class='absolute z-20 h-screen w-screen top-0 left-0'>
       <div class="fixed bg-black dark:bg-white inset-0 opacity-50" on:click={hide} />
       <aside
         in:fly="{{ x: props.right ? 200 : -200, duration: 500 }}"

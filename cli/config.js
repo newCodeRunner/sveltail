@@ -232,6 +232,7 @@ exports.default = (chalk) => {
                 
                 # Framework
                 .sveltail
+                dist/
                 src-cordova/platforms
                 src-cordova/plugins`.replace(/^ +| +$/gm, ''),
               );

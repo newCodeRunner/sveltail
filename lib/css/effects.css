@@ -1,4 +1,4 @@
-.ripple:after {
+.st-effect-ripple:after {
   content: "";
   background: inherit;
   position: absolute;
@@ -11,7 +11,7 @@
   transition: all 0.8s ease-out;
 }
 
-.ripple:active:after {
+.st-effect-ripple:active:after {
   top: calc(50% - 1px);
   left: calc(50% - 1px);
   width: 2px;

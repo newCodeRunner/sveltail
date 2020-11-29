@@ -1,6 +1,6 @@
 <script>
   import { getContext } from 'svelte';
-  import { Avatar, Banner, Button, Chip, Icon, Image } from 'sveltail';
+  import { Avatar, Banner, Button, ButtonDropdown, Chip, Icon, Image, List, Menu } from 'sveltail';
 
   const { notifier } = getContext('$$app');
   notifier.show({
@@ -9,7 +9,7 @@
   });
   notifier.show({
     title: 'Example Notification 2',
-    position: 'top-left',
+    placement: 'top-left',
   });
 </script>
 
@@ -163,6 +163,33 @@
   <Button colorBg="warning" size="lg" icon="fas fa-bars" class="mx-1" />
   <Button colorBg="danger" size="xl" iconRight="fas fa-bars" class="mx-1" />
 </div> 
+
+<br>
+<br>
+
+<h1>Button Dropdown</h1>
+<div class="inline-flex items-center">
+  <Menu
+    items={[
+      {title: 'Item 1', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+      {title: 'Item 2', icon: 'fas fa-bars', onClick() {}},
+      {title: 'Item 3', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+      {title: 'Item 4', icon: 'fas fa-bars', onClick() {}},
+    ]}
+  >
+    <Button label="Dropdown Button with Icon" colorBg="transparent" colorText="info" iconRight="fas fa-arrow-down" class="mx-1" />
+  </Menu>
+  <ButtonDropdown
+    label="Button Dropdown"
+    pill
+    items={[
+      {title: 'Item 1', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+      {title: 'Item 2', icon: 'fas fa-bars', onClick() {}},
+      {title: 'Item 3', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+      {title: 'Item 4', icon: 'fas fa-bars', onClick() {}},
+    ]}
+  />
+</div>
 
 <br>
 <br>

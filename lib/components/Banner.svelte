@@ -26,14 +26,7 @@
   <div
     bind:this={banner}
     role="alert"
-    class="
-      w-full
-      px-4
-      py-2
-      bg-{props.colorBg}
-      text-{props.color}
-      {props.class}
-    "
+    class="px-4 py-2 bg-{props.colorBg} text-{props.color} {props.class}"
   >
     <div class="flex justify-between items-center">
       <div class="flex items-center">
