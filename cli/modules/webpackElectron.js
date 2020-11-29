@@ -27,7 +27,13 @@ module.exports = (env) => {
       this.electronProcess = null;
       this.exitHandler = () => {
         console.log('\n Sveltail: Terminating development environment');
-        execSync(`taskkill -F -T -PID ${process.pid}`);
+        process.stdout.pause();
+        process.stderr.pause();
+        if (process.platform === 'win32') {
+          execSync(`taskkill -F -T -PID ${process.pid}`);
+        } else {
+          process.kill(process.pid);
+        }
       };
       this.start = () => {
         const electronStartPath = resolve(currDirectory, '.sveltail', 'Electron', 'eM-main.js');
@@ -43,8 +49,13 @@ module.exports = (env) => {
           if (this.electronProcess) {
             console.log('\n Sveltail: Closing and Restarting Electron');
             this.electronProcess.stdout.pause();
+            this.electronProcess.stderr.pause();
             this.electronProcess.removeAllListeners('exit');
-            execSync(`taskkill -F -T -PID ${this.electronProcess.pid}`);
+            if (process.platform === 'win32') {
+              execSync(`taskkill -F -T -PID ${this.electronProcess.pid}`);
+            } else {
+              process.kill(this.electronProcess.pid);
+            }
             this.start();
           } else {
             console.log('\n Sveltail: Starting Electron');

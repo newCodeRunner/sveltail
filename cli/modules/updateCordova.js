@@ -13,14 +13,14 @@ exports.default = (chalk, currDirectory, packageJSON) => {
     cordovaPkg.version = packageJSON.version;
     cordovaPkg.description = packageJSON.description;
     writeFileSync('src-cordova/package.json', JSON.stringify(cordovaPkg, null, 2));
-    console.log(chalk.green(' Updated src-cordova/package.json'));
+    console.log(chalk.green(' Sveltail: Updated src-cordova/package.json'));
 
     const builderXML = new XML.Builder();
 
     const config = readFileSync(resolve(currDirectory, 'src-cordova/config.xml'), 'utf-8');
     let jObject = {};
     XML.parseString(config, (err, res) => {
-      if (err) console.log(chalk.red('Unable to update src-cordova/config.xml'));
+      if (err) console.log(chalk.red(' Sveltail: Unable to update src-cordova/config.xml'));
       else {
         jObject = { ...res };
         jObject.widget.$.id = packageJSON.app.id;
@@ -34,7 +34,7 @@ exports.default = (chalk, currDirectory, packageJSON) => {
 
       const configXml = builderXML.buildObject(jObject);
       writeFileSync('src-cordova/config.xml', configXml);
-      console.log(chalk.green(' Updated src-cordova/config.xml'));
+      console.log(chalk.green(' Sveltail: Updated src-cordova/config.xml'));
     });
   }
 };

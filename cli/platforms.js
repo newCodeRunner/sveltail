@@ -34,7 +34,7 @@ exports.addPlatform = (chalk, platform) => {
         packageJSON.scripts[obj.key] = obj.script;
         if (!packageJSON.scripts[obj.key]) {
           console.log(
-            chalk.yellow(` Overwriting script: ${obj.key} beacuse a script with same name already exists.`),
+            chalk.yellow(` Sveltail: Overwriting script: ${obj.key} beacuse a script with same name already exists.`),
           );
         }
       });
@@ -45,12 +45,16 @@ exports.addPlatform = (chalk, platform) => {
     // Update Cordova Project Info
     updateCordova.default(chalk, currDirectory, packageJSON);
 
-    console.log(chalk.green(' Added Cordova to the project. Please use "svelte dev --cordova --ios" to start cordova in dev mode.'));
-    console.log(' Note: Cordova CLI must be installed globally "npm install cordova -g"');
-    console.log(' Next Step: run "(cd src-cordova && npm install)"');
+    console.log(
+      chalk.green(
+        ' Sveltail: Added Cordova to the project. Please use "svelte dev --cordova --ios" to start cordova in dev mode.',
+      ),
+    );
+    console.log(chalk.grey(' Sveltail: Preparing Cordova for first time use.'));
+    execSync('(cd src-cordova && cordova prepare android ios)', { cwd: currDirectory, stdio: 'inherit' });
   } else if (platform === 'electron') {
     copySync(resolve(__dirname, '../app/src-electron'), resolve(currDirectory, 'src-electron'));
-    console.log(chalk.green(' Added Electron to the project. Please use "svelte dev --electron" to start electron in dev mode.'));
+    console.log(chalk.green(' Sveltail: Added Electron to the project. Please use "svelte dev --electron" to start electron in dev mode.'));
 
     if (packageJSON) {
       // Adding Electron related scripts
@@ -86,10 +90,9 @@ exports.addPlatform = (chalk, platform) => {
       });
 
       if (command.trim() !== '') {
-        console.log(chalk.grey(' Adding Electron dependencies to the project.'));
+        console.log(chalk.grey(' Sveltail: Adding Electron dependencies to the project.'));
         if (existsSync(resolve(currDirectory, 'package-lock.json'))) command += ' --also=dev';
         else command += ' --dev';
-        console.log(' Adding project dependencies');
         console.log(chalk.grey(command));
         execSync(command, { cwd: currDirectory, stdio: 'inherit' });
       }
@@ -107,7 +110,7 @@ exports.addPlatform = (chalk, platform) => {
         packageJSON.scripts[obj.key] = obj.script;
         if (!packageJSON.scripts[obj.key]) {
           console.log(
-            chalk.yellow(` Overwriting script: ${obj.key} beacuse a script with same name already exists.`),
+            chalk.yellow(` Sveltail: Overwriting script: ${obj.key} beacuse a script with same name already exists.`),
           );
         }
       });
@@ -218,12 +221,12 @@ exports.removePlatform = (chalk, platform) => {
       .then(({ confirm }) => {
         if (confirm) {
           rmdirSync(resolve(currDirectory, `src-${platform}`), { recursive: true });
-          console.log(chalk.green(` The ${platform} has been successfully removed from the project.\n`));
+          console.log(chalk.green(` Sveltail: The ${platform} platform has been successfully removed from the project.\n`));
         } else {
-          console.log(chalk.yellow(` The ${platform} removal was cancelled.\n`));
+          console.log(chalk.yellow(` Sveltail: The ${platform} platform removal was cancelled.\n`));
         }
       });
   } else {
-    console.log(chalk.yellow(`\n The ${platform} is not present in the project.\n`));
+    console.log(chalk.yellow(`\n Sveltail: The ${platform} is not present in the project.\n`));
   }
 };

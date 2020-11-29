@@ -67,6 +67,7 @@ module.exports = (env) => {
             productVersion: version,
             platform,
             PROD,
+            utilities: framework.utilities,
           },
         ),
       ),
@@ -139,19 +140,29 @@ module.exports = (env) => {
           setTimeout(() => {
             if (platform === 'Cordova') {
               console.log('\n Sveltail: Running Cordova');
-              const child = exec(`(cd src-cordova && cordova run ${type})`);
+              const child = exec(
+                `(cd src-cordova && cordova run ${type})`,
+                { cwd: currDirectory, stdio: 'inherit' },
+              );
               child.stdout.pipe(process.stdout);
               child.stderr.pipe(process.stderr);
             } else if (platform === 'Electron') {
               console.log('\n Sveltail: Starting electron build process');
               const electronConfigPath = resolve(__dirname, 'webpackElectron.js');
-              const child = exec(`npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`);
+              const child = exec(
+                `npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`,
+                { cwd: currDirectory, stdio: 'inherit' },
+              );
               child.stdout.pipe(process.stdout);
               child.stderr.pipe(process.stderr);
               child.on('exit', () => {
                 process.stdout.pause();
                 process.stderr.pause();
-                execSync(`taskkill -F -T -PID ${process.pid}`);
+                if (process.platform === 'win32') {
+                  execSync(`taskkill -F -T -PID ${process.pid}`);
+                } else {
+                  process.kill(process.pid);
+                }
               });
             }
           }, 1000);

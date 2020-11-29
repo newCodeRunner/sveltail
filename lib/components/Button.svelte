@@ -64,7 +64,7 @@
       {#if props.icon}
         <Icon icon={props.icon} class="mx-1" size={$$props.size} />
       {/if}
-      {#if props.label}<div class="{props.textSize}">{props.label}</div>{/if}
+      {#if props.label}<div class="{props.textSize} whitespace-nowrap">{props.label}</div>{/if}
       {#if props.iconRight}
         <Icon icon={props.iconRight} class="mx-1" size={$$props.size} />
       {/if}

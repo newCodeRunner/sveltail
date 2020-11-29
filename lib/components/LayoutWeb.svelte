@@ -42,36 +42,54 @@
     // App Ready
     let isReady = false;
     let headerHeight = 0;
+    
+    // Utilities
+    let Alerter;
+    let Notifier;
+    let Toaster;
+    let LocalStorage;
+
     onMount(() => {
       isReady = true;
 
       // Load Fonts
       import('../js/fonts');
+
+      // Load Utilities
+      const utilities = process.APP_ENV.utilities;
+      import('../js/utilities').then((module) => {
+        if (utilities.findIndex((i) => i === 'Alerter') > -1) Alerter = module.Alerter;
+        if (utilities.findIndex((i) => i === 'Notifier') > -1) Notifier = module.Notifier;
+        if (utilities.findIndex((i) => i === 'Toaster') > -1) Toaster = module.Toaster;
+        if (utilities.findIndex((i) => i === 'LocalStorage') > -1) LocalStorage = module.LocalStorage;
+      });
     });
   </script>
   
-  <section class="relative z-10">
+  <section id="st-notifier" class="relative z-10">
     <Loader on:ready={updateAppContext} />
+
+    <svelte:component this={Alerter} on:ready={updateAppContext} />
+    <svelte:component this={Notifier} on:ready={updateAppContext} />
+    <svelte:component this={Toaster} on:ready={updateAppContext} />
+    <svelte:component this={LocalStorage} on:ready={updateAppContext} />
   </section>
   
   {#if isReady}
-    <section class="{app.platform === 'Cordova' ? 'cordova' : ''} safe-area dark:bg-black dark:text-white">
+    <section class="{app.platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
       {#if props.fixedHeader}
         <header bind:clientHeight={headerHeight} class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
           <slot name="header" />
         </header>
       {/if}
-      <aside>
-        <slot name="right-drawer" />
-        <slot name="left-drawer" />
-      </aside>
-      <section class="relative z-0 w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
+      <slot name="drawer" />
+      <section class="w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
         {#if !props.fixedHeader}
           <header class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
             <slot name="header" />
           </header>
         {/if}
-        <main>
+        <main class="w-screen flex-wrap overflow-x-hidden">
           <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateAppContext}  />
         </main>
       </section>

@@ -30,7 +30,7 @@ exports.devCordova = (chalk, { mode }) => {
       const builderXML = new XML.Builder();
       const configXml = builderXML.buildObject(jObject);
       writeFileSync(configPath, configXml);
-      console.log(chalk.green(' Updated src-cordova/config.xml for Dev Environment'));
+      console.log(chalk.green(' Sveltail: Updated src-cordova/config.xml for Dev Environment'));
 
       if (entryAvail()) {
         const webpackPath = resolve(__dirname, './modules/webpack.js');

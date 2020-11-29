@@ -1,5 +1,16 @@
 <script>
-  import { Avatar, Button, Chip, Icon, Image } from 'sveltail';
+  import { getContext } from 'svelte';
+  import { Avatar, Banner, Button, Chip, Icon, Image } from 'sveltail';
+
+  const { notifier } = getContext('$$app');
+  notifier.show({
+    title: 'Example Notification',
+    placement: 'top-left',
+  });
+  notifier.show({
+    title: 'Example Notification 2',
+    position: 'top-left',
+  });
 </script>
 
 <br>
@@ -31,6 +42,12 @@
   <Avatar letter="m" class="mx-1" circle colorBg="brand" />
 </div>
 
+<br>
+<h1><strong>Banners</strong></h1>
+<Banner title="Info" />
+<Banner title="Primary Banner" message="This is a custom banner" colorBg="primary" colorText="black" icon="fas fa-bars" dismissable />
+<Banner title="Secondary Banner" colorBg="secondary" dismissable />
+<Banner title="Success Banner" message="Success Achieved!" colorBg="success" icon="fas fa-check" />
 
 <br>
 <h1><strong>Buttons</strong></h1>
