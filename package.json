@@ -1,6 +1,6 @@
 {
   "name": "sveltail",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Cross platform development from a single code base making use of Svelte, NativeScript, Electron and Cordova",
   "app": {
     "id": "app.web.sveltail",

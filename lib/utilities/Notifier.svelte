@@ -76,7 +76,7 @@
           dismiss,
           timer: persistant ? null : setTimeout(dismiss, timeout || 3000),
           position: getPosition(position),
-          isTop: position.indexOf('bottom') !== 0, 
+          isTop: getPosition(position).indexOf('bottom') !== 0, 
           badge: 1,
           actions: helpers.isArray(actions)
             ? actions.map((i, index) => {
