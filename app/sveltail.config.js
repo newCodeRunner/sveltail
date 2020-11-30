@@ -28,7 +28,9 @@ exports.default = (/* cfg */) => {
           gray: colors.gray,
         },
         extend: {
-          colors: { // Extend the colors you want to use in tailwind, by default the framework uses below, you can change or add new colors
+          // Extend the colors you want to use in tailwind.
+          // By default the framework uses below, you can change the hex values or add new colors.
+          colors: {
             brand: '#68b0ab',
             accent: '#e6b89c',
             primary: '#0496ff',

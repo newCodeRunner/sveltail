@@ -9,6 +9,7 @@
     icon: helpers.getIcon($$props.icon),
     label: helpers.isString($$props.label) ? $$props.label : null,
     pill: helpers.getBoolean($$props.pill),
+    rounded: helpers.getBoolean($$props.rounded),
     dismissable: helpers.getBoolean($$props.dismissable),
     colorBg: helpers.getColor($$props.colorBg, 'primary'),
     colorText: helpers.getColor($$props.colorText, 'white'),
@@ -17,8 +18,6 @@
   };
 
   let chip;
-  let chipHeight;
-
   const dismiss = () => {
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       if (chip) chip.remove();
@@ -33,27 +32,36 @@
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
   <div
     bind:this="{chip}"
-    bind:clientHeight="{chipHeight}"
     class="
       inline-flex
       justify-center
       items-center
       border
-      rounded
       py-2
       bg-{props.colorBg}
       text-{props.colorText}
       border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
+      {props.rounded || props.pill ? 'rounded' : ''}
       {props.pill ? 'rounded-full px-4' : 'px-2'}
       {props.class}
-      {props.textSize}
+      {props.height}
     "
   >
     {#if props.icon}<Icon icon={props.icon} class="ml-1 mr-2" size={$$props.size} />{/if}
-    {#if props.label}<div>{props.label}</div>{/if}
+    {#if props.label}<div class="{props.textSize}">{props.label}</div>{/if}
     {#if props.dismissable}
-      <div on:click={dismiss}>  
-        <Icon class="ml-4 mr-1 cursor-pointer" icon="fas fa-times-circle" fontSize={chipHeight / 3} />
+      <div
+        class="
+          ml-4
+          mr-1
+          p-0
+          cursor-pointer
+          transition ease-in-out
+          transform hover:scale-110
+        "
+        on:click={dismiss}
+      >  
+        <Icon icon="fas fa-times-circle" size={$$props.size} />
       </div>
     {/if}
   </div>

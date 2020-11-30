@@ -1,6 +1,6 @@
 <script>
   import { getContext } from 'svelte';
-  import { Avatar, Banner, Button, ButtonDropdown, Chip, Icon, Image, List, Menu } from 'sveltail';
+  import { Avatar, Banner, Button, ButtonDropdown, Chip, Icon, Image, Input, List, Menu } from 'sveltail';
 
   const { notifier } = getContext('$$app');
   notifier.show({
@@ -235,3 +235,146 @@
 
 
 <Image />
+
+<List
+  items={[
+    {title: 'Item 1', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+    {title: 'Item 2', icon: 'fas fa-bars', onClick() {}},
+    {title: 'Item 3', icon: 'fas fa-bars', description: 'List item with desctiption', onClick() {}},
+    {title: 'Item 4', icon: 'fas fa-bars', onClick() {}},
+  ]}
+/>
+
+<br>
+<h1><strong>Size Comparison of different Components</strong></h1>
+<br>
+<h1>Normal</h1>
+<br>
+<div class="inline-flex items-center">
+  <Button label="Button" size="xs" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip size="xs" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input class="mx-1" size="xs" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button label="Button" size="sm" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip size="sm" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input class="mx-1" size="sm" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button label="Button" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input class="mx-1" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button label="Button" size="lg" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip size="lg" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input class="mx-1" size="lg" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button label="Button" size="xl" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip size="xl" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input class="mx-1" size="xl" label="Input" />
+</div>
+
+<br>
+<br>
+
+<h1>Rounded</h1>
+<br>
+
+<div class="inline-flex items-center">
+  <Button rounded label="Button" size="xs" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip rounded size="xs" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input rounded class="mx-1" size="xs" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button rounded label="Button" size="sm" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip rounded size="sm" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input rounded class="mx-1" size="sm" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button rounded label="Button" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip rounded label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input rounded class="mx-1" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button rounded label="Button" size="lg" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip rounded size="lg" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input rounded class="mx-1" size="lg" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button rounded label="Button" size="xl" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip rounded size="xl" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input rounded class="mx-1" size="xl" label="Input" />
+</div>
+
+<br>
+<br>
+
+<h1>Pills</h1>
+<br>
+
+<div class="inline-flex items-center">
+  <Button pill label="Button" size="xs" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip pill size="xs" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input pill class="mx-1" size="xs" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button pill label="Button" size="sm" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip pill size="sm" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input pill class="mx-1" size="sm" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button pill label="Button" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip pill label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input pill class="mx-1" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button pill label="Button" size="lg" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip pill size="lg" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input pill class="mx-1" size="lg" label="Input" />
+</div>
+
+<br>
+<br>
+<div class="inline-flex items-center">
+  <Button pill label="Button" size="xl" icon="fas fa-bars" iconRight="fas fa-times" class="mx-1" />
+  <Chip pill size="xl" label="Chip" icon="fab fa-youtube" dismissable class="mx-1" />
+  <Input pill class="mx-1" size="xl" label="Input" />
+</div>
+
+<br>
+<br>

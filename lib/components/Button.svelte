@@ -44,7 +44,6 @@
         justify-center
         items-center
         relative
-        focus:outline-none
         transition ease-in-out
         transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
         bg-{props.colorBg}

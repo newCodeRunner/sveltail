@@ -23,24 +23,24 @@
   };
 </script>
 
-  <div
-    bind:this={banner}
-    role="alert"
-    class="px-4 py-2 bg-{props.colorBg} text-{props.color} {props.class}"
-  >
-    <div class="flex justify-between items-center">
-      <div class="flex items-center">
-        {#if props.icon}<Icon icon={props.icon} size="md" class="ml-1 mr-4" />{/if}
-        <div>
-          {#if props.title}<p class="font-bold">{props.title}</p>{/if}
-          {#if props.message}<p>{props.message}</p>{/if}
-          <slot />
-        </div>
+<div
+  bind:this={banner}
+  role="alert"
+  class="px-4 py-2 bg-{props.colorBg} text-{props.color} {props.class}"
+>
+  <div class="flex justify-between items-center">
+    <div class="flex items-center">
+      {#if props.icon}<Icon icon={props.icon} size="md" class="ml-1 mr-4" />{/if}
+      <div>
+        {#if props.title}<p class="font-bold">{props.title}</p>{/if}
+        {#if props.message}<p>{props.message}</p>{/if}
+        <slot />
       </div>
-      {#if props.dismissable}
-        <div on:click={dismiss}>  
-          <Icon class="ml-4 mr-1 cursor-pointer" icon="fas fa-times-circle" size="sm" />
-        </div>
-      {/if}
     </div>
+    {#if props.dismissable}
+      <div on:click={dismiss}>  
+        <Icon class="ml-4 mr-1 cursor-pointer" icon="fas fa-times-circle" size="sm" />
+      </div>
+    {/if}
   </div>
+</div>

@@ -89,7 +89,7 @@
             <slot name="header" />
           </header>
         {/if}
-        <main class="w-screen flex-wrap overflow-x-hidden">
+        <main class="w-full flex-wrap overflow-x-hidden">
           <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateAppContext}  />
         </main>
       </section>
