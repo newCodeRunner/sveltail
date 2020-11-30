@@ -192,6 +192,26 @@
 </div>
 
 <br>
+<h1><strong>Chips</strong></h1>
+<br>
+
+<Chip size="xs" label="Primary Chip" />
+<Chip size="xs" label="Secondary Chip" pill colorBg="secondary" class="mx-1" />
+<Chip size="xs" label="Info Chip" class="mx-1" icon="fas fa-search" />
+<Chip size="xs" label="Success Chip" pill colorBg="success" class="mx-1" icon="fas fa-bars" />
+<Chip size="xs" label="Danger Chip" colorBg="danger" class="mx-1" icon="fas fa-download" dismissable />
+
+<br>
+<br>
+
+<h1>Sizes</h1>
+<Chip size="xs" label="Primary Chip" icon="fab fa-youtube" />
+<Chip size="sm" label="Secondary Chip" pill colorBg="secondary" class="mx-1" icon="fas fa-bars" />
+<Chip label="Info Chip" class="mx-1" icon="fas fa-search" />
+<Chip size="lg" label="Success Chip" pill colorBg="success" class="mx-1" icon="fas fa-bars" dismissable />
+<Chip size="xl" label="Danger Chip" colorBg="danger" class="mx-1" icon="fas fa-download" dismissable />
+
+<br>
 <br>
 
 <h1><strong>FontAwesome Support out of the box!</strong></h1>
@@ -214,27 +234,39 @@
 <Icon icon="fas fa-bars" fontSize="100" class="text-warning" />
 
 <br>
-<h1><strong>Chips</strong></h1>
+<h1><strong>Inputs</strong></h1>
 <br>
-
-<Chip size="xs" label="Primary Chip" />
-<Chip size="xs" label="Secondary Chip" pill colorBg="secondary" class="mx-1" />
-<Chip size="xs" label="Info Chip" class="mx-1" icon="fas fa-search" />
-<Chip size="xs" label="Success Chip" pill colorBg="success" class="mx-1" icon="fas fa-bars" />
-<Chip size="xs" label="Danger Chip" colorBg="danger" class="mx-1" icon="fas fa-download" dismissable />
-
-<br>
-<br>
-
 <h1>Sizes</h1>
-<Chip size="xs" label="Primary Chip" icon="fab fa-youtube" />
-<Chip size="sm" label="Secondary Chip" pill colorBg="secondary" class="mx-1" icon="fas fa-bars" />
-<Chip label="Info Chip" class="mx-1" icon="fas fa-search" />
-<Chip size="lg" label="Success Chip" pill colorBg="success" class="mx-1" icon="fas fa-bars" dismissable />
-<Chip size="xl" label="Danger Chip" colorBg="danger" class="mx-1" icon="fas fa-download" dismissable />
+<Input label="Extra Small" size="xs" />
+<br>
+<br>
+<Input label="Small" size="sm" />
+<br>
+<br>
+<Input label="Medium" />
+<br>
+<br>
+<Input label="Large" size="lg" />
+<br>
+<br>
+<Input label="Extra Large" size="xl" />
+<br>
+<br>
+
+<h1>Colors</h1>
+<Input label="Medium" colorText="primary" colorBg="transparent" />
+<br>
+<br>
+<Input label="Medium" colorText="white" colorBg="info" />
+<br>
+<br>
+<Input label="Medium" colorText="danger" colorBg="transparent" />
+<br>
+<br>
 
 
-<Image />
+<br>
+<br>
 
 <List
   items={[
