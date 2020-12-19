@@ -28,10 +28,13 @@
     height: helpers.getHeight($$props.size, 'md'),
     width: helpers.getWidth($$props.size, 'md'),
     textSize: helpers.getTextSize($$props.size, 'md'),
+    clearable: helpers.getBoolean($$props.clearable),
 
     validate: helpers.isFunction($$props.validate) ? $$props.validate : null,
     autoValidate: helpers.getBoolean($$props.autoValidate),
     type: getType($$props.type),
+    hideHint: helpers.getBoolean($$props.hideHint),
+    iconWidth: helpers.getTextWidth($$props.size, 'md'),
     
     // Validation Options
     required: helpers.getBoolean($$props.required),
@@ -44,7 +47,7 @@
   let input = null;
   let value = null;
   const validate = () => {
-    const cleanedStr = escape((value));
+    const cleanedStr = escape((value ? value : ''));
 
     let errMsg = null;
     if (props.validate) {
@@ -52,28 +55,29 @@
       if (helpers.isString(result)) errMsg = result;
     }
 
+    if (props.required) errMsg = !isEmpty(cleanedStr) && cleanedStr.trim() !== '' ? null : 'This is Required';
+
     if (props.autoValidate) {
-      if (props.required) error = !isEmpty(cleanedStr) ? null : 'This is Required';
       if (props.type === 'number') {
-          error = isNumeric(cleanedStr, { no_symbols: true }) ? null : 'Only numbers are allowed';
-          const { min, max } = props;
-          if (min) error = Number(cleanedStr) >= Number(min) ? null : `Must be greater than or equal to ${min}`;
-          if (max) error = Number(cleanedStr) <= Number(max) ? null : `Must be less than or equal to ${max}`;
-        } else if (type === 'tel') error = isNumeric(cleanedStr) ? null : 'Invalid Number';
-        else if (type === 'email') error = isEmail(cleanedStr) ? null : 'Invalid Email';
-        else if (type === 'date') error = isDate(cleanedStr) ? null : 'Invalid Date';
-        else if (type === 'text' || type === 'password') {
-          const { min, max } = props;
-          if (min || max) {
-            error = isLength(cleanedStr, { min: min ? min : 0, max: max ? max : undefined })
-              ? null
-              : min && max
-                ? `Must be between ${min} and ${max} Characters`
-                : min
-                  ? `Must be at least ${min} Characters`
-                  : `Must be less than ${max} Characters`;
-          }
+        error = isNumeric(cleanedStr, { no_symbols: true }) ? null : 'Only numbers are allowed';
+        const { min, max } = props;
+        if (min) error = Number(cleanedStr) >= Number(min) ? null : `Must be greater than or equal to ${min}`;
+        if (max) error = Number(cleanedStr) <= Number(max) ? null : `Must be less than or equal to ${max}`;
+      } else if (type === 'tel') error = isNumeric(cleanedStr) ? null : 'Invalid Number';
+      else if (type === 'email') error = isEmail(cleanedStr) ? null : 'Invalid Email';
+      else if (type === 'date') error = isDate(cleanedStr) ? null : 'Invalid Date';
+      else if (type === 'text' || type === 'password') {
+        const { min, max } = props;
+        if (min || max) {
+          error = isLength(cleanedStr, { min: min ? min : 0, max: max ? max : undefined })
+            ? null
+            : min && max
+              ? `Must be between ${min} and ${max} Characters`
+              : min
+                ? `Must be at least ${min} Characters`
+                : `Must be less than ${max} Characters`;
         }
+      }
     }
 
     if (errMsg) error = errMsg;
@@ -82,9 +86,16 @@
   const focusInput = () => {
     if (input) input.focus();
   };
-  const onChange = () => {
-    dispatch('change');
+  const onChange = (val) => {
+    dispatch('change', val);
   };
+  const clearAll = () => {
+    value = null
+  };
+
+  console.log(props.iconWidth);
+
+  $: onChange(value);
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
@@ -92,68 +103,96 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <div
-    class="
-      relative
-      inline-flex
-      justify-center
-      items-center
-      border
-      pt-2
-      cursor-text
-      {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
-      {error ? 'border-3 border-danger' : ''}
-      bg-{props.colorBg}
-      border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
-      {props.rounded || props.pill ? 'rounded' : ''}
-      {props.pill ? 'rounded-full' : ''}
-      {props.pill && $$props.size === 'xs' ? 'px-3' : 'px-2'}
-      {props.pill && $$props.size === 'sm' ? 'px-4' : 'px-2'}
-      {props.pill && ($$props.size === 'md' || !$$props.size) ? 'px-5' : 'px-2'}
-      {props.pill && $$props.size === 'lg' ? 'px-6' : 'px-2'}
-      {props.pill && $$props.size === 'xl' ? 'px-8' : 'px-2'}
-      {props.class}
-      {props.height}
-    "
-    on:click={focusInput}
-  >
-      {#if props.icon}<Icon icon={props.icon} class="mx-1" size={$$props.size} />{/if}
-      {#if props.label}
-        <label
-          class="
-            cursor-text
-            absolute
-            whitespace-nowrap
-            bg-transparent
-            {props.pill && $$props.size === 'xs' ? 'px-3' : 'px-2'}
-            {props.pill && $$props.size === 'sm' ? 'px-4' : 'px-2'}
-            {props.pill && ($$props.size === 'md' || !$$props.size) ? 'px-5' : 'px-2'}
-            {props.pill && $$props.size === 'lg' ? 'px-6' : 'px-2'}
-            {props.pill && $$props.size === 'xl' ? 'px-8' : 'px-2'}
-            text-{props.colorText}
-            {isFocused || value ? `top-0 left-0 text-${$$props.size} leading-none` : `left-0 -mt-2 ${props.textSize}`}
-          "
-          for=""
-        >
-          {props.label}
-        </label>
-      {/if}
-      <input
-        bind:this={input}
-        bind:value={value}
-        style={props.colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-        class="focus:outline-none bg-{props.colorBg === 'transparent' ? '' : props.colorBg} text-{props.colorText} {props.textSize}"
-        tabindex="0"
-        on:blur={() => {
-          validate(); isFocused = false;
-        }}
-        on:focus={() => {
-          isFocused = true;
-        }}
-        on:change={onChange}
-      />
-      {#if props.iconRight}<Icon icon={props.iconRight} class="mx-1" size={$$props.size} />{/if}
-      {#if error}<span class="text-danger -mt-2" title="This is the error"><Icon icon="fas fa-info-circle" size={$$props.size} /></span>{/if}
+  <div>
+    <div
+      class="
+        inline-flex
+        items-center
+        border
+        cursor-text
+        {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
+        {error ? 'border-3 border-danger' : ''}
+        bg-{props.colorBg}
+        border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
+        {props.rounded || props.pill ? 'rounded' : ''}
+        {props.pill ? 'rounded-full' : 'px-2'}
+        {props.pill && $$props.size === 'xs' ? 'px-3' : ''}
+        {props.pill && $$props.size === 'sm' ? 'px-4' : ''}
+        {props.pill && ($$props.size === 'md' || !$$props.size) ? 'px-5' : ''}
+        {props.pill && $$props.size === 'lg' ? 'px-6' : ''}
+        {props.pill && $$props.size === 'xl' ? 'px-8' : ''}
+        {props.class}
+        {props.height}
+      "
+      on:click={focusInput}
+    >
+        {#if props.icon}<Icon icon={props.icon} class="mx-1" size={$$props.size} />{/if}
+        <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : props.height}">
+          {#if props.label}
+            <label
+              class="
+                cursor-text
+                absolute
+                whitespace-nowrap
+                bg-transparent
+                left-0
+                text-{props.colorText}
+                {isFocused || value ? `top-0 text-${$$props.size} leading-none` : props.textSize}
+              "
+              for=""
+            >
+              {props.label}
+            </label>
+          {/if}
+        </div>
+        <input
+          bind:this={input}
+          bind:value={value}
+          style={props.colorBg === 'transparent' ? 'background-color: inherit;' : ''}
+          class="mt-2 flex-grow focus:outline-none bg-{props.colorBg === 'transparent' ? '' : props.colorBg} text-{props.colorText} {props.textSize}"
+          tabindex="0"
+          on:blur={() => {
+            validate();
+            isFocused = false;
+          }}
+          on:focus={() => {
+            isFocused = true;
+          }}
+          on:change={onChange}
+        />
+        <div class="flex justify-end {props.iconWidth}">
+          {#if error}
+            <Icon icon="fas fa-info-circle" size={$$props.size} class="text-danger" />
+          {/if}
+        </div>
+        {#if props.clearable}
+          <div class="mx-1 cursor-pointer transition ease-in-out transform hover:scale-110" on:click={clearAll}>  
+            <Icon icon="fas fa-times-circle" class="text-{props.colorText}" size={$$props.size} />
+          </div>
+        {/if}
+        {#if props.iconRight}
+          <Icon icon={props.iconRight} class="text-{props.colorText}" size={$$props.size} />
+        {/if}
+    </div>
+    {#if !props.hideHint}
+      <div
+        class="
+          select-none
+          h-auto
+          pb-1
+          {props.textSize}
+          {error ? 'text-danger' : 'text-white dark:text-black'}
+          {props.pill ? '' : 'px-2'}
+          {props.pill && $$props.size === 'xs' ? 'px-3' : ''}
+          {props.pill && $$props.size === 'sm' ? 'px-4' : ''}
+          {props.pill && ($$props.size === 'md' || !$$props.size) ? 'px-5' : ''}
+          {props.pill && $$props.size === 'lg' ? 'px-6' : ''}
+          {props.pill && $$props.size === 'xl' ? 'px-8' : ''}
+        "
+      >
+        {error || '|'}
+      </div>
+    {/if}
   </div>
 {/if}
   

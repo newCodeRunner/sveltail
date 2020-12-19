@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { app, BrowserWindow } from 'electron';
+import setupUserPreferences from './modules/userPreferences';
 
 let mainWindow = null;
 
@@ -22,6 +23,9 @@ const createWindow = () => {
       preload: './eR-main.js',
     },
   });
+
+  // Sets up window size, position and state
+  setupUserPreferences(mainWindow);
 
   mainWindow.on('close', () => {
     mainWindow = null;
