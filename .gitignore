@@ -5,9 +5,9 @@
 
 # Log files
 *debug.log
-*npm-debug.log*
-*yarn-debug.log*
-*yarn-error.log*
+*npm-debug.log
+*yarn-debug.log
+*yarn-error.log
 
 # Editor directories and files
 .idea
@@ -17,4 +17,4 @@
 *.sln
 
 # Package Install Files
-*package-lock.json*
+*package-lock.json

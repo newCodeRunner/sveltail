@@ -36,12 +36,12 @@
 
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <div class='absolute z-20 h-screen w-screen top-0 left-0'>
+    <div class='absolute z-20 h-screen w-screen top-0 left-0 cordova safe-area'>
       <div class="fixed bg-black dark:bg-white inset-0 opacity-50" on:click={hide} />
       <aside
         in:fly="{{ x: props.right ? 200 : -200, duration: 200 }}"
         out:fly="{{ x: props.right ? 200 : -200, duration: 150 }}"
-        class="fixed w-80 h-full bg-white text-black dark:bg-black dark:text-white {props.right ? 'right-0' : ''}"
+        class="fixed safe-area-top w-80 h-full bg-white text-black dark:bg-black dark:text-white {props.right ? 'right-0' : ''}"
       >
         <div class="h-full w-full p-5 {props.class}">
           Hello World

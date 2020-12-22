@@ -37,22 +37,23 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <div>
+  <span>
     <button
       class="
         flex
         justify-center
         items-center
         relative
+        focus:none
         transition ease-in-out
         transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
         bg-{props.colorBg}
-        text-{props.colorText}       
+        text-{props.colorText}   
         {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
         {props.rounded || props.pill ? 'rounded' : ''}
         {props.pill || props.circle ? 'rounded-full' : ''}
         {props.pill ? 'p-4' : 'p-2'}
-        {props.circle ? props.width : ''}
+        {props.circle || !props.label ? props.width : ''}
         {props.height}
         {props.class}
       "
@@ -69,5 +70,5 @@
         <Icon icon={props.iconRight} class="mx-1" size={$$props.size} />
       {/if}
     </button>
-  </div>
+  </span>
 {/if}

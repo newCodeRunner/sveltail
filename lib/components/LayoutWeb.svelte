@@ -106,12 +106,12 @@
 
     @import "../css/effects.css";
   
-    .cordova.safe-area {
+    :global(.cordova.safe-area) {
       padding-right: env(safe-area-inset-right, 20px);
       padding-bottom: env(safe-area-inset-bottom, 20px);
       padding-left: env(safe-area-inset-left, 20px);
     }
-    .cordova .safe-area-top {
+    :global(.cordova .safe-area-top) {
       padding-top: env(safe-area-inset-top, 20px);
     }
 
