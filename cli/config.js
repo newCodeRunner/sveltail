@@ -214,14 +214,14 @@ exports.default = (chalk) => {
                 `# Common
                 *.DS_Store
                 *.thumbs.db
-                *node_modules*
-
+                node_modules
+                
                 # Log files
                 *debug.log
                 *npm-debug.log
                 *yarn-debug.log
                 *yarn-error.log
-
+                
                 # Editor directories and files
                 .idea
                 *.suo
@@ -234,7 +234,8 @@ exports.default = (chalk) => {
                 .sveltail
                 dist/
                 src-cordova/platforms
-                src-cordova/plugins`.replace(/^ +| +$/gm, ''),
+                src-cordova/plugins
+                src-cordova/node_modules`.replace(/^ +| +$/gm, ''),
               );
             }
 

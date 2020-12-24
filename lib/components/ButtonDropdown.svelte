@@ -8,6 +8,7 @@
   const dispatch = createEventDispatcher();
   const buttonProps = $$props;
   const { items } = $$props;
+  let menuEL;
 
   delete buttonProps.items;
   const onClick = () => {
@@ -15,7 +16,7 @@
   };
 </script>
 
-<Menu items={items}>
+<Menu bind:this={menuEL} items={items}>
   <Button
     {...buttonProps}
     on:click={onClick}

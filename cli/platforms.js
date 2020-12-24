@@ -15,6 +15,8 @@ if (existsSync(resolve(currDirectory, 'package.json'))) {
   packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
 }
 
+if (!packageJSON.devDependencies) packageJSON.devDependencies = {};
+
 exports.addPlatform = (chalk, platform) => {
   console.log('\n');
   if (platform === 'cordova') {
@@ -50,7 +52,7 @@ exports.addPlatform = (chalk, platform) => {
         ' Sveltail: Added Cordova to the project. Please use "svelte dev --cordova --ios" to start cordova in dev mode.',
       ),
     );
-    console.log(chalk.grey(' Sveltail: Preparing Cordova for first time use.'));
+    console.log(chalk.green(' Sveltail: Preparing Cordova for first time use.'));
     execSync('(cd src-cordova && cordova prepare android ios)', { cwd: currDirectory, stdio: 'inherit' });
   } else if (platform === 'electron') {
     copySync(resolve(__dirname, '../app/src-electron'), resolve(currDirectory, 'src-electron'));
@@ -76,7 +78,7 @@ exports.addPlatform = (chalk, platform) => {
       writeFileSync(resolve(currDirectory, 'package.json'), JSON.stringify(packageJSON, null, 2));
 
       // Add project dependencies and devDependencies
-      const devDeps = ['electron', 'electron-builder'];
+      const devDeps = ['electron', 'electron-builder', 'electron-store'];
 
       let command = '';
       devDeps.forEach((dep) => {

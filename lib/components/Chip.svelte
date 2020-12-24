@@ -37,7 +37,6 @@
       justify-center
       items-center
       border
-      py-2
       bg-{props.colorBg}
       text-{props.colorText}
       border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
@@ -47,22 +46,15 @@
       {props.height}
     "
   >
-    {#if props.icon}<Icon icon={props.icon} class="ml-1 mr-2" size={$$props.size} />{/if}
-    {#if props.label}<div class="{props.textSize}">{props.label}</div>{/if}
+    {#if props.icon}<Icon icon={props.icon} size={$$props.size} />{/if}
+    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.label}</div>{/if}
     {#if props.dismissable}
-      <div
-        class="
-          ml-4
-          mr-1
-          p-0
-          cursor-pointer
-          transition ease-in-out
-          transform hover:scale-110
-        "
+      <Icon
+        class="cursor-pointer transition ease-in-out transform hover:scale-110"
+        icon="fas fa-times-circle"
+        size={$$props.size}
         on:click={dismiss}
-      >  
-        <Icon icon="fas fa-times-circle" size={$$props.size} />
-      </div>
+      />
     {/if}
   </div>
 {/if}

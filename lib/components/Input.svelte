@@ -34,7 +34,6 @@
     autoValidate: helpers.getBoolean($$props.autoValidate),
     type: getType($$props.type),
     hideHint: helpers.getBoolean($$props.hideHint),
-    iconWidth: helpers.getTextWidth($$props.size, 'md'),
     
     // Validation Options
     required: helpers.getBoolean($$props.required),
@@ -93,8 +92,6 @@
     value = null
   };
 
-  console.log(props.iconWidth);
-
   $: onChange(value);
 </script>
 
@@ -126,53 +123,53 @@
       "
       on:click={focusInput}
     >
-        {#if props.icon}<Icon icon={props.icon} class="mx-1" size={$$props.size} />{/if}
-        <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : props.height}">
-          {#if props.label}
-            <label
-              class="
-                cursor-text
-                absolute
-                whitespace-nowrap
-                bg-transparent
-                left-0
-                text-{props.colorText}
-                {isFocused || value ? `top-0 text-${$$props.size} leading-none` : props.textSize}
-              "
-              for=""
-            >
-              {props.label}
-            </label>
-          {/if}
-        </div>
-        <input
-          bind:this={input}
-          bind:value={value}
-          style={props.colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-          class="mt-2 flex-grow focus:outline-none bg-{props.colorBg === 'transparent' ? '' : props.colorBg} text-{props.colorText} {props.textSize}"
-          tabindex="0"
-          on:blur={() => {
-            validate();
-            isFocused = false;
-          }}
-          on:focus={() => {
-            isFocused = true;
-          }}
-          on:change={onChange}
-        />
-        <div class="flex justify-end {props.iconWidth}">
-          {#if error}
-            <Icon icon="fas fa-info-circle" size={$$props.size} class="text-danger" />
-          {/if}
-        </div>
-        {#if props.clearable}
-          <div class="mx-1 cursor-pointer transition ease-in-out transform hover:scale-110" on:click={clearAll}>  
-            <Icon icon="fas fa-times-circle" class="text-{props.colorText}" size={$$props.size} />
-          </div>
+      {#if props.icon}<Icon icon={props.icon} class="mx-1" size={$$props.size} />{/if}
+      <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : props.height}">
+        {#if props.label}
+          <label
+            class="
+              cursor-text
+              absolute
+              whitespace-nowrap
+              bg-transparent
+              left-0
+              text-{props.colorText}
+              {isFocused || value ? `top-0 text-${$$props.size} leading-none` : props.textSize}
+            "
+            for=""
+          >
+            {props.label}
+          </label>
         {/if}
-        {#if props.iconRight}
-          <Icon icon={props.iconRight} class="text-{props.colorText}" size={$$props.size} />
+      </div>
+      <input
+        bind:this={input}
+        bind:value={value}
+        style={props.colorBg === 'transparent' ? 'background-color: inherit;' : ''}
+        class="mt-2 flex-grow focus:outline-none bg-{props.colorBg === 'transparent' ? '' : props.colorBg} text-{props.colorText} {props.textSize}"
+        tabindex="0"
+        on:blur={() => {
+          validate();
+          isFocused = false;
+        }}
+        on:focus={() => {
+          isFocused = true;
+        }}
+        on:change={onChange}
+      />
+      <div class="flex justify-end {props.width}">
+        {#if error}
+          <Icon icon="fas fa-info-circle" size={$$props.size} class="text-danger" />
         {/if}
+      </div>
+      {#if props.clearable}
+        <div class="mx-1 cursor-pointer transition ease-in-out transform hover:scale-110" on:click={clearAll}>  
+          <Icon icon="fas fa-times-circle" class="text-{props.colorText}" size={$$props.size} />
+        </div>
+      {/if}
+      {#if props.iconRight}
+        <Icon icon={props.iconRight} class="text-{props.colorText}" size={$$props.size} />
+      {/if}
     </div>
     {#if !props.hideHint}
       <div

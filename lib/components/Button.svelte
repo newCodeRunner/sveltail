@@ -23,6 +23,10 @@
   const onClick = () => {
     dispatch('click');
   };
+  const onBlur = () => {
+    dispatch('blur');
+  };
+  
   export let loading = false;
 </script>
 
@@ -37,38 +41,38 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <span>
-    <button
-      class="
-        flex
-        justify-center
-        items-center
-        relative
-        focus:none
-        transition ease-in-out
-        transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
-        bg-{props.colorBg}
-        text-{props.colorText}   
-        {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
-        {props.rounded || props.pill ? 'rounded' : ''}
-        {props.pill || props.circle ? 'rounded-full' : ''}
-        {props.pill ? 'p-4' : 'p-2'}
-        {props.circle || !props.label ? props.width : ''}
-        {props.height}
-        {props.class}
-      "
-      on:click={onClick}
-      aria-label={props.label ? `Button ${props.label}` : 'Action Button'}
-      disabled={loading}
-    >
-      <div class="st-effect-ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
-      {#if props.icon}
-        <Icon icon={props.icon} class="mx-1" size={$$props.size} />
-      {/if}
-      {#if props.label}<div class="{props.textSize} whitespace-nowrap">{props.label}</div>{/if}
-      {#if props.iconRight}
-        <Icon icon={props.iconRight} class="mx-1" size={$$props.size} />
-      {/if}
-    </button>
-  </span>
+  <button
+    class="
+      flex
+      justify-center
+      items-center
+      relative
+      focus:outline-none
+      focus:none
+      transition ease-in-out
+      transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
+      transform focus:bg-{props.colorText} focus:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:focus:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
+      bg-{props.colorBg}
+      text-{props.colorText}   
+      {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
+      {props.rounded || props.pill ? 'rounded' : ''}
+      {props.pill || props.circle ? 'rounded-full' : ''}
+      {props.pill ? 'px-4' : 'px-2'}
+      {props.circle || !props.label ? props.width : ''}
+      {props.height}
+      {props.class}
+    "
+    on:click={onClick}
+    aria-label={props.label ? `Button ${props.label}` : 'Action Button'}
+    disabled={loading}
+  >
+    <div class="st-effect-ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
+    {#if props.icon}
+      <Icon icon={props.icon} size={$$props.size} />
+    {/if}
+    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.label}</div>{/if}
+    {#if props.iconRight}
+      <Icon icon={props.iconRight} size={$$props.size} />
+    {/if}
+  </button>
 {/if}

@@ -1,7 +1,8 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getContext, createEventDispatcher } from 'svelte';
 
   // Globals
+  const dispatch = createEventDispatcher();
   const { helpers } = getContext('$$app');
   const props = {
     icon: helpers.isString($$props.icon) ? helpers.getIcon($$props.icon) : null,
@@ -9,6 +10,9 @@
     fontSize: helpers.getFontSize($$props.size, 'md'), 
   };
   if ($$props.fontSize) props.fontSize = $$props.fontSize;
+  const onClick = () => {
+    dispatch('click');
+  };
 </script>
 
 {#if props.icon}
@@ -17,6 +21,6 @@
   {/if}
 
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <i class="{props.class} {props.icon}" style="font-size: {props.fontSize}px;" />
+    <i class="{props.class} {props.icon}" style="font-size: {props.fontSize}px;" on:click={onClick} />
   {/if}
 {/if}
