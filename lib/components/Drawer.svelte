@@ -44,7 +44,7 @@
         class="fixed safe-area-top w-80 h-full bg-white text-black dark:bg-black dark:text-white {props.right ? 'right-0' : ''}"
       >
         <div class="h-full w-full p-5 {props.class}">
-          Hello World
+          <slot />
         </div>
       </aside>
     </div>

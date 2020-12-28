@@ -1,7 +1,8 @@
+/* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 // eslint-disable-next-line object-curly-newline
-const { readFileSync, writeFileSync, existsSync, mkdirSync } = require('fs');
+const { readFileSync, writeFileSync, existsSync, mkdirSync, watchFile } = require('fs');
 const { resolve } = require('path');
 const { exec, execSync } = require('child_process');
 
@@ -13,19 +14,49 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
+const postcss = require('postcss');
 
+// Find current working directory
 const currDirectory = process.cwd();
+
+// Load values from package.json
 const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
 const { app, description, version } = packageJSON;
 
+// Load values from sveltail.config.js
 const svelteConfig = require(resolve(currDirectory, 'sveltail.config.js'));
 const { tailwindcss, pwa, framework } = svelteConfig.default();
-if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
-writeFileSync(
-  resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
-  `module.exports = ${JSON.stringify(tailwindcss, null, 2)}`,
-);
+
+// Create an inital tailwind.config.js file based on user values
+const updateTailwindConfig = (css) => {
+  if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
+  writeFileSync(
+    resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
+    `module.exports = ${JSON.stringify(css, null, 2)}`,
+  );
+};
+updateTailwindConfig(tailwindcss);
 const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
+
+// Plugin to watch changes in Tailwind Config
+const postcssPlugin = postcss.plugin('postcss-assets', () => (css, result) => {
+  result.messages.push({
+    type: 'dependency',
+    file: resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
+  });
+});
+
+// Update Tailwind Config on changes in sveltail.config.js
+watchFile(resolve(currDirectory, 'sveltail.config.js'), () => {
+  const requireUncached = (module) => {
+    delete require.cache[require.resolve(module)];
+    return require(module);
+  };
+
+  const configJS = requireUncached(resolve(currDirectory, 'sveltail.config.js'));
+  const config = configJS.default();
+  updateTailwindConfig(config.tailwindcss);
+});
 
 module.exports = (env) => {
   let url = 'index.html';
@@ -204,6 +235,7 @@ module.exports = (env) => {
                 [
                   tailwind,
                   autoprefixer,
+                  postcssPlugin(),
                 ],
               ],
             },

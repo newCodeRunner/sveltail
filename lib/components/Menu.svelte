@@ -20,18 +20,6 @@
   export const hide = () => {
     visible = false;
   };
-
-  const onOutsideClick = () => {
-
-  };
-
-  onMount(() => {
-    document.removeEventListener('click', onOutsideClick);
-  });
-
-  onDestroy(() => {
-    document.removeEventListener('click', onOutsideClick);
-  });
 </script>
 
 <div class="relative focus:outline-none" on:blur={hide} tabindex="0">

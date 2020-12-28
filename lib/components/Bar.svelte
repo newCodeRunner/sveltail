@@ -57,7 +57,7 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  <nav class="z-20 w-full flex items-center py-2 {props.class} {props.dense ? 'h-12' : 'h-16'}">
+  <nav class="z-20 w-full flex items-center p-2 {props.class} {props.dense ? 'h-12' : 'h-16'}">
     <div class="flex items-center justify-start">
       <!-- Left Menu -->
       {#if props.leftMenu}
