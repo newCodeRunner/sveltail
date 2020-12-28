@@ -1,8 +1,10 @@
 /* eslint-disable global-require */
 /* eslint-disable no-console */
+// eslint-disable-next-line object-curly-newline
+const { existsSync, readFileSync, mkdirSync, writeFileSync } = require('fs');
 const { resolve, dirname } = require('path');
-const { existsSync, readFileSync, mkdirSync } = require('fs');
 const sharp = require('sharp');
+const { createICO, createICNS } = require('png2icons');
 
 const makeDirectory = (dir) => {
   const directory = dirname(dir);
@@ -409,6 +411,48 @@ exports.default = (chalk, arg) => {
           });
         });
       }
+    }
+
+    if (existsSync(resolve(currDirectory, 'src-electron'))) {
+      const outputPath = resolve(currDirectory, 'public/Electron/icons', 'icon.png');
+      makeDirectory(outputPath);
+
+      // PNG File
+      sharp(buffer)
+        .resize(512, 512)
+        .toFormat('png')
+        .toFile(outputPath, (err) => {
+          if (!err) console.log(`Saved image at ${outputPath}`);
+          else throw new Error(err);
+        });
+
+      // ICO File
+      const icoPath = outputPath.replace('.png', '.ico');
+      sharp(buffer)
+        .resize(256, 256)
+        .toBuffer((err, resized) => {
+          if (!err) {
+            const converted = createICO(resized, 0, 0);
+            if (converted) {
+              writeFileSync(icoPath, converted);
+              console.log(`Saved image at ${icoPath}`);
+            }
+          } else throw new Error(err);
+        });
+
+      // ICNS File
+      const icnsPath = outputPath.replace('.png', '.icns');
+      sharp(buffer)
+        .resize(256, 256)
+        .toBuffer((err, resized) => {
+          if (!err) {
+            const converted = createICNS(resized, 0, 0);
+            if (converted) {
+              writeFileSync(icnsPath, converted);
+              console.log(`Saved image at ${icnsPath}`);
+            }
+          } else throw new Error(err);
+        });
     }
   } else {
     throw new Error('Invalid logo path: Please define a valid logo path with --logo argument. Eg. "--logo ./logo.png"');
