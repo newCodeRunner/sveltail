@@ -2,11 +2,13 @@
   import { createEventDispatcher, getContext,  } from "svelte";
 
   const dispatch = createEventDispatcher();
-  const { helpers } = getContext('$$app');
-  const props = {
-    class: helpers.isString($$props.class) ? $$props.class : '',
-    right: helpers.getBoolean($$props.right),
-  };
+  const { getString, getBoolean } = getContext('$$app').helpers;
+
+  let _class, _right;
+
+  $:  _class = getString($$props.class);
+  $:  _right = getBoolean($$props.right);
+
   const emitEvent = (vis) => {
     if (vis) dispatch('show'); 
     else dispatch('hide');
@@ -17,7 +19,6 @@
 
   export const show = () => {
     visible = true;
-    dispatch('show');
   };
   export const hide = () => {
     visible = false;
@@ -39,11 +40,11 @@
     <div class='absolute z-20 h-screen w-screen top-0 left-0 cordova safe-area'>
       <div class="fixed bg-black dark:bg-white inset-0 opacity-50" on:click={hide} />
       <aside
-        in:fly="{{ x: props.right ? 200 : -200, duration: 200 }}"
-        out:fly="{{ x: props.right ? 200 : -200, duration: 150 }}"
-        class="fixed safe-area-top w-80 h-full bg-white text-black dark:bg-black dark:text-white {props.right ? 'right-0' : ''}"
+        in:fly="{{ x: _right ? 200 : -200, duration: 200 }}"
+        out:fly="{{ x: _right ? 200 : -200, duration: 150 }}"
+        class="fixed safe-area-top w-80 h-full bg-white text-black dark:bg-black dark:text-white {_right ? 'right-0' : ''}"
       >
-        <div class="h-full w-full p-5 {props.class}">
+        <div class="h-full w-full p-5 {_class}">
           <slot />
         </div>
       </aside>

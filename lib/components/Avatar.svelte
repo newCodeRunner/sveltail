@@ -4,19 +4,21 @@
   import Image from './Image.svelte';
 
   // Globals
-  const { helpers } = getContext('$$app');
-  const props = {
-    class: helpers.isString($$props.class) ? $$props.class : '',
-    icon: helpers.getIcon($$props.icon),
-    img: helpers.isString($$props.img) ? $$props.img : null,
-    letter: helpers.isString($$props.letter) ? String($$props.letter).toUpperCase().substr(0, 1) : null,
-    circle: helpers.getBoolean($$props.circle),
-    colorBg: helpers.getColor($$props.colorBg, 'primary'),
-    colorText: helpers.getColor($$props.colorText, 'white'),
-    height: helpers.getHeight($$props.size, 'md'),
-    width: helpers.getWidth($$props.size, 'md'),
-    fontSize: helpers.getFontSize($$props.size, 'md'), 
-  };
+  const { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getFontSize, isString } = getContext('$$app').helpers;
+  
+  let _class, _letter, _icon, _fontSize, _circle, _img, _colorBg, _colorText, _height, _width, _size;
+
+  $: _size = getString($$props.size, 'md');
+  $: _class = getString($$props.class);
+  $: _icon = getIcon($$props.icon);
+  $: _img = getString($$props.img, null);
+  $: _letter = isString($$props.letter) ? String($$props.letter).toUpperCase().substr(0, 1) : null;
+  $: _circle = getBoolean($$props.circle);
+  $: _colorBg = getColor($$props.colorBg, 'primary');
+  $: _colorText = getColor($$props.colorText, 'white');
+  $: _height = getHeight($$props.size, 'md');
+  $: _width = getWidth($$props.size, 'md');
+  $: _fontSize = getFontSize($$props.size, 'md');
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
@@ -30,21 +32,21 @@
         justify-center
         items-center
         border
-        bg-{props.colorBg}
-        text-{props.colorText}
-        border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
-        {props.circle ? 'rounded-full' : ''}
-        {props.height} 
-        {props.width}
-        {props.class}
+        bg-{_colorBg}
+        text-{_colorText}
+        border-{_colorBg === 'transparent' ? _colorText : _colorBg}
+        {_circle ? 'rounded-full' : ''}
+        {_height} 
+        {_width}
+        {_class}
       "
     >
-      {#if props.icon}
-        <Icon icon={props.icon} size={$$props.size} />
-      {:else if props.img}
-        <Image img={props.img} />
-      {:else if props.letter}
-        <span style="font-size: {props.fontSize}px;">{props.letter}</span>
+      {#if _icon}
+        <Icon icon={_icon} size={_size} />
+      {:else if _img}
+        <Image img={_img} />
+      {:else if _letter}
+        <span style="font-size: {_fontSize}px;">{_letter}</span>
       {/if}
     </div>
 {/if}

@@ -4,23 +4,26 @@
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { helpers } = getContext('$$app');
-  const props = {
-    class: helpers.isString($$props.class) ? $$props.class : '',
-    label: helpers.isString($$props.label) ? $$props.label : null,
-    icon: helpers.getIcon($$props.icon),
-    iconRight: helpers.getIcon($$props.iconRight),
-    flat: helpers.getBoolean($$props.flat),
-    circle: helpers.getBoolean($$props.circle),
-    rounded: helpers.getBoolean($$props.rounded),
-    caps: helpers.getBoolean($$props.caps),
-    pill: helpers.getBoolean($$props.pill),
-    colorBg: helpers.getColor($$props.colorBg, 'primary'),
-    colorText: helpers.getColor($$props.colorText, 'white'),
-    height: helpers.getHeight($$props.size, 'md'),
-    width: helpers.getWidth($$props.size, 'md'),
-    textSize: helpers.getTextSize($$props.size, 'md'),
-  };
+  const { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getTextSize } = getContext('$$app').helpers;
+
+  let _class, _label, _icon, _iconRight, _flat, _circle, _rounded, _caps, _pill, _colorBg, _colorText, _height, _width, _textSize, _size;
+
+  $: _size = getString($$props.size, 'md');
+  $: _class = getString($$props.class);
+  $: _label = getString($$props.label, null);
+  $: _icon = getIcon($$props.icon);
+  $: _iconRight = getIcon($$props.iconRight);
+  $: _flat = getBoolean($$props.flat);
+  $: _circle = getBoolean($$props.circle);
+  $: _rounded = getBoolean($$props.rounded);
+  $: _caps = getBoolean($$props.caps);
+  $: _pill = getBoolean($$props.pill);
+  $: _colorBg = getColor($$props.colorBg, 'primary');
+  $: _colorText = getColor($$props.colorText, 'white');
+  $: _height = getHeight($$props.size, 'md');
+  $: _width = getWidth($$props.size, 'md');
+  $: _textSize = getTextSize($$props.size, 'md');
+
   const onClick = () => {
     dispatch('click');
   };
@@ -32,11 +35,11 @@
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
-  <button backgroundColor={props.colorBg} on:tap={onClick} >
-    <formattedString color={props.colorText}>
-      {#if props.icon}<Icon icon={props.icon.text} class={props.icon.class} />{/if}
-      {#if props.label}<span text={props.label} />{/if}
-      {#if props.iconRight}<Icon icon={props.iconRight.text} class={props.iconRight.class} />{/if}
+  <button backgroundColor={_colorBg} on:tap={onClick} >
+    <formattedString color={_colorText}>
+      {#if _icon}<Icon icon={_icon.text} class={_icon.class} />{/if}
+      {#if _label}<span text={_label} />{/if}
+      {#if _iconRight}<Icon icon={_iconRight.text} class={_iconRight.class} />{/if}
     </formattedString>
   </button>
 {/if}
@@ -50,30 +53,31 @@
       relative
       focus:outline-none
       focus:none
-      transition ease-in-out
-      transform hover:bg-{props.colorText} hover:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:hover:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
-      transform focus:bg-{props.colorText} focus:text-{props.colorBg === 'transparent' ? 'black' : props.colorBg} dark:focus:text-{props.colorBg === 'transparent' ? 'white' : props.colorBg}
-      bg-{props.colorBg}
-      text-{props.colorText}   
-      {props.flat ? '' : `border border-${props.colorBg === 'transparent' ? props.colorText : props.colorBg}`}
-      {props.rounded || props.pill ? 'rounded' : ''}
-      {props.pill || props.circle ? 'rounded-full' : ''}
-      {props.pill ? 'px-4' : 'px-2'}
-      {props.circle || !props.label ? props.width : ''}
-      {props.height}
-      {props.class}
+      transition
+        ease-in-out
+      transform
+        hover:bg-{_colorText} hover:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
+        dark:hover:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
+      transform
+        focus:bg-{_colorText} focus:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
+        dark:focus:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
+      bg-{_colorBg}
+      text-{_colorText}   
+      {_flat ? '' : `border border-${_colorBg === 'transparent' ? _colorText : _colorBg}`}
+      {_rounded || _pill ? 'rounded' : ''}
+      {_pill || _circle ? 'rounded-full' : ''}
+      {_pill ? 'px-4' : 'px-2'}
+      {_circle || !_label ? _width : ''}
+      {_height}
+      {_class}
     "
     on:click={onClick}
-    aria-label={props.label ? `Button ${props.label}` : 'Action Button'}
+    aria-label={_label ? `Button ${_label}` : 'Action Button'}
     disabled={loading}
   >
-    <div class="st-effect-ripple bg-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}" />
-    {#if props.icon}
-      <Icon icon={props.icon} size={$$props.size} />
-    {/if}
-    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.caps ? props.label.toUpperCase() : props.label}</div>{/if}
-    {#if props.iconRight}
-      <Icon icon={props.iconRight} size={$$props.size} />
-    {/if}
+    <div class="st-effect-ripple bg-{_colorBg === 'transparent' ? _colorText : _colorBg}" />
+    {#if _icon}<Icon icon={_icon} size={_size} />{/if}
+    {#if _label}<div class="{_textSize} mx-2 whitespace-nowrap">{_caps ? _label.toUpperCase() : _label}</div>{/if}
+    {#if _iconRight}<Icon icon={_iconRight} size={_size} />{/if}
   </button>
 {/if}

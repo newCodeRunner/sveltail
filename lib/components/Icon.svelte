@@ -3,24 +3,26 @@
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { helpers } = getContext('$$app');
-  const props = {
-    icon: helpers.isString($$props.icon) ? helpers.getIcon($$props.icon) : null,
-    class: helpers.isString($$props.class) ? $$props.class : '',
-    fontSize: helpers.getFontSize($$props.size, 'md'), 
-  };
+  const { getString, getFontSize } = getContext('$$app').helpers;
+
+  let _class, _icon, _fontSize;
+
+  $:  _icon = getString($$props.icon, null);
+  $:  _class = getString($$props.class);
+  $:  _fontSize = getFontSize($$props.size, 'md');
+
   if ($$props.fontSize) props.fontSize = $$props.fontSize;
   const onClick = () => {
     dispatch('click');
   };
 </script>
 
-{#if props.icon}
+{#if _icon}
   {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
-    <span text={String.fromCharCode(props.icon.text)} class="{props.class} {props.icon.class}" />
+    <span text={String.fromCharCode(_icon.text)} class="{_class} {_icon.class}" />
   {/if}
 
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <i class="{props.class} {props.icon}" style="font-size: {props.fontSize}px;" on:click={onClick} />
+    <i class="{_class} {_icon}" style="font-size: {_fontSize}px;" on:click={onClick} />
   {/if}
 {/if}

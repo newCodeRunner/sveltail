@@ -2,19 +2,19 @@
   import { getContext } from 'svelte';
 
   // Global
-  const { helpers } = getContext('$$app');
-  const props = {
-    img: helpers.isString($$props.img) ? $$props.img : null,
-    class: helpers.isString($$props.class) ? $$props.class : '',
-  };
+  const { getString } = getContext('$$app').helpers;
+  let _img, _class;
+
+  $: _img = getString($$props.img, null);
+  $: _class = getString($$props.class);
 </script>
 
-{#if props.img}
+{#if _img}
   {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
-    <image src="res://{props.img}" class={props.class} />
+    <image class={_class} src="res://{_img}" />
   {/if}
 
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <img class={props.class} src={props.img} alt="">
+    <img class={_class} src={_img} alt="">
   {/if}
 {/if}

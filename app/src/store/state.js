@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { writable } from 'svelte/store';
+import { writable, readable } from 'svelte/store';
 
-export const writeableGlobal = writable(null);
+export const writableGlobal = writable(null);
+export const readableGlobal = readable(null);

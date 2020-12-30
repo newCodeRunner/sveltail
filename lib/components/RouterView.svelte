@@ -4,7 +4,8 @@
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { loader } = getContext('$$app');
+  const { loader, helpers } = getContext('$$app');
+
   let Route = null;
   let currPath = null;
   let ready = false;
@@ -16,7 +17,7 @@
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(async () => {
-          const result = await $$props.onBefore();
+          const result = await helpers.isFunction($$props.onBefore) ? $$props.onBefore() : true;
           if (result) next();
           else loader.hide();
         });
@@ -24,7 +25,7 @@
     }
 
     if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
-      const result = await $$props.onBefore();
+      const result = await helpers.isFunction($$props.onBefore) ? $$props.onBefore() : true;
       if (result) next();
       else loader.hide();
     }
@@ -42,7 +43,7 @@
   };
 
   const afterRouteUpdate = () => {
-    $$props.onAfter();
+    helpers.isFunction($$props.onAfter) ? $$props.onAfter() : true;;
   };
 
   const navigateTo = (path) => {

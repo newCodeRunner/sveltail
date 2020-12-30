@@ -3,19 +3,21 @@
   import Icon from './Icon.svelte';
 
   // Globals
-  const { helpers } = getContext('$$app');
-  const props = {
-    class: helpers.isString($$props.class) ? $$props.class : '',
-    icon: helpers.getIcon($$props.icon),
-    label: helpers.isString($$props.label) ? $$props.label : null,
-    pill: helpers.getBoolean($$props.pill),
-    rounded: helpers.getBoolean($$props.rounded),
-    dismissable: helpers.getBoolean($$props.dismissable),
-    colorBg: helpers.getColor($$props.colorBg, 'primary'),
-    colorText: helpers.getColor($$props.colorText, 'white'),
-    height: helpers.getHeight($$props.size, 'md'),
-    textSize: helpers.getTextSize($$props.size, 'md'),
-  };
+  const { getString, getIcon, getBoolean, getColor, getHeight, getTextSize } = getContext('$$app').helpers;
+
+  let _size, _class, _icon, _label, _pill, _rounded, _dismissable, _colorBg, _colorText, _height, _textSize;
+
+  $: _size = getString($$props.size, 'md');
+  $: _class = getString($$props.class);
+  $: _icon = getIcon($$props.icon);
+  $: _label = getString($$props.label, null);
+  $: _pill = getBoolean($$props.pill);
+  $: _rounded = getBoolean($$props.rounded);
+  $: _dismissable = getBoolean($$props.dismissable);
+  $: _colorBg = getColor($$props.colorBg, 'primary');
+  $: _colorText = getColor($$props.colorText, 'white');
+  $: _height = getHeight($$props.size, 'md');
+  $: _textSize = getTextSize($$props.size, 'md');
 
   let chip;
   const dismiss = () => {
@@ -37,22 +39,22 @@
       justify-center
       items-center
       border
-      bg-{props.colorBg}
-      text-{props.colorText}
-      border-{props.colorBg === 'transparent' ? props.colorText : props.colorBg}
-      {props.rounded || props.pill ? 'rounded' : ''}
-      {props.pill ? 'rounded-full px-4' : 'px-2'}
-      {props.class}
-      {props.height}
+      bg-{_colorBg}
+      text-{_colorText}
+      border-{_colorBg === 'transparent' ? _colorText : _colorBg}
+      {_rounded || _pill ? 'rounded' : ''}
+      {_pill ? 'rounded-full px-4' : 'px-2'}
+      {_class}
+      {_height}
     "
   >
-    {#if props.icon}<Icon icon={props.icon} size={$$props.size} />{/if}
-    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.label}</div>{/if}
-    {#if props.dismissable}
+    {#if _icon}<Icon icon={_icon} size={_size} />{/if}
+    {#if _label}<div class="{_textSize} mx-2 whitespace-nowrap">{_label}</div>{/if}
+    {#if _dismissable}
       <Icon
         class="cursor-pointer transition ease-in-out transform hover:scale-110"
         icon="fas fa-times-circle"
-        size={$$props.size}
+        size={_size}
         on:click={dismiss}
       />
     {/if}

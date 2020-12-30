@@ -33,10 +33,10 @@
     $: setContext('$$app', app);
 
     // Globals
-    const props = {
-      fixedHeader: app.helpers.getBoolean($$props.fixedHeader), 
-    };
-  
+    let _fixedHeader;
+
+    $: _fixedHeader = app.helpers.getBoolean($$props.fixedHeader);
+    
     // App Ready
     let isReady = false;
     let headerHeight = 0;
@@ -75,14 +75,14 @@
   
   {#if isReady}
     <section class="{app.platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
-      {#if props.fixedHeader}
+      {#if _fixedHeader}
         <header bind:clientHeight={headerHeight} class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
           <slot name="header" />
         </header>
       {/if}
       <slot name="drawer" />
       <section class="w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
-        {#if !props.fixedHeader}
+        {#if !_fixedHeader}
           <header class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
             <slot name="header" />
           </header>
