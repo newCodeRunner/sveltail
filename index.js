@@ -13,3 +13,4 @@ export { default as LayoutWeb } from './lib/components/LayoutWeb.svelte';
 export { default as LayoutNative } from './lib/components/LayoutNative.svelte';
 export { default as List } from './lib/components/List.svelte';
 export { default as Menu } from './lib/components/Menu.svelte';
+export { default as RouterView } from './lib/components/RouterView.svelte';

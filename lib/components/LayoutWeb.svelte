@@ -3,13 +3,8 @@
     import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
   
     import languages from '~/src/i18n/index';
-    import hooks from '~/src/router/hooks';
-    import routes from '~/src/router/routes';
-
     import helpers from '../js/helpers';
-  
     import Loader from './Loader.svelte';
-    import RouterView from './RouterView.svelte';
   
     // i18n
     languages.forEach((lang) => {
@@ -88,7 +83,7 @@
           </header>
         {/if}
         <main class="w-full flex-wrap overflow-x-hidden">
-          <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateAppContext}  />
+          <slot />
         </main>
       </section>
       <footer>

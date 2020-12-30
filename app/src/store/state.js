@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-import { writable, readable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
-export const writableGlobal = writable(null);
-export const readableGlobal = readable(null);
+export const router = writable(null);
