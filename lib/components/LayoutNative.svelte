@@ -4,7 +4,6 @@
   import languages from '~/src/i18n/index';
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
-  import state from '~/src/store/state';
 
   import helpers from '../js/helpers';
 
@@ -13,7 +12,6 @@
 
   // Include Store and Utilities
   let app = {
-    state,
     languages,
     helpers: helpers(),
   };

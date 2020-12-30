@@ -13,6 +13,7 @@
     flat: helpers.getBoolean($$props.flat),
     circle: helpers.getBoolean($$props.circle),
     rounded: helpers.getBoolean($$props.rounded),
+    caps: helpers.getBoolean($$props.caps),
     pill: helpers.getBoolean($$props.pill),
     colorBg: helpers.getColor($$props.colorBg, 'primary'),
     colorText: helpers.getColor($$props.colorText, 'white'),
@@ -70,7 +71,7 @@
     {#if props.icon}
       <Icon icon={props.icon} size={$$props.size} />
     {/if}
-    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.label}</div>{/if}
+    {#if props.label}<div class="{props.textSize} mx-2 whitespace-nowrap">{props.caps ? props.label.toUpperCase() : props.label}</div>{/if}
     {#if props.iconRight}
       <Icon icon={props.iconRight} size={$$props.size} />
     {/if}
