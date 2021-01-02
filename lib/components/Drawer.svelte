@@ -1,8 +1,8 @@
 <script>
-  import { createEventDispatcher, getContext,  } from "svelte";
+  import { createEventDispatcher  } from "svelte";
+  import { getString, getBoolean } from '../js/helpers';
 
   const dispatch = createEventDispatcher();
-  const { getString, getBoolean } = getContext('$$app').helpers;
 
   let _class, _right;
 

@@ -1,11 +1,9 @@
 <script>
-  import { Button } from 'sveltail';
-  import { getContext } from 'svelte';
+  import { Button, router } from 'sveltail';
 
-  const { router } = getContext('$$app');
   const message = 'Error 404: Not Found';
   const gotoHomePage = () => {
-    router.navigateTo('/');
+    $router.navigateTo('/');
   };
 </script>
 

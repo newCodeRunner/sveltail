@@ -1,12 +1,14 @@
 <script>
-  import { createEventDispatcher, getContext, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
-  import Icon from '../components/Icon.svelte';
-  import Button from '../components/Button.svelte';
+  import Icon from './Icon.svelte';
+  import Button from './Button.svelte';
+
+  import { setAlerter } from '../js/utilities';
+  import { getString, getIcon, getBoolean } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { helpers } = getContext('$$app');
 
   let props = null;
   let msg;
@@ -26,14 +28,14 @@
       const html = document.querySelector('html');
       html.classList.add('overflow-hidden');
       props = {
-        title: helpers.isString(title) ? title : null,
-        message: helpers.isString(message) ? message : null,
-        icon: helpers.getIcon(icon),
-        hideBar: helpers.getBoolean(hideBar),
-        barColorBg: helpers.getColor(barColorBg, 'primary'),
-        barColorText: helpers.getColor(barColorText, 'white'),
-        persistant: helpers.getBoolean(persistant),
-        actions: helpers.isArray(actions)
+        title: getString(title, null),
+        message: getString(message, null),
+        icon: getIcon(icon),
+        hideBar: getBoolean(hideBar),
+        barColorBg: getColor(barColorBg, 'primary'),
+        barColorText: getColor(barColorText, 'white'),
+        persistant: getBoolean(persistant),
+        actions: isArray(actions)
           ? actions.map((i, index) => {
               return { 
                 id: index,
@@ -43,7 +45,7 @@
                 colorBg: i.colorBg,
                 colorText: i.colorText,
                 onClick() {
-                  if (helpers.isFunction(i.onClick)) result = i.onClick();
+                  if (isFunction(i.onClick)) result = i.onClick();
                   dismiss();  
                 }, 
               };
@@ -55,24 +57,18 @@
             colorBg: 'primary',
             onClick: dismiss,
           }],
-        actionsClass: helpers.isString(actionsClass) ? actionsClass : 'justify-end',
+        actionsClass: isString(actionsClass) ? actionsClass : 'justify-end',
       };
     };
     confirm = () => {
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
-
-
     };
   }
 
-  onMount(() => {
-    dispatch('ready', {
-      alerter: {
-        msg,
-        confirm,
-      },
-    });
+  $setAlerter({
+    msg,
+    confirm,
   });
 </script>
 

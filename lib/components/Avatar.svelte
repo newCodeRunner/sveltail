@@ -1,10 +1,9 @@
 <script>
-  import { getContext } from 'svelte';
   import Icon from './Icon.svelte';
   import Image from './Image.svelte';
 
   // Globals
-  const { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getFontSize, isString } = getContext('$$app').helpers;
+  import { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getFontSize, isString } from '../js/helpers';
   
   let _class, _letter, _icon, _fontSize, _circle, _img, _colorBg, _colorText, _height, _width, _size;
 
@@ -26,28 +25,28 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <div
-      class="
-        flex
-        justify-center
-        items-center
-        border
-        bg-{_colorBg}
-        text-{_colorText}
-        border-{_colorBg === 'transparent' ? _colorText : _colorBg}
-        {_circle ? 'rounded-full' : ''}
-        {_height} 
-        {_width}
-        {_class}
-      "
-    >
-      {#if _icon}
-        <Icon icon={_icon} size={_size} />
-      {:else if _img}
-        <Image img={_img} />
-      {:else if _letter}
-        <span style="font-size: {_fontSize}px;">{_letter}</span>
-      {/if}
-    </div>
+  <div
+    class="
+      flex
+      justify-center
+      items-center
+      border
+      bg-{_colorBg}
+      text-{_colorText}
+      border-{_colorBg === 'transparent' ? _colorText : _colorBg}
+      {_circle ? 'rounded-full' : ''}
+      {_height} 
+      {_width}
+      {_class}
+    "
+  >
+    {#if _icon}
+      <Icon icon={_icon} size={_size} />
+    {:else if _img}
+      <Image img={_img} />
+    {:else if _letter}
+      <span style="font-size: {_fontSize}px;">{_letter}</span>
+    {/if}
+  </div>
 {/if}
   

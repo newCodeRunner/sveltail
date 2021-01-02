@@ -1,16 +1,19 @@
 <script>
-  import { getContext, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import Icon from './Icon.svelte';
+
+  import { getString, getArray, isFunction, getIcon, getBoolean } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { getString, getArray, isFunction } = getContext('$$app').helpers;
 
-  let _class, _items;
+  let _class, _items, _activeClass;
 
   $: _class = getString($$props.class);
+  $: _activeClass = getString($$props.activeClass, 'text-primary disabled');
   $: _items = getArray($$props.items).map((i, index) => ({ 
     id: index,
+    active: getBoolean(i.active),
     title: getString(i.title, null),
     description: getString(i.description, null),
     icon: getIcon(i.icon),
@@ -18,7 +21,7 @@
       if (isFunction(i.onClick)) i.onClick();
       dispatch('itemClicked');
     },
-    cursor: isFunction(i.onClick),
+    cursor: getBoolean(i.active) ? false : isFunction(i.onClick),
   }));
 </script>
 
@@ -30,7 +33,7 @@
     >
       {#if item.cursor}<div class="st-effect-ripple bg-gray-300 dark:bg-gray-700" />{/if}
       {#if item.icon}<Icon icon={item.icon} size="md" class="ml-1 mr-4" />{/if}
-      <div class="ml-4">
+      <div class="ml-4 {item.active ? _activeClass : ''}">
         {#if item.title}<p class="text-base font-medium">{item.title}</p>{/if}
         {#if item.description}<p class="mt-1 text-sm">{item.description}</p>{/if}
       </div>

@@ -1,10 +1,12 @@
 <script>
-    import { setContext, onMount } from 'svelte';
+    import { onMount } from 'svelte';
     import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
-  
+
     import languages from '~/src/i18n/index';
-    import helpers from '../js/helpers';
+    import Image from './Image.svelte';
     import Loader from './Loader.svelte';
+
+    import { getBoolean } from '../js/helpers';
   
     // i18n
     languages.forEach((lang) => {
@@ -14,83 +16,50 @@
       fallbackLocale: 'en',
       initialLocale: getLocaleFromNavigator(),
     });
-  
-    // Include Store and Utilities
-    let app = {
-      mode: JSON.parse(process.env.PROD) ? 'prod' : 'dev',
-      platform: process.env.platform,
-      languages,
-      helpers: helpers(),
-    };
-    const updateAppContext = ({ detail }) => {
-      app = Object.assign(app, detail);
-    };
-    $: setContext('$$app', app);
 
     // Globals
+    const platform = process.env.platform;
     let _fixedHeader;
-
-    $: _fixedHeader = app.helpers.getBoolean($$props.fixedHeader);
+    $: _fixedHeader = getBoolean($$props.fixedHeader);
     
-    // App Ready
-    let isReady = false;
     let headerHeight = 0;
-    
-    // Utilities
-    let Alerter;
-    let Notifier;
-    let Toaster;
-    let LocalStorage;
 
+    // Load Fonts
     onMount(() => {
-      isReady = true;
-
-      // Load Fonts
       import('../js/fonts');
-
-      // Load Utilities
-      const utilities = process.APP_ENV.utilities;
-      import('../js/utilities').then((module) => {
-        if (utilities.findIndex((i) => i === 'Alerter') > -1) Alerter = module.Alerter;
-        if (utilities.findIndex((i) => i === 'Notifier') > -1) Notifier = module.Notifier;
-        if (utilities.findIndex((i) => i === 'Toaster') > -1) Toaster = module.Toaster;
-        if (utilities.findIndex((i) => i === 'LocalStorage') > -1) LocalStorage = module.LocalStorage;
-      });
     });
   </script>
   
   <section id="st-notifier" class="relative z-10">
-    <Loader on:ready={updateAppContext} />
-
-    <svelte:component this={Alerter} on:ready={updateAppContext} />
-    <svelte:component this={Notifier} on:ready={updateAppContext} />
-    <svelte:component this={Toaster} on:ready={updateAppContext} />
-    <svelte:component this={LocalStorage} on:ready={updateAppContext} />
+    <Loader>
+      <slot name="loader">
+        <Image class='mx-auto h-16 w-16 animate-bounce bg-loader' img="assets/logo.png" />
+      </slot>
+    </Loader>
+    <slot name="utilities" />
   </section>
   
-  {#if isReady}
-    <section class="{app.platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
-      {#if _fixedHeader}
-        <header bind:clientHeight={headerHeight} class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
+  <section class="{platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
+    {#if _fixedHeader}
+      <header bind:clientHeight={headerHeight} class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
+        <slot name="header" />
+      </header>
+    {/if}
+    <slot name="drawer" />
+    <section class="w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
+      {#if !_fixedHeader}
+        <header class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
           <slot name="header" />
         </header>
       {/if}
-      <slot name="drawer" />
-      <section class="w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
-        {#if !_fixedHeader}
-          <header class="{app.platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
-            <slot name="header" />
-          </header>
-        {/if}
-        <main class="w-full flex-wrap overflow-x-hidden">
-          <slot />
-        </main>
-      </section>
-      <footer>
-        <slot name="footer" />
-      </footer>
+      <main class="w-full flex-wrap overflow-x-hidden">
+        <slot />
+      </main>
     </section>
-  {/if}
+    <footer>
+      <slot name="footer" />
+    </footer>
+  </section>
   
   <style>
     @import "tailwindcss/base";

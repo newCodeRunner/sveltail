@@ -1,8 +1,7 @@
 <script>
-  import { getContext } from 'svelte';
+  import { getString } from '../js/helpers';
 
   // Global
-  const { getString } = getContext('$$app').helpers;
   let _img, _class;
 
   $: _img = getString($$props.img, null);

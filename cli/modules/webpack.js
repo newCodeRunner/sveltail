@@ -98,7 +98,6 @@ module.exports = (env) => {
             productVersion: version,
             platform,
             PROD,
-            utilities: framework.utilities,
           },
         ),
       ),

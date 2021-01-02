@@ -1,3 +1,6 @@
+/* eslint-disable object-curly-newline */
+
+// Components
 export { default as Avatar } from './lib/components/Avatar.svelte';
 export { default as Banner } from './lib/components/Banner.svelte';
 export { default as Bar } from './lib/components/Bar.svelte';
@@ -14,3 +17,10 @@ export { default as LayoutNative } from './lib/components/LayoutNative.svelte';
 export { default as List } from './lib/components/List.svelte';
 export { default as Menu } from './lib/components/Menu.svelte';
 export { default as RouterView } from './lib/components/RouterView.svelte';
+export { default as Tabs } from './lib/components/Tabs.svelte';
+
+// Utilities
+export { default as helpers } from './lib/js/helpers';
+export { router, alerter, notifier, localStorage } from './lib/js/utilities';
+export { default as Alerter } from './lib/components/Alerter.svelte';
+export { default as Notifier } from './lib/components/Notifier.svelte';

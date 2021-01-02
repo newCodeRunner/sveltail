@@ -1,10 +1,11 @@
 <script>
-  import { createEventDispatcher, getContext } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import Icon from './Icon.svelte';
+
+  import { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getTextSize } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getTextSize } = getContext('$$app').helpers;
 
   let _class, _label, _icon, _iconRight, _flat, _circle, _rounded, _caps, _pill, _colorBg, _colorText, _height, _width, _textSize, _size;
 
@@ -24,8 +25,9 @@
   $: _width = getWidth($$props.size, 'md');
   $: _textSize = getTextSize($$props.size, 'md');
 
-  const onClick = () => {
+  const onClick = (evt) => {
     dispatch('click');
+    evt.target.blur();
   };
   const onBlur = () => {
     dispatch('blur');

@@ -1,9 +1,9 @@
 <script>
-  import { getContext, createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
+  import { getString, getFontSize } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { getString, getFontSize } = getContext('$$app').helpers;
 
   let _class, _icon, _fontSize;
 

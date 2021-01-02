@@ -109,12 +109,6 @@ exports.default = (/* cfg */) => {
       APP_ENV: {
 
       },
-      utilities: [
-        'LocalStorage',
-        'Alerter',
-        'Notifier',
-        'Toaster',
-      ],
     },
   };
 };

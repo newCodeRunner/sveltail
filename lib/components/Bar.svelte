@@ -1,11 +1,12 @@
 <script>
-    import { createEventDispatcher, getContext } from 'svelte';
+    import { createEventDispatcher } from 'svelte';
     import Button from './Button.svelte';
     import Image from './Image.svelte';
 
+    import { getString, getBoolean, getColor } from '../js/helpers';
+
     // Globals
     const dispatch = createEventDispatcher();
-    const { getString, getBoolean, getColor } = getContext('$$app').helpers;
 
     $: _class = getString($$props.class, 'bg-brand text-white');
     $: _img = getString($$props.img, null);

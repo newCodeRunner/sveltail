@@ -1,9 +1,6 @@
 <script>
-  import { Button } from 'sveltail';
-  import { getContext } from 'svelte';
+  import { Button, router } from 'sveltail';
   import Examples from '../components/Examples.svelte';
-
-  const { router } = getContext('$$app');
 
   const message = 'Welcome to Sveltail';
   const gotoErrorPage = () => {

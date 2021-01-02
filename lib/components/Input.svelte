@@ -1,12 +1,13 @@
 <script>
-  import { createEventDispatcher, getContext } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { escape, isEmpty, isNumeric, isEmail, isDate, isLength } from 'validator';
 
+  import { getString, getIcon, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize } from '../js/helpers';
+  
   import Icon from './Icon.svelte';
 
   // Globals
   const dispatch = createEventDispatcher();
-  const { getString, getIcon, getBoolean, getNumber, getHeight, getWidth, getTextSize } = getContext('$$app').helpers;
   const getType = (typ) => {
     const supportedTypes = ['text', 'number', 'tel', 'email', 'password'];
 
@@ -193,4 +194,3 @@
     {/if}
   </div>
 {/if}
-  

@@ -1,10 +1,9 @@
 <script>
-  import { getContext } from 'svelte';
   import Icon from './Icon.svelte';
 
-  // Globals
-  const { getString, getIcon, getBoolean, getColor, getHeight, getTextSize } = getContext('$$app').helpers;
+  import { getString, getIcon, getBoolean, getColor, getHeight, getTextSize } from '../js/helpers';
 
+  // Globals
   let _size, _class, _icon, _label, _pill, _rounded, _dismissable, _colorBg, _colorText, _height, _textSize;
 
   $: _size = getString($$props.size, 'md');

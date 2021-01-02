@@ -1,14 +1,22 @@
 <script>
-  import { createEventDispatcher, onMount, getContext } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
+
   import Icon from '../components/Icon.svelte';
   import Button from '../components/Button.svelte';
 
+  import { setNotifier } from '../js/utilities';
+  import { getString, getIcon, getBoolean, isFunction, isNull } from '../js/helpers';
+
+
   // Globals
   const dispatch = createEventDispatcher();
-  const { helpers } = getContext('$$app');
   let notifications = [];
   let show;
+
+  const clearAll = () => {
+    notifications = [];
+  };
 
   // Native
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
@@ -54,16 +62,16 @@
     };
 
     show = ({ title, message, icon, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass }) => {
-      const newTitle = helpers.isString(title) ? title : null;
-      const newMessage = helpers.isString(message) ? message : null;
-      const newIcon = helpers.getIcon(icon);
+      const newTitle = getString(title, null);
+      const newMessage = getString(message, null);
+      const newIcon = getIcon(icon);
 
       const foundIndex = notifications.findIndex((i) => i.title === newTitle && i.message === newMessage && i.icon === newIcon);
       if (foundIndex < 0) {
         const id = `notify-${new Date().getTime() + notifications.length}`;
         const dismiss = () => {
           notifications = [...notifications.filter((i) => i.id !== id)];
-          if (helpers.isFunction(onDismiss)) onDismiss();
+          if (isFunction(onDismiss)) onDismiss();
         };
         
         notifications = [...notifications, {
@@ -72,13 +80,13 @@
           title: newTitle,
           message: newMessage,
           icon: newIcon,
-          dismissable: helpers.getBoolean(dismissable),
+          dismissable: getBoolean(dismissable),
           dismiss,
           timer: persistant ? null : setTimeout(dismiss, timeout || 3000),
           position: getPosition(position),
           isTop: getPosition(position).indexOf('bottom') !== 0, 
           badge: 1,
-          actions: helpers.isArray(actions)
+          actions: isArray(actions)
             ? actions.map((i, index) => {
                 return { 
                   id: index,
@@ -89,15 +97,15 @@
                   colorText: i.colorText,
                   onClick() {
                     let result = true;
-                    if (helpers.isFunction(i.onClick)) result = i.onClick();
-                    if (helpers.isNull(result) || helpers.isUndefined(result)) result = true;
+                    if (isFunction(i.onClick)) result = i.onClick();
+                    if (isNull(result) || isUndefined(result)) result = true;
                     if (result) dismiss();  
                   }, 
                 };
               }
             )
             : [],
-          actionsClass: helpers.isString(actionsClass) ? actionsClass : 'justify-end',
+          actionsClass: getString(actionsClass, 'justify-end'),
         }];
       } else {
         const tempArray = notifications.map((i) => i);
@@ -107,12 +115,9 @@
     };
   }
 
-  onMount(() => {
-    dispatch('ready', {
-      notifier: {
-        show,
-      },
-    });
+  $setNotifier({
+    show,
+    clearAll,
   });
 </script>
 

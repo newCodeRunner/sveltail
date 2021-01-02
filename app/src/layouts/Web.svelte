@@ -1,21 +1,16 @@
 <script>
-  import { LayoutWeb, Bar, Drawer, RouterView } from 'sveltail';
-
-  import hooks from '../router/hooks';
-  import routes from '../router/routes';
-
-  import { router } from '../store/state.js';
-  
-  const updateRouter = (val) => {
-    router.set(val);
-  };
+  import { LayoutWeb, Bar, Drawer, RouterView, Alerter, Notifier} from 'sveltail';
 
   let leftDrawer;
   let rightDrawer;
 </script>
 
 <LayoutWeb fixedHeader>
-  <RouterView onBefore={hooks.onBefore} onAfter={hooks.onAfter} routes={routes} on:ready={updateRouter}  />
+  <RouterView />
+  <div slot="utilities">
+    <Alerter />
+    <Notifier />
+  </div>
   <div slot="header">
     <Bar
       img="logo.png"

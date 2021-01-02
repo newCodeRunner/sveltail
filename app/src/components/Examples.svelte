@@ -1,8 +1,6 @@
 <script>
-  import { getContext } from 'svelte';
-  import { Avatar, Banner, Button, ButtonDropdown, Chip, Icon, Image, Input, List, Menu } from 'sveltail';
+  import { Avatar, Banner, Button, ButtonDropdown, Chip, Icon, Input, List, Menu, notifier } from 'sveltail';
 
-  const { notifier } = getContext('$$app');
   notifier.show({
     title: 'Example Notification',
     placement: 'top-left',

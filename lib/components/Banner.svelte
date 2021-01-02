@@ -1,10 +1,9 @@
 <script>
-  import { getContext } from 'svelte';
   import Icon from './Icon.svelte';
 
-  // Globals
-  const { getString, getIcon, getBoolean, getColor } = getContext('$$app').helpers;
+  import { getString, getIcon, getBoolean, getColor } from '../js/helpers';
 
+  // Globals
   let _class, _icon, _colorBg, _colorText, _title, _message, _dismissable;
   $: _class = getString($$props.class);
   $: _title = getString($$props.title, null);

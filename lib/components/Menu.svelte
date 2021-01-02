@@ -1,9 +1,8 @@
 <script>
-  import { getContext } from 'svelte';
   import List from './List.svelte';
+  import { getArray, getNumber } from '../js/helpers';
 
   // Globals
-  const { getArray, getNumber } = getContext('$$app').helpers;
   let _items, _width;
 
   $: _items = getArray($$props.items);
