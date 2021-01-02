@@ -5,9 +5,7 @@
   import Icon from '../components/Icon.svelte';
   import Button from '../components/Button.svelte';
 
-  import { setNotifier } from '../js/utilities';
-  import { getString, getIcon, getBoolean, isFunction, isNull } from '../js/helpers';
-
+  import { getString, getIcon, getBoolean, isFunction, isNull, isObject } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -115,10 +113,12 @@
     };
   }
 
-  $setNotifier({
-    show,
-    clearAll,
-  });
+  if (isObject($$props.context)) {
+    $$props.context.notifier = {
+      show,
+      clearAll,
+    }
+  }
 </script>
 
 {#if notifications.length > 0}

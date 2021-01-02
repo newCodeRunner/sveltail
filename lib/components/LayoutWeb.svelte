@@ -31,11 +31,7 @@
   </script>
   
   <section id="st-notifier" class="relative z-10">
-    <Loader>
-      <slot name="loader">
-        <Image class='mx-auto h-16 w-16 animate-bounce bg-loader' img="assets/logo.png" />
-      </slot>
-    </Loader>
+    <slot name="loader" />
     <slot name="utilities" />
   </section>
   

@@ -1,7 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { setLoader } from '../js/utilities';
+
   import Image from './Image.svelte';
+
+  import { isObject } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -32,11 +34,13 @@
       render = false;
     };
   }
-
-  $setLoader({
+  export const loader = {
     show,
     hide,
-  })
+  };
+  if (isObject($$props.context)) {
+    $$props.context.loader = loader;
+  }
 </script>
 
 {#if render}

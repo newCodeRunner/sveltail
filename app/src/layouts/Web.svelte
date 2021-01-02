@@ -1,16 +1,30 @@
 <script>
-  import { LayoutWeb, Bar, Drawer, RouterView, Alerter, Notifier} from 'sveltail';
+  import { setContext } from 'svelte';
+  import { LayoutWeb, Bar, Drawer, RouterView, Alerter, Notifier, Loader, Image} from 'sveltail';
 
   let leftDrawer;
   let rightDrawer;
+  
+  // Make a Global Context for all Svelte Components
+  const app = {
+    // This will be automatically updated by utilities you load, just pass it as a prop in context
+  };
+
+  $: setContext('$$app', app);
 </script>
 
 <LayoutWeb fixedHeader>
-  <RouterView />
-  <div slot="utilities">
-    <Alerter />
-    <Notifier />
+  <div slot="loader">
+    <Loader context={app}>
+      <Image class='mx-auto h-16 w-16 animate-bounce bg-loader' img="assets/logo.png" />
+    </Loader>
   </div>
+
+  <div slot="utilities">
+    <Alerter context={app} />
+    <Notifier context={app} />
+  </div>
+
   <div slot="header">
     <Bar
       img="logo.png"
@@ -22,8 +36,13 @@
       on:rightMenuClicked={() => rightDrawer.toggle()}
     />
   </div>
+
   <div slot="drawer">
     <Drawer bind:this={leftDrawer} />
     <Drawer bind:this={rightDrawer} right />
   </div>
+
+  <RouterView context={app} />
+
+  <div slot="footer" />
 </LayoutWeb>

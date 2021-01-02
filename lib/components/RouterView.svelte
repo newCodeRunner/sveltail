@@ -4,9 +4,8 @@
 
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
-
-  import { setRouter, loader } from '../js/utilities';
-  import { isFunction } from '../js/helpers';
+  
+  import { isFunction, isObject } from '../js/helpers';
 
   // Globals
   let Route = null;
@@ -15,14 +14,14 @@
   let page;
   
   const beforeRouteUpdate = async (ctx, next) => {
-    $loader.show();
+    if ($$props.context.loader.show) $$props.context.loader.show();
 
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(async () => {
           const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
           if (result) next();
-          else $loader.hide();
+          else if ($$props.context.loader.hide) $$props.context.loader.hide();
         });
       });
     }
@@ -30,7 +29,7 @@
     if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
       const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
       if (result) next();
-      else $loader.hide();
+      else if ($$props.context.loader.hide) $$props.context.loader.hide();
     }
   };
 
@@ -85,17 +84,19 @@
   }
 
   const updateRouter = (path) => {
-    $setRouter({
-      currentPath: path,
-      routes,
-      navigateTo,
-    });
+    if (isObject($$props.context)) {
+      $$props.context.router = {
+        currentPath: path,
+        routes,
+        navigateTo,
+      }
+    };
   }
 
   $: updateRouter(currPath);
 
   afterUpdate(() => {
-    $loader.hide();
+    if ($$props.context.loader.hide) $$props.context.loader.hide();
   });
 </script>
 

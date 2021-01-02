@@ -1,11 +1,11 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
+
   import Icon from './Icon.svelte';
   import Button from './Button.svelte';
 
-  import { setAlerter } from '../js/utilities';
-  import { getString, getIcon, getBoolean } from '../js/helpers';
+  import { getString, getIcon, getBoolean, isObject } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -66,10 +66,14 @@
     };
   }
 
-  $setAlerter({
+  export const alerter = {
     msg,
     confirm,
-  });
+  };
+
+  if (isObject($$props.context)) {
+    $$props.context.alerter = alerter;
+  }
 </script>
 
 {#if props}
