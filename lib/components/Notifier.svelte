@@ -6,6 +6,7 @@
   import Button from '../components/Button.svelte';
 
   import { getString, getIcon, getBoolean, isFunction, isNull, isObject } from '../js/helpers';
+  import { readable } from 'svelte/store';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -114,10 +115,10 @@
   }
 
   if (isObject($$props.context)) {
-    $$props.context.notifier = {
+    $$props.context.notifier = readable({
       show,
       clearAll,
-    }
+    });
   }
 </script>
 

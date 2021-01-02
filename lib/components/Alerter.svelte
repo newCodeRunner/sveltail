@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { readable } from 'svelte/store';
   import { fade } from 'svelte/transition';
 
   import Icon from './Icon.svelte';
@@ -72,7 +73,7 @@
   };
 
   if (isObject($$props.context)) {
-    $$props.context.alerter = alerter;
+    $$props.context.alerter = readable(alerter);
   }
 </script>
 

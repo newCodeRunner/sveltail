@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import { readable } from 'svelte/store';
 
   import Image from './Image.svelte';
 
@@ -39,7 +40,7 @@
     hide,
   };
   if (isObject($$props.context)) {
-    $$props.context.loader = loader;
+    $$props.context.loader = readable(loader);
   }
 </script>
 

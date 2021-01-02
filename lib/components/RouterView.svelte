@@ -1,6 +1,7 @@
 <script>
   // eslint-disable-next-line object-curly-newline
   import { afterUpdate } from 'svelte';
+  import { writable } from 'svelte/store';
 
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
@@ -12,16 +13,18 @@
   let currPath = null;
   let ready = false;
   let page;
+
+  const { loader } = $$props.context;
   
   const beforeRouteUpdate = async (ctx, next) => {
-    if ($$props.context.loader.show) $$props.context.loader.show();
+    if (isFunction($loader.show)) $loader.show();
 
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(async () => {
           const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
           if (result) next();
-          else if ($$props.context.loader.hide) $$props.context.loader.hide();
+          else if (isFunction($loader.hide)) $loader.hide();
         });
       });
     }
@@ -29,7 +32,7 @@
     if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
       const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
       if (result) next();
-      else if ($$props.context.loader.hide) $$props.context.loader.hide();
+      else if (isFunction($loader.hide)) $loader.hide();
     }
   };
 
@@ -48,10 +51,12 @@
     isFunction(hooks.onAfter) ? hooks.onAfter() : true;;
   };
 
-  const navigateTo = (path) => {
+  export const navigateTo = (path, afterNavigation) => {
     if (path !== currPath) {
-      if (routes.findIndex((i) => i.path === path) > -1) page.redirect(path);
-      else navigateTo('/*');
+      if (routes.findIndex((i) => i.path === path) > -1) {
+        page.redirect(path);
+        if (isFunction(afterNavigation)) afterNavigation();
+      } else navigateTo('/*');
     }
   };
 
@@ -83,20 +88,35 @@
     navigateTo('/');
   }
 
-  const updateRouter = (path) => {
-    if (isObject($$props.context)) {
-      $$props.context.router = {
-        currentPath: path,
+  const createRouter = () => {
+		const store = writable({
+      currentPath: currPath,
+      routes,
+      navigateTo,
+    });
+		
+		const set = (newPath) => {
+      store.set({
+        currentPath: newPath,
         routes,
         navigateTo,
-      }
+      });
+		};
+		
+		const update = (updateFunc) => {
+      set(updateFunc(currPath))
     };
-  }
+		
+		return { ...store, set, update };
+  };
+  
+  export const router = createRouter();
 
-  $: updateRouter(currPath);
+  $: router.set(currPath);
+  $: if (isObject($$props.context)) $$props.context.router = router;
 
   afterUpdate(() => {
-    if ($$props.context.loader.hide) $$props.context.loader.hide();
+    if (isFunction($loader.hide)) $loader.hide();
   });
 </script>
 
