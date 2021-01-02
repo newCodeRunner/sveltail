@@ -1,6 +1,6 @@
 <script>
   import { setContext } from 'svelte';
-  import { LayoutWeb, Bar, Drawer, RouterView, Alerter, Notifier, Loader, Image} from 'sveltail';
+  import { LayoutWeb, Bar, Drawer, RouterView, Alerter, Notifier, Loader, LocalStorage, Image } from 'sveltail';
 
   let leftDrawer;
   let rightDrawer;
@@ -23,6 +23,7 @@
   <div slot="utilities">
     <Alerter context={app} />
     <Notifier context={app} />
+    <LocalStorage context={app} />
   </div>
 
   <div slot="header">

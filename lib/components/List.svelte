@@ -28,7 +28,14 @@
 <div class="bg-white text-black dark:bg-black dark:text-white {_class}">
   {#each _items as item (item.id)}
     <div
-      class="p-3 relative flex items-start rounded-lg hover:bg-gray-300 dark:hover:bg-gray-700 {item.cursor ? 'cursor-pointer' : _activeClass}"
+      class="
+        p-3
+        relative
+        flex
+        items-start
+        rounded-lg
+        {item.cursor ? 'cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700' : _activeClass}
+      "
       on:click={item.onClick}
     >
       {#if item.cursor}<div class="st-effect-ripple bg-gray-300 dark:bg-gray-700" />{/if}

@@ -6,12 +6,14 @@
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
   
-  import { isFunction, isObject } from '../js/helpers';
+  import { isFunction, isObject, getBoolean } from '../js/helpers';
 
   // Globals
+  let _reverse;
+  $:  _reverse = getBoolean($$props.reverse);
+
   let Route = null;
   let currPath = null;
-  let ready = false;
   let page;
 
   const { loader } = $$props.context;
@@ -40,10 +42,15 @@
     const { path } = ctx;
     const routeIndex = routes.findIndex((i) => i.path === path);
     const { name } = routes[routeIndex > -1 ? routeIndex : routes.length - 1];
-    import(`~/src/pages/${name}.svelte`).then((module) => {
-      Route = module.default;
-      currPath = path;
-      next();
+    Route = null;
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        import(`~/src/pages/${name}.svelte`).then((module) => {
+          Route = module.default;
+          currPath = path;
+          next();
+        });
+      });
     });
   };
 
@@ -69,22 +76,18 @@
 
       page.base('/#');
       page();
-      ready = true;
     });
   }
 
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
     page = {
       redirect: async (path) => {
-        Route = null;
         await beforeRouteUpdate(
           null,
           () => { updateRoute({ path }, afterRouteUpdate); },
         );
       },
     };
-    ready = true;
-
     navigateTo('/');
   }
 
@@ -120,6 +123,4 @@
   });
 </script>
 
-{#if ready}
-  <svelte:component this={Route} />
-{/if}
+<svelte:component this={Route} />
