@@ -187,7 +187,22 @@ yargs(hideBin(process.argv))
     `,
     () => {},
     (arg) => {
-      console.log(arg);
+      const build = require('../cli/build');
+      if (arg.cordova) {
+        if (arg.android || arg.ios) {
+          build.buildCordova(chalk, { mode: arg.android ? 'android' : 'ios' });
+        } else usageAlert();
+      } else if (arg.nativescript) {
+        if (arg.android || arg.ios) {
+          build.buildNS(chalk, { mode: arg.android ? 'android' : 'ios' });
+        } else usageAlert();
+      } else if (arg.electron) {
+        build.buildElectron(chalk, { noPackage: !!arg.noPackage });
+      } else if (arg.pwa) {
+        build.buildPWA(chalk);
+      } else {
+        build.buildWeb(chalk);
+      }
     },
   )
   .command(

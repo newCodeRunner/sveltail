@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable import/no-dynamic-require */
 const { exec, execSync } = require('child_process');
-const { readdirSync, readFileSync } = require('fs');
+const { readdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
 
 // Webpack and plugins
@@ -10,7 +10,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const currDirectory = process.cwd();
 const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
-const { app, description, version } = packageJSON;
+// eslint-disable-next-line object-curly-newline
+const { app, description, version, dependencies, devDependencies, author, license } = packageJSON;
 
 const svelteConfig = require(resolve(currDirectory, 'sveltail.config.js'));
 const { framework } = svelteConfig.default();
@@ -45,25 +46,66 @@ module.exports = (env) => {
 
     apply(compiler) {
       compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
-        setTimeout(() => {
-          if (this.electronProcess) {
-            console.log('\n Sveltail: Closing and Restarting Electron');
-            this.electronProcess.stdout.pause();
-            this.electronProcess.stderr.pause();
-            this.electronProcess.removeAllListeners('exit');
-            if (process.platform === 'win32') {
-              execSync(`taskkill -F -T -PID ${this.electronProcess.pid}`);
+        if (PROD) {
+          console.log('\n Sveltail: Generating package.json');
+          writeFileSync(
+            resolve(currDirectory, 'dist', 'Electron', 'unpacked', 'package.json'),
+            JSON.stringify({
+              main: 'eM-main.js',
+              name: app.name.replace(/\s/g, ''),
+              author: author || 'Sveltail Dev Team',
+              description,
+              version,
+              dependencies,
+              devDependencies,
+              license: license || 'ISC',
+            }, null, 2),
+          );
+        } else {
+          setTimeout(() => {
+            if (this.electronProcess) {
+              console.log('\n Sveltail: Closing and Restarting Electron');
+              this.electronProcess.stdout.pause();
+              this.electronProcess.stderr.pause();
+              this.electronProcess.removeAllListeners('exit');
+              if (process.platform === 'win32') {
+                execSync(`taskkill -F -T -PID ${this.electronProcess.pid}`);
+              } else {
+                process.kill(this.electronProcess.pid);
+              }
+              this.start();
             } else {
-              process.kill(this.electronProcess.pid);
+              console.log('\n Sveltail: Starting Electron');
+              this.start();
             }
-            this.start();
-          } else {
-            console.log('\n Sveltail: Starting Electron');
-            this.start();
-          }
-        }, 1000);
+          }, 1000);
+        }
       });
     }
+  }
+
+  const plugins = [
+    new DefinePlugin({
+      'process.APP_ENV': JSON.stringify(
+        Object.assign(
+          framework.APP_ENV,
+          {
+            productName: app.name,
+            productDescription: description,
+            productVersion: version,
+            platform: 'Electron',
+            PROD,
+            url,
+          },
+        ),
+      ),
+    }),
+    new EnvironmentPlugin(['platform', 'PROD']),
+    new OnBuildPlugin(),
+  ];
+
+  if (!PROD) {
+    plugins.unshift(new CleanWebpackPlugin());
   }
 
   const entry = {};
@@ -84,34 +126,37 @@ module.exports = (env) => {
   });
 
   return {
-    watch: true,
+    watch: !PROD,
     entry,
     resolve: {
       alias: {
-        sveltail: resolve(currDirectory, 'node_modules', 'sveltail'),
         '~': currDirectory,
       },
-      extensions: ['.mjs', '.js'],
-      mainFields: ['browser', 'module', 'main'],
-      symlinks: false,
+      extensions: ['.mjs', '.js', '.json'],
     },
     target: 'electron-main',
-    output: {
-      path: PROD ? resolve(currDirectory, 'dist', 'Electron') : resolve(currDirectory, '.sveltail', 'Electron'),
-      filename: PROD ? 'js/e-[name].js' : undefined,
-      chunkFilename: PROD ? 'js/e-[id].js' : undefined,
-      pathinfo: !PROD,
+    node: {
+      __dirname: false,
+      __filename: false,
     },
+    output: {
+      path: PROD ? resolve(currDirectory, 'dist', 'Electron', 'unpacked') : resolve(currDirectory, '.sveltail', 'Electron'),
+      filename: '[name].js',
+      chunkFilename: '[id].js',
+      libraryTarget: 'commonjs2',
+    },
+    externals: Object.keys(dependencies),
     optimization: {
       splitChunks: !PROD ? undefined : {
         chunks: 'all',
       },
-      removeAvailableModules: !PROD,
-      removeEmptyChunks: !PROD,
+      removeAvailableModules: PROD,
+      removeEmptyChunks: PROD,
+      minimize: PROD,
     },
     stats: {
       assets: true,
-      children: false,
+      children: true,
       chunks: false,
       hash: false,
       modules: false,
@@ -121,29 +166,7 @@ module.exports = (env) => {
       warnings: true,
       colors: true,
     },
-    module: {
-      rules: [],
-    },
-    plugins: [
-      new CleanWebpackPlugin(),
-      new DefinePlugin({
-        'process.APP_ENV': JSON.stringify(
-          Object.assign(
-            framework.APP_ENV,
-            {
-              productName: app.name,
-              productDescription: description,
-              productVersion: version,
-              platform: 'Electron',
-              PROD,
-              url,
-            },
-          ),
-        ),
-      }),
-      new EnvironmentPlugin(['platform', 'PROD']),
-      new OnBuildPlugin(),
-    ],
+    plugins,
     mode,
     devtool: PROD ? false : 'source-map',
   };

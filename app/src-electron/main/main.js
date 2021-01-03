@@ -42,7 +42,11 @@ const createWindow = () => {
     mainWindow = null;
   });
 
-  mainWindow.loadURL(process.APP_ENV.url);
+  mainWindow.loadURL(
+    JSON.parse(process.env.PROD)
+      ? `file:///${resolve(__dirname, process.APP_ENV.url)}`
+      : process.APP_ENV.url,
+  );
 };
 
 // Make changes for production

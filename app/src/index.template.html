@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <base href="./">
   <title><%= productName %></title>
 
   <meta charset="utf-8">
@@ -9,12 +10,12 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
   <meta name="viewport" content="initial-scale=1, maximum-scale=5, minimum-scale=1, width=device-width<% if (cordova) { %>, viewport-fit=cover, user-scalable=0<% } %>">
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' filesystem; style-src 'self' 'unsafe-inline'">
 
-  <link rel="icon" type="image/png" sizes="128x128" href="./icons/logo-128x128.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="./icons/logo-96x96.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./icons/logo-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./icons/logo-16x16.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="icons/logo-128x128.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="icons/logo-96x96.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/logo-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/logo-16x16.png">
 </head>
 
 <body></body>

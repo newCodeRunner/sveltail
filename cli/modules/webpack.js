@@ -5,6 +5,7 @@
 const { readFileSync, writeFileSync, existsSync, mkdirSync, watchFile } = require('fs');
 const { resolve } = require('path');
 const { exec, execSync } = require('child_process');
+const { format } = require('url');
 
 // Webpack and Plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
@@ -116,7 +117,7 @@ module.exports = (env) => {
         patterns: [
           {
             from: resolve(currDirectory, 'public', platform),
-            to: resolve(currDirectory, 'dist', platform),
+            to: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : undefined),
           },
         ],
       }),
@@ -274,7 +275,7 @@ module.exports = (env) => {
 
   // Web Config
   const config = {
-    devServer: PROD ? undefined : {
+    devServer: {
       writeToDisk: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
       contentBase: platform === 'Electron'
@@ -310,17 +311,30 @@ module.exports = (env) => {
       symlinks: false,
     },
     output: {
-      path: resolve(currDirectory, 'dist', platform),
+      path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : undefined),
       filename: PROD ? 'js/[name].js' : undefined,
       chunkFilename: PROD ? 'js/[id].js' : undefined,
-      pathinfo: !PROD,
+      publicPath: './',
     },
     optimization: {
       splitChunks: !PROD ? undefined : {
         chunks: 'all',
       },
-      removeAvailableModules: !PROD,
-      removeEmptyChunks: !PROD,
+      removeAvailableModules: PROD,
+      removeEmptyChunks: PROD,
+      minimize: PROD,
+    },
+    stats: {
+      assets: true,
+      children: false,
+      chunks: false,
+      hash: false,
+      modules: false,
+      publicPath: false,
+      timings: true,
+      version: false,
+      warnings: true,
+      colors: true,
     },
     module: {
       rules,
@@ -329,6 +343,8 @@ module.exports = (env) => {
     mode,
     devtool: PROD ? false : 'source-map',
   };
+
+  if (PROD) delete config.devServer;
 
   return config;
 };

@@ -110,5 +110,44 @@ exports.default = (/* cfg */) => {
 
       },
     },
+    'electron-builder': {
+      appId: 'app.demo.sveltail',
+      productName: packageJSON.app.name,
+      copyright: 'Copyright © Sveltail',
+      asar: true,
+      directories: {
+        output: 'dist/Electron/packaged',
+      },
+      win: {
+        target: [
+          {
+            target: 'nsis',
+            arch: [
+              'x64',
+            ],
+          },
+        ],
+      },
+      linux: {
+        target: [
+          {
+            target: 'AppImage',
+            arch: [
+              'x64',
+            ],
+          },
+        ],
+      },
+      mac: {
+        target: [
+          {
+            target: 'dmg',
+            arch: [
+              'x64',
+            ],
+          },
+        ],
+      },
+    },
   };
 };
