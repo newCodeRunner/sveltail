@@ -6,12 +6,9 @@
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
   
-  import { isFunction, isObject, getBoolean } from '../js/helpers';
+  import { isFunction, isObject } from '../js/helpers';
 
   // Globals
-  let _reverse;
-  $:  _reverse = getBoolean($$props.reverse);
-
   let Route = null;
   let currPath = null;
   let page;

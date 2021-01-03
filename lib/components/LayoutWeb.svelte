@@ -63,6 +63,7 @@
     @import "tailwindcss/utilities";
 
     @import "../css/effects.css";
+    @import "../css/helpers.css";
   
     :global(.cordova.safe-area) {
       padding-right: env(safe-area-inset-right, 20px);
