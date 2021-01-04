@@ -58,10 +58,12 @@
       transition
         ease-in-out
       transform
-        hover:bg-{_colorText} hover:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
+        hover:bg-{_colorBg === 'transparent' && _colorText === 'white' ? 'primary' : _colorText}
+        hover:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
         dark:hover:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
       transform
-        focus:bg-{_colorText} focus:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
+        focus:bg-{_colorBg === 'transparent' && _colorText === 'white' ? 'primary' : _colorText}
+        focus:text-{_colorBg === 'transparent' ? 'black' : _colorBg}
         dark:focus:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
       bg-{_colorBg}
       text-{_colorText}   

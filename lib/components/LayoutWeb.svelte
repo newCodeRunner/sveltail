@@ -3,10 +3,8 @@
     import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
     import languages from '~/src/i18n/index';
-    import Image from './Image.svelte';
-    import Loader from './Loader.svelte';
 
-    import { getBoolean } from '../js/helpers';
+    import { getBoolean, getString } from '../js/helpers';
   
     // i18n
     languages.forEach((lang) => {
@@ -19,10 +17,11 @@
 
     // Globals
     const platform = process.env.platform;
-    let _fixedHeader;
+    let _fixedHeader, _mainClass;
     $: _fixedHeader = getBoolean($$props.fixedHeader);
+    $: _mainClass = getString($$props.mainClass);
     
-    let headerHeight = 0;
+    let _headerHeight = 0;
 
     // Load Fonts
     onMount(() => {
@@ -37,18 +36,18 @@
   
   <section class="{platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
     {#if _fixedHeader}
-      <header bind:clientHeight={headerHeight} class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
+      <header bind:clientHeight={_headerHeight} class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
         <slot name="header" />
       </header>
     {/if}
     <slot name="drawer" />
-    <section class="w-screen overflow-auto" style="height: calc(100vh - {headerHeight}px);">
+    <section class="w-screen overflow-auto" style="height: calc(100vh - {_headerHeight}px);">
       {#if !_fixedHeader}
         <header class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
           <slot name="header" />
         </header>
       {/if}
-      <main class="w-full flex-wrap overflow-x-hidden">
+      <main class="w-full flex-wrap overflow-x-hidden {_mainClass}">
         <slot />
       </main>
     </section>
