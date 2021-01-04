@@ -145,7 +145,7 @@ module.exports = (env) => {
       chunkFilename: '[id].js',
       libraryTarget: 'commonjs2',
     },
-    externals: Object.keys(dependencies),
+    externals: Object.keys(dependencies || {}),
     optimization: {
       splitChunks: !PROD ? undefined : {
         chunks: 'all',
