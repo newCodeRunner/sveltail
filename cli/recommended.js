@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 const { existsSync, writeFileSync, readFileSync } = require('fs');
 const { resolve } = require('path');
@@ -13,7 +15,7 @@ exports.default = (chalk) => {
   }
 
   if (existsSync(resolve(currDirectory, 'package.json'))) {
-    const packageJSON = JSON.parse(resolve(currDirectory, 'package.json'));
+    const packageJSON = require(resolve(currDirectory, 'package.json'));
     const { devDependencies } = packageJSON;
 
     const devDeps = [

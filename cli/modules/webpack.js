@@ -311,7 +311,7 @@ module.exports = (env) => {
       symlinks: false,
     },
     output: {
-      path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : undefined),
+      path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : ''),
       filename: PROD ? 'js/[name].js' : undefined,
       chunkFilename: PROD ? 'js/[id].js' : undefined,
       publicPath: './',
