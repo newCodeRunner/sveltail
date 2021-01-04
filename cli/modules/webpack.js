@@ -314,7 +314,6 @@ module.exports = (env) => {
       path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : ''),
       filename: PROD ? 'js/[name].js' : undefined,
       chunkFilename: PROD ? 'js/[id].js' : undefined,
-      publicPath: './',
     },
     optimization: {
       splitChunks: !PROD ? undefined : {
