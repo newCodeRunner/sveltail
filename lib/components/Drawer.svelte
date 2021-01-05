@@ -42,7 +42,7 @@
       <aside
         in:fly="{{ x: _right ? 200 : -200, duration: 200 }}"
         out:fly="{{ x: _right ? 200 : -200, duration: 150 }}"
-        class="fixed safe-area-top w-80 h-full bg-white text-black dark:bg-black dark:text-white {_right ? 'right-0' : ''}"
+        class="fixed safe-area-top w-80 h-full bg-white dark:bg-black {_right ? 'right-0' : ''}"
       >
         <div class="h-full w-full p-5 {_class}">
           <slot />
