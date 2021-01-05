@@ -28,16 +28,19 @@ exports.buildElectron = (chalk, { noPackage }) => {
 
       // Update Electron Builder Icons
       if (process.platform === 'darwin' && !builderJSON.mac) {
-        builderJSON.mac = {};
-        if (!builderJSON.mac.icon) builderJSON.mac.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.icns');
+        builderJSON.mac = {
+          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.icns'),
+        };
       }
       if (process.platform === 'linux' && !builderJSON.linux) {
-        builderJSON.linux = {};
-        if (!builderJSON.linux.icon) builderJSON.linux.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.png');
+        builderJSON.linux = {
+          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.png'),
+        };
       }
       if (process.platform === 'win32' && !builderJSON.win) {
-        builderJSON.win = {};
-        if (!builderJSON.win.icon) builderJSON.win.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.ico');
+        builderJSON.win = {
+          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.ico'),
+        };
       }
 
       writeFileSync(resolve(currDirectory, '.sveltail', 'builder.json'), JSON.stringify(builderJSON, null, 2));

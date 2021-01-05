@@ -31,7 +31,7 @@ const createWindow = () => {
       nodeIntegration: false,
       nodeIntegrationInWorker: false,
 
-      preload: './eR-main.js',
+      preload: resolve(__dirname, 'eR-main.js'),
     },
   });
 

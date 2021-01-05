@@ -58,6 +58,7 @@ module.exports = (env) => {
               version,
               dependencies,
               devDependencies,
+              repository: 'github:newCodeRunner/pb-sa-release',
               license: license || 'ISC',
             }, null, 2),
           );
