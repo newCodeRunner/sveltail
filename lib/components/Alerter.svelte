@@ -6,7 +6,7 @@
   import Icon from './Icon.svelte';
   import Button from './Button.svelte';
 
-  import { getString, getIcon, getBoolean, isObject } from '../js/helpers';
+  import { getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
@@ -31,7 +31,7 @@
       props = {
         title: getString(title, null),
         message: getString(message, null),
-        icon: getIcon(icon),
+        icon: getIcon(icon, null),
         hideBar: getBoolean(hideBar),
         barColorBg: getColor(barColorBg, 'primary'),
         barColorText: getColor(barColorText, 'white'),
@@ -55,10 +55,11 @@
           : [{
             label: 'Okay',
             size: 'sm',
-            colorBg: 'primary',
+            colorBg: 'transparent',
+            colorText: 'primary',
             onClick: dismiss,
           }],
-        actionsClass: isString(actionsClass) ? actionsClass : 'justify-end',
+        actionsClass: getString(actionsClass, 'justify-end'),
       };
     };
     confirm = () => {
@@ -91,10 +92,15 @@
           if (!props.persistant) dismiss();
         }}
       />
-      <div transition:fade={{ duration: 300 }} class="z-10 m-auto st-alerter rounded bg-black text-white dark:bg-white dark:text-black">
+      <div transition:fade={{ duration: 300 }} class="z-10 m-auto st-alerter rounded bg-white text-black dark:bg-black dark:text-white">
         {#if !props.hideBar}
           <div class="flex h-12 p-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}">
-            <div>{props.title}</div>
+            <div class="inline-flex items-center">
+              {#if props.icon}
+                <Icon icon={props.icon} size="md" class="mx-1" />
+              {/if}
+              <div>{props.title}</div>
+            </div>
             <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
           </div>
         {/if}
