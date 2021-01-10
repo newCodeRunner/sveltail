@@ -5,7 +5,7 @@
   import Icon from '../components/Icon.svelte';
   import Button from '../components/Button.svelte';
 
-  import { getString, getIcon, getBoolean, isFunction, isNull, isObject } from '../js/helpers';
+  import { getString, getIcon, getBoolean, isFunction, isNull, isObject, isArray } from '../js/helpers';
   import { readable } from 'svelte/store';
 
   // Globals
