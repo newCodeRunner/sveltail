@@ -20,6 +20,7 @@ export { default as Loader } from './lib/components/Loader.svelte';
 export { default as LocalStorage } from './lib/components/LocalStorage.svelte';
 export { default as Menu } from './lib/components/Menu.svelte';
 export { default as Notifier } from './lib/components/Notifier.svelte';
+export { default as ObserverScroll } from './lib/components/ObserverScroll.svelte';
 export { default as RouterView } from './lib/components/RouterView.svelte';
 export { default as Tabs } from './lib/components/Tabs.svelte';
 

@@ -4,13 +4,16 @@
 
   import Image from './Image.svelte';
 
-  import { isObject } from '../js/helpers';
+  import { isObject, getString } from '../js/helpers';
 
   // Globals
   const dispatch = createEventDispatcher();
   let render = true;
   let show;
   let hide;
+
+  let _class;
+  $: _class = getString($$props.class);
 
   // Native
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
@@ -54,8 +57,8 @@
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
     <div class='relative z-30 h-screen w-screen'>
       <div class="fixed inset-0 opacity-75" />
-      <div class="fixed h-full w-full overflow-y-auto">
-        <div class="w-full h-full flex items-center justify-center">
+      <div class="fixed h-full w-full overflow-none">
+        <div class="w-full h-full flex items-center justify-center {_class}">
           <slot />            
         </div>
       </div>

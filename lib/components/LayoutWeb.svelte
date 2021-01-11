@@ -4,7 +4,7 @@
 
     import languages from '~/src/i18n/index';
 
-    import { getBoolean, getString } from '../js/helpers';
+    import { getBoolean, getString, getColor } from '../js/helpers';
   
     // i18n
     languages.forEach((lang) => {
@@ -17,9 +17,10 @@
 
     // Globals
     const platform = process.env.platform;
-    let _fixedHeader, _mainClass;
+    let _fixedHeader, _mainClass, _headerColor;
     $: _fixedHeader = getBoolean($$props.fixedHeader);
     $: _mainClass = getString($$props.mainClass);
+    $: _headerColor = getColor($$props.headerColor, 'transparent');
     
     let _headerHeight = 0;
 
@@ -36,14 +37,14 @@
   
   <section class="{platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
     {#if _fixedHeader}
-      <header bind:clientHeight={_headerHeight} class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-screen">
+      <header bind:clientHeight={_headerHeight} class="bg-{_headerColor} safe-area-top w-screen">
         <slot name="header" />
       </header>
     {/if}
     <slot name="drawer" />
     <section class="w-screen overflow-auto" style="height: calc(100vh - {_headerHeight}px);">
       {#if !_fixedHeader}
-        <header class="{platform === 'Cordova' ? 'bg-brand' : ''} safe-area-top w-full">
+        <header class="bg-{_headerColor} safe-area-top w-full">
           <slot name="header" />
         </header>
       {/if}

@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { escape, isEmpty, isNumeric, isEmail, isDate, isLength } from 'validator';
 
-  import { getString, getIcon, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize } from '../js/helpers';
+  import { getString, getIcon, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize, isFunction } from '../js/helpers';
   
   import Icon from './Icon.svelte';
 

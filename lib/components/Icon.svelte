@@ -11,7 +11,7 @@
   $:  _class = getString($$props.class);
   $:  _fontSize = getFontSize($$props.size, 'md');
 
-  if ($$props.fontSize) props.fontSize = $$props.fontSize;
+  if ($$props.fontSize) _fontSize = $$props.fontSize;
   const onClick = () => {
     dispatch('click');
   };

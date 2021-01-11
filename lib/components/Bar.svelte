@@ -8,7 +8,7 @@
     // Globals
     const dispatch = createEventDispatcher();
 
-    $: _class = getString($$props.class, 'bg-brand text-white');
+    $: _class = getString($$props.class);
     $: _img = getString($$props.img, null);
     $: _title = getString($$props.title, null);
     $: _leftMenu = getBoolean($$props.leftMenu);
@@ -38,7 +38,7 @@
       <slot name="nav-start">
         <!-- Default Logo and Title -->
         <div class="flex items-center justify-start mx-3 cursor-pointer" on:click={brandClicked}>
-          {#if _img}<Image img="assets/{_img}" class="object-contain mr-2 {_dense ? 'h-8' : 'h-12'}" />{/if}
+          {#if _img}<Image img={_img} class="object-contain mr-2 {_dense ? 'h-8' : 'h-12'}" />{/if}
           {#if _title}<span class="font-semibold text-xl tracking-tight">{_title}</span>{/if}
         </div>
       </slot>
