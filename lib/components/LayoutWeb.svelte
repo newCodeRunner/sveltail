@@ -35,7 +35,7 @@
     <slot name="utilities" />
   </section>
   
-  <section class="{platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area dark:bg-black dark:text-white">
+  <section class="{platform === 'Cordova' ? 'cordova' : ''} relative z-0 safe-area bg-white text-black dark:bg-black dark:text-white">
     {#if _fixedHeader}
       <header bind:clientHeight={_headerHeight} class="bg-{_headerColor} safe-area-top w-screen">
         <slot name="header" />

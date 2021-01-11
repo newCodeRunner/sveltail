@@ -25,12 +25,13 @@
 
   // Web / Hybrid
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    msg = ({ title, message, icon, hideBar, barColorBg, barColorText, persistant, actions, actionsClass }) => {
+    msg = ({ title, message, details, icon, hideBar, barColorBg, barColorText, persistant, actions, actionsClass }) => {
       const html = document.querySelector('html');
       html.classList.add('overflow-hidden');
       props = {
         title: getString(title, null),
         message: getString(message, null),
+        details: getString(details, null),
         icon: getIcon(icon, null),
         hideBar: getBoolean(hideBar),
         barColorBg: getColor(barColorBg, 'primary'),
@@ -59,7 +60,7 @@
             colorText: 'primary',
             onClick: dismiss,
           }],
-        actionsClass: getString(actionsClass, 'justify-end'),
+        actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     };
     confirm = () => {
@@ -94,7 +95,7 @@
       />
       <div transition:fade={{ duration: 300 }} class="z-10 m-auto st-alerter rounded bg-white text-black dark:bg-black dark:text-white">
         {#if !props.hideBar}
-          <div class="flex h-12 p-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}">
+          <div class="flex h-12 px-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}">
             <div class="inline-flex items-center">
               {#if props.icon}
                 <Icon icon={props.icon} size="md" class="mx-1" />
@@ -104,25 +105,27 @@
             <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
           </div>
         {/if}
-        <div class="p-5">
-          <p>{props.message}</p>
+        <div class="-h-12 w-full p-4">
+          <div class="-h-16 w-full overflow-auto">
+            <div><strong>{props.message}</strong></div>
+            <div>{props.details}</div>
+          </div>
           {#if props.actions.length > 0}
-              <br>
-              <div class="inline-flex w-full {props.actionsClass}">
-                {#each props.actions as action}
-                  <Button
-                    flat
-                    rounded
-                    class="mx-1"
-                    label={action.label}
-                    size={action.size}
-                    colorBg={action.colorBg}
-                    colorText={action.colorText}
-                    on:click={action.onClick}
-                  />
-                {/each}
-              </div>
-            {/if}
+            <div class="flex h-16 {props.actionsClass}">
+              {#each props.actions as action}
+                <Button
+                  flat
+                  rounded
+                  class="mx-1"
+                  label={action.label}
+                  size={action.size}
+                  colorBg={action.colorBg}
+                  colorText={action.colorText}
+                  on:click={action.onClick}
+                />
+              {/each}
+            </div>
+          {/if}
         </div>
       </div>
     </div>
@@ -131,6 +134,7 @@
 
 <style>
   .st-alerter {
-    min-width: 50vw;
+    width: 75vw;
+    height: 50vh;
   }
 </style>

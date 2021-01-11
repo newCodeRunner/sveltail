@@ -8,6 +8,7 @@
     // Globals
     const dispatch = createEventDispatcher();
 
+    let _class, _img, _title, _leftMenu, _rightMenu, _dense;
     $: _class = getString($$props.class);
     $: _img = getString($$props.img, null);
     $: _title = getString($$props.title, null);
@@ -31,7 +32,7 @@
     <div class="flex items-center justify-start">
       <!-- Left Menu -->
       {#if _leftMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="{_dense ? 'sm' : 'md'}" flat on:click={leftMenuClicked} />
+        <Button colorBg="transparent" colorText="current" icon='fas fa-bars f0c9' size="{_dense ? 'sm' : 'md'}" flat on:click={leftMenuClicked} />
       {/if}
       
       <!-- Start Slot  -->
@@ -55,7 +56,7 @@
 
       <!-- Left Menu -->
       {#if _rightMenu}
-        <Button colorBg="brand" colorText="white" icon='fas fa-bars f0c9' size="{_dense ? 'sm' : 'md'}" flat on:click={rightMenuClicked} />
+        <Button colorBg="transparent" colorText="current" icon='fas fa-bars f0c9' size="{_dense ? 'sm' : 'md'}" flat on:click={rightMenuClicked} />
       {/if}
     </div>
   </nav>
