@@ -35,7 +35,7 @@ yargs(hideBin(process.argv))
     () => {},
     (arg) => {
       const config = require('../cli/config');
-      config.default(chalk, arg);
+      config.default(arg);
     },
   )
   .command(
@@ -96,7 +96,7 @@ yargs(hideBin(process.argv))
 
       if (platform) {
         const platforms = require('../cli/platforms');
-        platforms.addPlatform(chalk, platform);
+        platforms.addPlatform(platform);
       } else usageAlert();
     },
   )
@@ -125,7 +125,7 @@ yargs(hideBin(process.argv))
 
       if (platform) {
         const platforms = require('../cli/platforms');
-        platforms.removePlatform(chalk, platform);
+        platforms.removePlatform(platform);
       } else usageAlert();
     },
   )
@@ -152,18 +152,18 @@ yargs(hideBin(process.argv))
       const dev = require('../cli/dev');
       if (arg.cordova) {
         if (arg.android || arg.ios) {
-          dev.devCordova(chalk, { mode: arg.android ? 'android' : 'ios' });
+          dev.devCordova({ mode: arg.android ? 'android' : 'ios' });
         } else usageAlert();
       } else if (arg.nativescript) {
         if (arg.android || arg.ios) {
-          dev.devNS(chalk, { mode: arg.android ? 'android' : 'ios' });
+          dev.devNS({ mode: arg.android ? 'android' : 'ios' });
         } else usageAlert();
       } else if (arg.electron) {
-        dev.devElectron(chalk);
+        dev.devElectron();
       } else if (arg.pwa) {
-        dev.devPWA(chalk);
+        dev.devPWA();
       } else {
-        dev.devWeb(chalk);
+        dev.devWeb();
       }
     },
   )
@@ -190,18 +190,18 @@ yargs(hideBin(process.argv))
       const build = require('../cli/build');
       if (arg.cordova) {
         if (arg.android || arg.ios) {
-          build.buildCordova(chalk, { mode: arg.android ? 'android' : 'ios' });
+          build.buildCordova({ mode: arg.android ? 'android' : 'ios' });
         } else usageAlert();
       } else if (arg.nativescript) {
         if (arg.android || arg.ios) {
-          build.buildNS(chalk, { mode: arg.android ? 'android' : 'ios' });
+          build.buildNS({ mode: arg.android ? 'android' : 'ios' });
         } else usageAlert();
       } else if (arg.electron) {
-        build.buildElectron(chalk, { noPackage: !!arg.noPackage });
+        build.buildElectron({ noPackage: !!arg.noPackage, publish: arg.publish !== undefined });
       } else if (arg.pwa) {
-        build.buildPWA(chalk);
+        build.buildPWA();
       } else {
-        build.buildWeb(chalk);
+        build.buildWeb();
       }
     },
   )
@@ -211,7 +211,45 @@ yargs(hideBin(process.argv))
     () => {},
     () => {
       const recommended = require('../cli/recommended');
-      recommended.default(chalk);
+      recommended.default();
+    },
+  )
+  .command(
+    'GHToken',
+    `Stores and uses your GHToken to automatically update env when publishing to Github Releases!
+    
+    Options:
+
+    --set              [boolean]
+    Use this option to set a GitHub Access Token for publishing to your repo's Releases.
+    The token is stored in native OS credential manager, and retrieved automatically when needed.
+    The tokens are not stored and/or used by Sveltail in any way.
+
+      Further Options:
+      --default        [boolean]
+      Sets a global token store. Use this if you use one access token for all repos.
+
+    --get              [boolean]
+    Use this option to display the locally stored GH Token for this project.
+    Returns the default token if project specific is not set.
+
+    --clear         [boolean]
+    Use this option to clear all the locally stored GH Token for this project.
+
+      Further Options:
+        --default        [boolean]
+        Clears the global token store. Use this if you want to remove the global store instead.
+
+    --list         [boolean]
+    Use this option to list all the locally stored GH Tokens by Sveltail.
+    `,
+    () => {},
+    (arg) => {
+      const credentials = require('../cli/credentials');
+      if (arg.set) credentials.setGHToken(arg.default);
+      else if (arg.get) credentials.getGHToken();
+      else if (arg.clear) credentials.clear(arg.default);
+      else if (arg.list) credentials.list();
     },
   )
   .argv;

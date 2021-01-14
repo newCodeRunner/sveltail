@@ -5,6 +5,7 @@ const { copySync } = require('fs-extra');
 const { writeFileSync, existsSync, rmdirSync, readFileSync } = require('fs');
 const inquirer = require('inquirer');
 const { execSync } = require('child_process');
+const chalk = require('chalk');
 
 const updateCordova = require('./modules/updateCordova.js');
 const updateNS = require('./modules/updateNS.js');
@@ -17,7 +18,7 @@ if (existsSync(resolve(currDirectory, 'package.json'))) {
 
 if (!packageJSON.devDependencies) packageJSON.devDependencies = {};
 
-exports.addPlatform = (chalk, platform) => {
+exports.addPlatform = (platform) => {
   console.log('\n');
   if (platform === 'cordova') {
     copySync(resolve(__dirname, '../app/src-cordova'), resolve(currDirectory, 'src-cordova'));
@@ -45,7 +46,7 @@ exports.addPlatform = (chalk, platform) => {
     }
 
     // Update Cordova Project Info
-    updateCordova.default(chalk, currDirectory, packageJSON);
+    updateCordova.default(currDirectory, packageJSON);
 
     console.log(
       chalk.green(
@@ -126,7 +127,7 @@ exports.addPlatform = (chalk, platform) => {
     copySync(resolve(__dirname, '../app/src-nativescript'), resolve(currDirectory, 'src-nativescript'));
 
     // Update NativeScript Project Info
-    updateNS.default(chalk, currDirectory, packageJSON);
+    updateNS.default(currDirectory, packageJSON);
 
     console.log(chalk.green(' Added NativeScript to the project. Please use "svelte dev --nativescript --ios" to start dev mode.'));
     console.log(' Note: NativeScript CLI must be installed globally "npm install nativescript -g"');
@@ -208,7 +209,7 @@ exports.addPlatform = (chalk, platform) => {
   console.log('\n');
 };
 
-exports.removePlatform = (chalk, platform) => {
+exports.removePlatform = (platform) => {
   if (existsSync(resolve(currDirectory, `src-${platform}`))) {
     console.log('\n');
     inquirer

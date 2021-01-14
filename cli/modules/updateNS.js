@@ -3,8 +3,9 @@ const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 const plist = require('plist');
 const XML = require('xml2js');
+const chalk = require('chalk');
 
-exports.default = (chalk, currDirectory, packageJSON) => {
+exports.default = (currDirectory, packageJSON) => {
   if (existsSync(resolve(currDirectory, 'src-nativescript/package.json'))) {
     const nativePkg = readFileSync(resolve(currDirectory, 'src-nativescript/package.json'), 'utf-8');
     nativePkg.name = packageJSON.name;

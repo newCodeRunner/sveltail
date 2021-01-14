@@ -11,6 +11,9 @@
   // Globals
   const dispatch = createEventDispatcher();
 
+  let _headerHeight = 0;
+  let _msgHeight = 0;
+  let _actionsHeight = 0;
   let props = null;
   let msg;
   let confirm;
@@ -25,7 +28,7 @@
 
   // Web / Hybrid
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    msg = ({ title, message, details, icon, hideBar, barColorBg, barColorText, persistant, actions, actionsClass }) => {
+    msg = ({ title, message, details, icon, barColorBg, barColorText, persistant, actions, actionsClass }) => {
       const html = document.querySelector('html');
       html.classList.add('overflow-hidden');
       props = {
@@ -33,7 +36,6 @@
         message: getString(message, null),
         details: getString(details, null),
         icon: getIcon(icon, null),
-        hideBar: getBoolean(hideBar),
         barColorBg: getColor(barColorBg, 'primary'),
         barColorText: getColor(barColorText, 'white'),
         persistant: getBoolean(persistant),
@@ -93,9 +95,15 @@
           if (!props.persistant) dismiss();
         }}
       />
-      <div transition:fade={{ duration: 300 }} class="z-10 m-auto st-alerter rounded bg-white text-black dark:bg-black dark:text-white">
-        {#if !props.hideBar}
-          <div class="flex h-12 px-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}">
+      <div
+        transition:fade={{ duration: 300 }}
+        class="z-10 m-auto st-alerter rounded bg-white text-black dark:bg-black dark:text-white"
+      >
+        {#if props.title}
+          <div
+            bind:clientHeight={_headerHeight}
+            class="flex h-12 px-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}"
+          >
             <div class="inline-flex items-center">
               {#if props.icon}
                 <Icon icon={props.icon} size="md" class="mx-1" />
@@ -105,27 +113,25 @@
             <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
           </div>
         {/if}
-        <div class="-h-12 w-full p-4">
-          <div class="-h-16 w-full overflow-auto">
-            <div><strong>{props.message}</strong></div>
-            <div>{props.details}</div>
+        <div class="w-full p-4" bind:clientHeight={_msgHeight}><strong>{props.message}</strong></div>
+        {#if props.details}
+          <div class="w-full p-4 overflow-auto" style="height: calc(50vh - {_headerHeight}px - {_msgHeight}px - {_actionsHeight}px);">
+            {props.details}
           </div>
-          {#if props.actions.length > 0}
-            <div class="flex h-16 {props.actionsClass}">
-              {#each props.actions as action}
-                <Button
-                  flat
-                  rounded
-                  class="mx-1"
-                  label={action.label}
-                  size={action.size}
-                  colorBg={action.colorBg}
-                  colorText={action.colorText}
-                  on:click={action.onClick}
-                />
-              {/each}
-            </div>
-          {/if}
+        {/if}
+        <div class="flex p-4 {props.actionsClass}" bind:clientHeight={_actionsHeight}>
+          {#each props.actions as action}
+            <Button
+              flat
+              rounded
+              class="mx-1"
+              label={action.label}
+              size={action.size}
+              colorBg={action.colorBg}
+              colorText={action.colorText}
+              on:click={action.onClick}
+            />
+          {/each}
         </div>
       </div>
     </div>
@@ -134,7 +140,7 @@
 
 <style>
   .st-alerter {
-    width: 75vw;
-    height: 50vh;
+    min-width: 50vw;
+    max-width: 75vw;
   }
 </style>

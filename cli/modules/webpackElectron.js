@@ -3,6 +3,7 @@
 const { exec, execSync } = require('child_process');
 const { readdirSync, readFileSync, writeFileSync } = require('fs');
 const { resolve } = require('path');
+const chalk = require('chalk');
 
 // Webpack and plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
@@ -47,7 +48,7 @@ module.exports = (env) => {
     apply(compiler) {
       compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
         if (PROD) {
-          console.log('\n Sveltail: Generating package.json');
+          console.log(chalk.green(' Sveltail: Generating package.json\n'));
           writeFileSync(
             resolve(currDirectory, 'dist', 'Electron', 'unpacked', 'package.json'),
             JSON.stringify({

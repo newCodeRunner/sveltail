@@ -3,12 +3,13 @@ const { resolve } = require('path');
 const { existsSync, writeFileSync, readFileSync } = require('fs');
 const { execSync } = require('child_process');
 const XML = require('xml2js');
+const chalk = require('chalk');
 
 const currDirectory = process.cwd();
 
 const entryAvail = () => existsSync(resolve(currDirectory, 'src/app.js'));
 
-exports.devCordova = (chalk, { mode }) => {
+exports.devCordova = ({ mode }) => {
   const configPath = resolve(currDirectory, 'src-cordova/config.xml');
   if (existsSync(configPath)) {
     const config = readFileSync(configPath, 'utf-8');

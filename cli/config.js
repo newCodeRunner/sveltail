@@ -5,11 +5,12 @@ const inquirer = require('inquirer');
 const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 const { copySync } = require('fs-extra');
+const chalk = require('chalk');
 
 const updateCordova = require('./modules/updateCordova.js');
 const updateNS = require('./modules/updateNS.js');
 
-exports.default = (chalk) => {
+exports.default = () => {
   // Clears the command prompt
   clear();
 
@@ -197,10 +198,10 @@ exports.default = (chalk) => {
             }
 
             // Update Cordova Project Info
-            updateCordova.default(chalk, currDirectory, packageJSON);
+            updateCordova.default(currDirectory, packageJSON);
 
             // Update NativeScript Project Info
-            updateNS.default(chalk, currDirectory, packageJSON);
+            updateNS.default(currDirectory, packageJSON);
 
             // Add src folder if not exsists
             if (!existsSync(resolve(currDirectory, 'src'))) {

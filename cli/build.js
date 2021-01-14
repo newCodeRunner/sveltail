@@ -1,14 +1,16 @@
+/* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
 const { resolve } = require('path');
 const { existsSync, writeFileSync, rmdirSync } = require('fs');
 const { execSync, exec } = require('child_process');
+const chalk = require('chalk');
 
 const currDirectory = process.cwd();
 const entryAvail = () => existsSync(resolve(currDirectory, 'src/app.js'));
 const config = require(resolve(currDirectory, 'sveltail.config.js'));
 
-exports.buildElectron = (chalk, { noPackage }) => {
+exports.buildElectron = ({ noPackage, publish }) => {
   if (entryAvail()) {
     const webpackPath = resolve(__dirname, './modules/webpack.js');
     try {
@@ -27,20 +29,17 @@ exports.buildElectron = (chalk, { noPackage }) => {
       if (!builderJSON.directories.output) builderJSON.directories.output = resolve(currDirectory, 'dist', 'Electron', 'packaged');
 
       // Update Electron Builder Icons
-      if (process.platform === 'darwin' && !builderJSON.mac) {
-        builderJSON.mac = {
-          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.icns'),
-        };
+      if (process.platform === 'darwin') {
+        if (!builderJSON.mac) builderJSON.mac = {};
+        if (!builderJSON.mac.icon) builderJSON.mac.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.icns');
       }
-      if (process.platform === 'linux' && !builderJSON.linux) {
-        builderJSON.linux = {
-          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.png'),
-        };
+      if (process.platform === 'linux') {
+        if (!builderJSON.linux) builderJSON.linux = {};
+        if (!builderJSON.linux.icon) builderJSON.linux.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.png');
       }
-      if (process.platform === 'win32' && !builderJSON.win) {
-        builderJSON.win = {
-          icon: resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.ico'),
-        };
+      if (process.platform === 'win32') {
+        if (!builderJSON.win) builderJSON.win = {};
+        if (!builderJSON.win.icon) builderJSON.win.icon = resolve(currDirectory, 'public', 'Electron', 'icons', 'icon.ico');
       }
 
       writeFileSync(resolve(currDirectory, '.sveltail', 'builder.json'), JSON.stringify(builderJSON, null, 2));
@@ -56,10 +55,22 @@ exports.buildElectron = (chalk, { noPackage }) => {
         if (!noPackage) {
           console.log(chalk.green(' Sveltail: Building app through Electron Builder'));
           const configPath = resolve(currDirectory, '.sveltail', 'builder.json');
-          execSync(
-            `npx electron-builder build --config ${configPath}`,
-            { cwd: currDirectory, stdio: 'inherit' },
-          );
+
+          if (publish) {
+            const credentials = require('./credentials');
+            credentials.getGHToken()
+              .then((token) => {
+                execSync(
+                  `Set GH_TOKEN=${token} && npx electron-builder build --config ${configPath} --publish always`,
+                  { cwd: currDirectory, stdio: 'inherit' },
+                );
+              });
+          } else {
+            execSync(
+              `npx electron-builder build --config ${configPath}`,
+              { cwd: currDirectory, stdio: 'inherit' },
+            );
+          }
         }
       });
     } catch (err) {

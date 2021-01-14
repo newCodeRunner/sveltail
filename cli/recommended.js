@@ -4,8 +4,9 @@
 const { existsSync, writeFileSync, readFileSync } = require('fs');
 const { resolve } = require('path');
 const { execSync } = require('child_process');
+const chalk = require('chalk');
 
-exports.default = (chalk) => {
+exports.default = () => {
   const currDirectory = process.cwd();
   // Add .eslintrc.js
   if (!existsSync(resolve(currDirectory, '.eslintrc.js'))) {

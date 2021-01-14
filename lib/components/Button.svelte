@@ -24,6 +24,7 @@
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
   $: _textSize = getTextSize($$props.size, 'md');
+  $: _disabled = getBoolean($$props.disabled);
 
   const onClick = (evt) => {
     dispatch('click');
@@ -49,6 +50,7 @@
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
   <button
     class="
+    
       flex
       justify-center
       items-center
@@ -64,7 +66,7 @@
         focus:bg-{_colorText === 'current' ? 'gray-500' : _colorText}
         focus:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
       bg-{_colorBg}
-      text-{_colorText}   
+      text-{_colorText}  
       {_flat ? '' : `border border-${_colorBg === 'transparent' ? _colorText : _colorBg}`}
       {_rounded || _pill ? 'rounded' : ''}
       {_pill || _circle ? 'rounded-full' : ''}
@@ -75,7 +77,7 @@
     "
     on:click={onClick}
     aria-label={_label ? `Button ${_label}` : 'Action Button'}
-    disabled={loading}
+    disabled={loading || _disabled}
   >
     <div class="st-effect-ripple bg-{_colorBg === 'transparent' ? _colorText : _colorBg}" />
     {#if _icon}<Icon icon={_icon} size={_size} />{/if}

@@ -2,9 +2,10 @@
 const { resolve } = require('path');
 const { existsSync, readFileSync, writeFileSync } = require('fs');
 const XML = require('xml2js');
+const chalk = require('chalk');
 
 // Update Cordova Project Info
-exports.default = (chalk, currDirectory, packageJSON) => {
+exports.default = (currDirectory, packageJSON) => {
   if (existsSync(resolve(currDirectory, 'src-cordova/package.json'))) {
     const cordovaPkg = JSON.parse(readFileSync(resolve(currDirectory, 'src-cordova/package.json'), 'utf-8'));
 

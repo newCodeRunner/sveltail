@@ -5,13 +5,14 @@ const { existsSync, readFileSync, mkdirSync, writeFileSync } = require('fs');
 const { resolve, dirname } = require('path');
 const sharp = require('sharp');
 const { createICO, createICNS } = require('png2icons');
+const chalk = require('chalk');
 
 const makeDirectory = (dir) => {
   const directory = dirname(dir);
   if (!existsSync(directory)) mkdirSync(directory, { recursive: true });
 };
 
-exports.default = (chalk, arg) => {
+exports.default = (arg) => {
   const currDirectory = process.cwd();
 
   let logoPath = null;

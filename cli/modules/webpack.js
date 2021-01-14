@@ -5,7 +5,7 @@
 const { readFileSync, writeFileSync, existsSync, mkdirSync, watchFile } = require('fs');
 const { resolve } = require('path');
 const { exec, execSync } = require('child_process');
-const { format } = require('url');
+const chalk = require('chalk');
 
 // Webpack and Plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
@@ -178,7 +178,7 @@ module.exports = (env) => {
               child.stdout.pipe(process.stdout);
               child.stderr.pipe(process.stderr);
             } else if (platform === 'Electron') {
-              console.log('\n Sveltail: Starting electron build process');
+              console.log(chalk.green('\n Sveltail: Starting electron build process'));
               const electronConfigPath = resolve(__dirname, 'webpackElectron.js');
               const child = exec(
                 `npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`,
