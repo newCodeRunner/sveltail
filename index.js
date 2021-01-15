@@ -1,6 +1,8 @@
 /* eslint-disable object-curly-newline */
 
 // Components
+export { default as Accordian } from './lib/components/Accordian.svelte';
+export { default as AccordianItem } from './lib/components/AccordianItem.svelte';
 export { default as Alerter } from './lib/components/Alerter.svelte';
 export { default as Avatar } from './lib/components/Avatar.svelte';
 export { default as Banner } from './lib/components/Banner.svelte';
@@ -22,7 +24,9 @@ export { default as Menu } from './lib/components/Menu.svelte';
 export { default as Notifier } from './lib/components/Notifier.svelte';
 export { default as ObserverScroll } from './lib/components/ObserverScroll.svelte';
 export { default as RouterView } from './lib/components/RouterView.svelte';
-export { default as Tabs } from './lib/components/Tabs.svelte';
+export { default as Tab } from './lib/components/Tab.svelte';
+export { default as TabHeader } from './lib/components/TabHeader.svelte';
+export { default as TabItem } from './lib/components/TabItem.svelte';
 
 // Utilities
 export { default as helpers } from './lib/js/helpers';
