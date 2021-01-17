@@ -19,6 +19,7 @@ export { default as Input } from './lib/components/Input.svelte';
 export { default as LayoutNative } from './lib/components/LayoutNative.svelte';
 export { default as LayoutWeb } from './lib/components/LayoutWeb.svelte';
 export { default as List } from './lib/components/List.svelte';
+export { default as ListItem } from './lib/components/ListItem.svelte';
 export { default as Loader } from './lib/components/Loader.svelte';
 export { default as Menu } from './lib/components/Menu.svelte';
 export { default as Notifier } from './lib/components/Notifier.svelte';
