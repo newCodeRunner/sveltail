@@ -5,8 +5,8 @@
   $: _class = getString($$props.class);
   $: _label = getString($$props.label, '');
   $: _textSize = getTextSize($$props.size, 'md');
-  $: _colorBg = getColor($$props.colorBg, 'brand');
-  $: _colorText = getColor($$props.colorText, 'white');
+  $: _colorBg = getColor($$props.colorBg, 'transparent');
+  $: _colorText = getColor($$props.colorText, 'current');
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
 

@@ -8,8 +8,8 @@
   $: _class = getString($$props.class);
   $: _label = getString($$props.label);
   $: _name = getString(String($$props.name));
-  $: _borderColor = getColor($$props.borderColor, 'primary');
-  $: _textColor = getColor($$props.textColor, 'primary');
+  $: _borderColor = getColor($$props.colorBorder, 'current');
+  $: _textColor = getColor($$props.colorText, 'current');
 
   let _expand = false;
 
