@@ -23,7 +23,6 @@
   <div slot="utilities">
     <Alerter context={app} />
     <Notifier context={app} />
-    <LocalStorage context={app} />
   </div>
 
   <div slot="header">
@@ -39,8 +38,8 @@
   </div>
 
   <div slot="drawer">
-    <Drawer bind:this={leftDrawer} />
-    <Drawer bind:this={rightDrawer} right />
+    <Drawer bind:this={leftDrawer} fullScreen />
+    <Drawer bind:this={rightDrawer} right fullScreen />
   </div>
 
   <RouterView context={app} />

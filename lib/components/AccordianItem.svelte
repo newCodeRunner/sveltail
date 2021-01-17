@@ -4,7 +4,8 @@
   import { Icon } from 'sveltail';
   import { getColor, getString } from '../js/helpers';
 
-  let _label, _name, _borderColor, _textColor;
+  let _class, _label, _name, _borderColor, _textColor;
+  $: _class = getString($$props.class);
   $: _label = getString($$props.label);
   $: _name = getString(String($$props.name));
   $: _borderColor = getColor($$props.borderColor, 'primary');
@@ -49,7 +50,7 @@
   </div>
   {#if _expand}
     <div
-      class="w-full"
+      class="w-full {_class}" 
       in:fly="{{ y: -20, duration: 200 }}"
       out:fly="{{ y: -20, duration: 150 }}"
     >

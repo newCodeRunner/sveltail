@@ -36,7 +36,7 @@
       {/if}
       
       <!-- Start Slot  -->
-      <slot name="nav-start">
+      <slot name="start">
         <!-- Default Logo and Title -->
         <div class="flex items-center justify-start mx-3 cursor-pointer" on:click={brandClicked}>
           {#if _img}<Image img={_img} class="object-contain mr-2 {_dense ? 'h-8' : 'h-12'}" />{/if}
@@ -47,12 +47,12 @@
 
     <div class="flex items-center justify-start">
       <!-- Middle Slot  -->
-      <slot name="nav-middle" />
+      <slot name="middle" />
     </div>
 
     <div class="flex flex-1 items-center justify-end">
       <!-- End Slot -->
-      <slot name="nav-end" />
+      <slot name="end" />
 
       <!-- Left Menu -->
       {#if _rightMenu}
@@ -69,13 +69,13 @@
       <actionItem ios.position="left" android.position="actionBar">
         <Button colorBg="current" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={leftMenuClicked} />
         <!-- Start Slot  -->
-        <slot name="nav-start" />
+        <slot name="start" />
       </actionItem>
     {/if}
     
     <stackLayout orientation="horizontal">
       <!-- Start Slot  -->
-      <slot name="nav-middle">
+      <slot name="middle">
         <!-- Default Logo and Title -->
         <Image src="res://{_img}" stretch="aspectFill" height="25" class="m-x-10" />
         {#if _title}<label text={_title} fontSize="25" for="" color={getColor('white')} />{/if}
@@ -86,7 +86,7 @@
     {#if _rightMenu}
       <actionItem ios.position="right" android.position="popup">
         <!-- End Slot -->
-        <slot name="nav-end" />
+        <slot name="end" />
         <Button colorBg="current" colorText="white" icon='fas fa-bars f0c9' size="md" flat on:click={leftMenuClicked} />
       </actionItem>
     {/if}

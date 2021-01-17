@@ -4,10 +4,12 @@
 
   const dispatch = createEventDispatcher();
 
-  let _class, _right;
+  let _class, _right, _fullScreen, _noBackdrop;
 
   $:  _class = getString($$props.class);
   $:  _right = getBoolean($$props.right);
+  $: _fullScreen = getBoolean($$props.fullScreen);
+  $: _noBackdrop = getBoolean($$props.noBackdrop);
 
   const emitEvent = (vis) => {
     if (vis) dispatch('show'); 
@@ -37,14 +39,16 @@
 
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <div class='absolute z-20 h-screen w-screen top-0 left-0 cordova safe-area'>
-      <div class="fixed bg-black dark:bg-white inset-0 opacity-50" on:click={hide} />
+    <div class='absolute z-20 top-0 left-0 {_fullScreen ? 'h-screen w-screen cordova safe-area' : 'h-full w-full'}'>
+      {#if !_noBackdrop}
+        <div class="absolute bg-black dark:bg-white h-full w-full opacity-50" on:click={hide} />
+      {/if}
       <aside
         in:fly="{{ x: _right ? 200 : -200, duration: 200 }}"
         out:fly="{{ x: _right ? 200 : -200, duration: 150 }}"
-        class="fixed safe-area-top w-80 h-full bg-white dark:bg-black {_right ? 'right-0' : ''}"
+        class="absolute -w-12 sm:w-96 h-full bg-white dark:bg-black {_right ? 'right-0' : ''} {_fullScreen ? 'safe-area-top' : ''}"
       >
-        <div class="h-full w-full p-5 {_class}">
+        <div class="h-full w-full {_class}">
           <slot />
         </div>
       </aside>

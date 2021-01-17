@@ -61,7 +61,6 @@
     "sass": "^1.32.2",
     "sass-loader": "^10.1.0",
     "sharp": "^0.27.0",
-    "store2": "^2.12.0",
     "style-loader": "^2.0.0",
     "svelte": "^3.31.2",
     "svelte-i18n": "^3.3.0",

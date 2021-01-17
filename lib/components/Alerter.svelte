@@ -36,8 +36,8 @@
         message: getString(message, null),
         details: getString(details, null),
         icon: getIcon(icon, null),
-        barColorBg: getColor(barColorBg, 'primary'),
-        barColorText: getColor(barColorText, 'white'),
+        barColorBg: getColor(barColorBg, 'transparent'),
+        barColorText: getColor(barColorText, 'current'),
         persistant: getBoolean(persistant),
         actions: isArray(actions)
           ? actions.map((i, index) => {
@@ -65,10 +65,46 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     };
-    confirm = () => {
+    confirm = ({ title, message, details, icon, barColorBg, barColorText, actions, actionsClass }) => new Promise((resolve) => {
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
-    };
+      props = {
+        title: getString(title, null),
+        message: getString(message, null),
+        details: getString(details, null),
+        icon: getIcon(icon, null),
+        barColorBg: getColor(barColorBg, 'transparent'),
+        barColorText: getColor(barColorText, 'current'),
+        persistant: true,
+        actions: isArray(actions)
+          ? actions.map((i, index) => {
+              return { 
+                id: index,
+                label: i.label,
+                size: i.size,
+                icon: i.icon,
+                colorBg: i.colorBg,
+                colorText: i.colorText,
+                onClick() {
+                  dismiss();
+                  resolve(i.label);
+                }, 
+              };
+            }
+          )
+          : [{
+            label: 'Cancel',
+            size: 'sm',
+            colorBg: 'transparent',
+            colorText: 'primary',
+            onClick() {
+              dismiss();
+              resolve();
+            },
+          }],
+        actionsClass: getString(actionsClass, 'justify-end items-center'),
+      };
+    });
   }
 
   export const alerter = {
@@ -110,7 +146,9 @@
               {/if}
               <div>{props.title}</div>
             </div>
-            <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
+            {#if !props.persistant}
+              <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
+            {/if}
           </div>
         {/if}
         <div class="w-full p-4" bind:clientHeight={_msgHeight}><strong>{props.message}</strong></div>
