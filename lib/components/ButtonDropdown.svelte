@@ -6,19 +6,19 @@
 
   // Globals
   const dispatch = createEventDispatcher();
-  const buttonProps = $$props;
-  const { items } = $$props;
-  let menuEL;
+  const _buttonProps = $$props;
 
-  delete buttonProps.items;
   const onClick = () => {
     dispatch('click');
   };
 </script>
 
-<Menu bind:this={menuEL} items={items}>
+<Menu>
   <Button
-    {...buttonProps}
+    {..._buttonProps}
     on:click={onClick}
   />
+  <div slot="items">
+    <slot />
+  </div>
 </Menu>

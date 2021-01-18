@@ -32,7 +32,9 @@
       class="fixed top-0 left-0 z-10 border border-1 border-black dark:border-white md:absolute md:h-auto"
       style={`transform: translateY(${height}px); width: ${_width ? `${_width}px`: '100%'};`}
     >
-      <List items={_items} class="p-10 h-full overflow-auto md:p-0 md:h-auto md:overflow-none" on:itemClicked={hide} />
+      <List class="p-10 h-full overflow-auto md:p-0 md:h-auto md:overflow-none" on:click={hide}>
+        <slot name="items" />
+      </List>
     </div>
   {/if}
 </div>
