@@ -14,11 +14,8 @@
 </script>
 
 <Menu>
-  <Button
-    {..._buttonProps}
-    on:click={onClick}
-  />
   <div slot="items">
     <slot />
   </div>
+  <Button {..._buttonProps} on:click={onClick} />
 </Menu>

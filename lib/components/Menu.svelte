@@ -33,7 +33,9 @@
       style={`transform: translateY(${height}px); width: ${_width ? `${_width}px`: '100%'};`}
     >
       <List class="p-10 h-full overflow-auto md:p-0 md:h-auto md:overflow-none" on:click={hide}>
-        <slot name="items" />
+        <div class="h-full">
+          <slot name="items" />
+        </div>
       </List>
     </div>
   {/if}
