@@ -72,7 +72,6 @@
       });
 
       page.base('/#');
-      window.location.href = window.location.href.split('/#')[0] + '/#';
       page();
     });
   }

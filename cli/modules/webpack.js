@@ -30,10 +30,13 @@ const { tailwindcss, pwa, framework } = svelteConfig.default();
 
 // Create an inital tailwind.config.js file based on user values
 const updateTailwindConfig = (css) => {
+  const checkCSS = require('./checkTailwind');
+  const modifiedCSS = checkCSS(css);
+
   if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
   writeFileSync(
     resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
-    `module.exports = ${JSON.stringify(css, null, 2)}`,
+    `module.exports = ${JSON.stringify(modifiedCSS, null, 2)}`,
   );
 };
 updateTailwindConfig(tailwindcss);
@@ -64,6 +67,9 @@ module.exports = (env) => {
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
   const bundle = [resolve(currDirectory, 'src', 'app.js')];
+
+  // Set up for purging
+  process.env.NODE_ENV = mode;
 
   process.env.platform = platform;
   process.env.PROD = PROD;
@@ -97,8 +103,6 @@ module.exports = (env) => {
             productName: app.name,
             productDescription: description,
             productVersion: version,
-            platform,
-            PROD,
           },
         ),
       ),

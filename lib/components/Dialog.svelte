@@ -38,11 +38,11 @@
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
     <div class='absolute z-20 h-screen w-screen top-0 left-0 cordova safe-area flex items-center'>
-      <div class="fixed bg-black dark:bg-white inset-0 opacity-50" on:click={_persistent ? null : hide} />
+      <div class="fixed bg-dark dark:bg-light inset-0 opacity-50" on:click={_persistent ? null : hide} />
       <div
         in:fade="{{ duration: 200 }}"
         out:fade="{{ duration: 150 }}"
-        class="relative safe-area-top bg-white dark:bg-black {_fullScreen ? 'h-full w-full' : 'm-auto'} {_class}"
+        class="relative safe-area-top bg-light dark:bg-dark {_fullScreen ? 'h-full w-full' : 'm-auto'} {_class}"
       >
         <slot />
       </div>

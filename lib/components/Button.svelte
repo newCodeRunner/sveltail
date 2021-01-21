@@ -50,7 +50,6 @@
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
   <button
     class="
-    
       flex
       justify-center
       items-center
@@ -60,10 +59,10 @@
       transition
         ease-in-out
       transform
-        hover:bg-{_colorText === 'current' ? 'gray-500' : _colorText}
+        hover:bg-{_colorText === 'current' ? 'info' : _colorText}
         hover:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
       transform
-        focus:bg-{_colorText === 'current' ? 'gray-500' : _colorText}
+        focus:bg-{_colorText === 'current' ? 'info' : _colorText}
         focus:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
       bg-{_colorBg}
       text-{_colorText}  

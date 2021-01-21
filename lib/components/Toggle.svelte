@@ -24,8 +24,8 @@
   <label for={_id} class="inline-flex items-center cursor-pointer">
     <input id={_id} type="checkbox" class="hidden" checked="{checked}" on:click={() => { checked = !checked; }}>
     <div class="relative inline-flex items-center {_height} {_width}">
-      <div class="w-full h-1/4 rounded-full shadow-inner {checked ? `bg-${_color}` : 'bg-gray-500'}"/>
-      <div class="st-toggle-handle absolute w-1/2 h-1/2 rounded-full shadow bg-gray-300" />
+      <div class="w-full h-1/4 rounded-full shadow-inner {checked ? `bg-${_color}` : 'bg-info'}"/>
+      <div class="st-toggle-handle absolute w-1/2 h-1/2 rounded-full shadow bg-info" />
     </div>
     <span class="ml-2 {_textSize}">{_label}</span>
   </label>

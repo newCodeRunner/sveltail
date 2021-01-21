@@ -40,9 +40,12 @@ exports.default = () => {
   } else {
     packageJSON.name = currDirectory.replace(/\\/g, '/').split('/').pop();
     packageJSON.version = '1.0.0';
-    packageJSON.description = 'A Sveltail Example';
+    packageJSON.description = 'A Sveltail Example App';
     packageJSON.app = {
-      id: 'app.web.sveltail', name: 'Sveltail App', email: 'awesome@svetail.com', website: 'svetail.com',
+      id: 'app.demo.sveltail',
+      name: 'Sveltail App',
+      email: 'awesome@svetail.com',
+      website: 'svetail.com',
     };
   }
 

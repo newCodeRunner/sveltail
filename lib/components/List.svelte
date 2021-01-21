@@ -12,6 +12,6 @@
   $: _class = getString($$props.class);
 </script>
 
-<ul class="bg-white text-black dark:bg-black dark:text-white {_class}" on:click={onClick}>
+<ul class="bg-light text-dark dark:bg-dark dark:text-light {_class}" on:click={onClick}>
   <slot />
 </ul>

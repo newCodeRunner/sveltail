@@ -180,7 +180,7 @@
           h-auto
           pb-1
           {_textSize}
-          {error ? 'text-danger' : 'text-white dark:text-black'}
+          {error ? 'text-danger' : 'text-light dark:text-dark'}
           {_pill ? '' : 'px-2'}
           {_pill && _size === 'xs' ? 'px-3' : ''}
           {_pill && _size === 'sm' ? 'px-4' : ''}

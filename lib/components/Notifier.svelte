@@ -134,11 +134,11 @@
         in:fly={{ y: item.isTop ? -50 : 50, duration: 500 }}
         out:fly={{ y: item.isTop ? -50 : 50, duration: 500 }}
         bind:clientHeight={item.height}
-        class="fixed z-30 m-5 p-5 rounded max-w-xs md:max-w-sm bg-black text-white dark:bg-white dark:text-black"
+        class="fixed z-30 m-5 p-5 rounded max-w-xs md:max-w-sm bg-dark text-light dark:bg-light dark:text-dark"
         style={getStyle(i, item.position, item.id)}
       >
         <div class="relative flex">
-          {#if item.badge > 1}<div class="fixed top-0 rounded left-0 st-notifier-badge text-white px-2 py-1">{item.badge}</div>{/if}
+          {#if item.badge > 1}<div class="fixed top-0 rounded left-0 st-notifier-badge text-light px-2 py-1">{item.badge}</div>{/if}
           {#if item.icon}<Icon icon={item.icon} class="ml-1 mr-2" size="md" />{/if}
           <div>
             {#if item.title}<div>{item.title}</div>{/if}

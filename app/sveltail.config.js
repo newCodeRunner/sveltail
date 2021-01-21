@@ -22,9 +22,7 @@ exports.default = (/* cfg */) => {
           md: '768px',
           lg: '1024px',
         },
-        colors: { // Keep the colors you want to use in tailwind, by default the framework uses below
-          black: colors.black,
-          white: colors.white,
+        colors: { // Add the colors you want to use in tailwind
           gray: colors.gray,
         },
         extend: {
@@ -35,7 +33,9 @@ exports.default = (/* cfg */) => {
             accent: '#e6b89c',
             primary: '#0496ff',
             secondary: '#5eb1bf',
-            info: '#9cafb7',
+            info: '#818181',
+            light: '#ffffff',
+            dark: '#000000',
             success: '#90be6d',
             warning: '#ff9f1c',
             danger: '#d81159',
@@ -107,11 +107,11 @@ exports.default = (/* cfg */) => {
     },
     framework: {
       APP_ENV: {
-
+        // Define variables here
       },
     },
     'electron-builder': {
-      appId: 'app.demo.sveltail',
+      appId: packageJSON.app.id,
       productName: packageJSON.app.name,
       copyright: 'Copyright © Sveltail',
       asar: true,

@@ -12,7 +12,7 @@
   $: _class = getString($$props.class);
   $: _titleClass = getString($$props.titleClass);
   $: _descriptionClass = getString($$props.descriptionClass);
-  $: _activeClass = getString($$props.activeClass, 'text-primary bg-gray-400 dark:bg-gray-600');
+  $: _activeClass = getString($$props.activeClass, 'text-primary');
   $: _title = getString($$props.title, null);
   $: _description = getString($$props.description, null);
   $: _active = getBoolean($$props.active);
@@ -27,13 +27,13 @@
   class="
     relative
     flex
-    {_active ? _activeClass : 'cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700'}
+    {_active ? _activeClass : 'cursor-pointer hover:bg-info'}
     {_class}
   "
   on:click={_onClick}
 >
   {#if !_noRipple && !_active}
-    <div class="st-effect-ripple bg-gray-300 dark:bg-gray-700" />
+    <div class="st-effect-ripple bg-info" />
   {/if}
 
   <slot name="icon">

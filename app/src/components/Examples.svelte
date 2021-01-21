@@ -46,7 +46,7 @@
 <br>
 <h1><strong>Banners</strong></h1>
 <Banner title="Info" />
-<Banner title="Primary Banner" message="This is a custom banner" colorBg="primary" colorText="black" icon="fas fa-bars" dismissable />
+<Banner title="Primary Banner" message="This is a custom banner" colorBg="primary" colorText="dark" icon="fas fa-bars" dismissable />
 <Banner title="Secondary Banner" colorBg="secondary" dismissable />
 <Banner title="Success Banner" message="Success Achieved!" colorBg="success" icon="fas fa-check" />
 

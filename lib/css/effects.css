@@ -1,6 +1,6 @@
 .st-effect-ripple:after {
   content: "";
-  background: inherit ;
+  background: inherit;
   position: absolute;
   top: 0;
   left: 0;

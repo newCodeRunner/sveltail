@@ -1,24 +1,15 @@
 /* eslint-disable no-underscore-dangle */
+// eslint-disable-next-line import/no-unresolved
 import { app, BrowserWindow } from 'electron';
-import { existsSync } from 'fs';
 import { resolve } from 'path';
 import setupUserPreferences from './modules/userPreferences';
 
 let mainWindow = null;
 
-const iconType = {
-  darwin: 'icns',
-  linux: 'png',
-  win32: 'png',
-};
-const iconPath = resolve(process.cwd(), `public/Electron/icons/icon.${iconType[process.platform]}`);
-const icon = existsSync(iconPath) ? iconPath : null;
-
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 500,
     height: 300,
-    icon: JSON.parse(process.env.PROD) ? undefined : icon,
     useContentSize: true,
     webPreferences: {
       enableRemoteModule: false,

@@ -126,14 +126,14 @@
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
     <div class='absolute h-screen w-screen top-0 left-0 flex'>
       <div
-        class="fixed bg-black dark:bg-white inset-0 opacity-50"
+        class="fixed bg-dark dark:bg-light inset-0 opacity-50"
         on:click={() => {
           if (!props.persistant) dismiss();
         }}
       />
       <div
         transition:fade={{ duration: 300 }}
-        class="z-10 m-auto st-alerter rounded bg-white text-black dark:bg-black dark:text-white"
+        class="z-10 m-auto st-alerter rounded bg-light text-dark dark:bg-dark dark:text-light"
       >
         {#if props.title}
           <div
@@ -151,7 +151,7 @@
             {/if}
           </div>
         {/if}
-        <div class="w-full p-4" bind:clientHeight={_msgHeight}><strong>{props.message}</strong></div>
+        <div class="w-full p-4" bind:clientHeight={_msgHeight}>{props.message}</div>
         {#if props.details}
           <div class="w-full p-4 overflow-auto" style="height: calc(50vh - {_headerHeight}px - {_msgHeight}px - {_actionsHeight}px);">
             {props.details}
