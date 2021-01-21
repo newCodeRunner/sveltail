@@ -1,5 +1,4 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { readable } from 'svelte/store';
   import { fade } from 'svelte/transition';
 
@@ -9,8 +8,6 @@
   import { getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
 
   // Globals
-  const dispatch = createEventDispatcher();
-
   let _headerHeight = 0;
   let _msgHeight = 0;
   let _actionsHeight = 0;

@@ -1,13 +1,10 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { readable } from 'svelte/store';
 
   import Image from './Image.svelte';
-
   import { isObject, getString } from '../js/helpers';
 
   // Globals
-  const dispatch = createEventDispatcher();
   let render = true;
   let show;
   let hide;
