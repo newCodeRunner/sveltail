@@ -17,7 +17,7 @@
     return type;
   };
 
-  let _size, _class, _label, _icon, _iconRight, _flat, _pill, _rounded, _colorBg,_colorText, _height,
+  let _size, _class, _label, _icon, _iconRight, _pill, _rounded, _colorBg,_colorText, _height,
   _width, _textSize, _clearable, _validate, _autoValidate, _type, _hideHint, _required, _min, _max;
 
   $: _size = getString($$props.size, 'md');
@@ -25,11 +25,10 @@
   $: _label = getString($$props.label, null);
   $: _icon = getIcon($$props.icon);
   $: _iconRight = getIcon($$props.iconRight);
-  $: _flat = getBoolean($$props.flat);
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
-  $: _colorBg = getColor($$props.colorBg, 'primary');
-  $: _colorText = getColor($$props.colorText, 'white');
+  $: _colorBg = getColor($$props.colorBg, 'transparent');
+  $: _colorText = getColor($$props.colorText, 'dark');
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
   $: _textSize = getTextSize($$props.size, 'md');
@@ -46,9 +45,11 @@
   $: _max = getNumber($$props.max, null); 
 
   let isFocused = false;
-  let error = null;
   let input = null;
-  let value = null;
+  
+  export let error = null;
+  export let value = null;
+
   const validate = () => {
     const cleanedStr = escape((value ? value : ''));
 
@@ -112,7 +113,8 @@
         {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
         {error ? 'border-3 border-danger' : ''}
         bg-{_colorBg}
-        border-{_colorBg === 'transparent' ? _colorText : _colorBg}
+        border-{_colorBg === 'transparent' ? 'dark' : _colorBg}
+        dark:border-{_colorBg === 'transparent' ? 'light' : _colorBg}
         {_rounded || _pill ? 'rounded' : ''}
         {_pill ? 'rounded-full' : 'px-2'}
         {_pill && _size === 'xs' ? 'px-3' : ''}

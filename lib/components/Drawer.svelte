@@ -4,12 +4,13 @@
 
   const dispatch = createEventDispatcher();
 
-  let _class, _right, _fullScreen, _noBackdrop;
+  let _class, _right, _fullScreen, _noBackdrop, _persistant;
 
   $:  _class = getString($$props.class);
   $:  _right = getBoolean($$props.right);
   $: _fullScreen = getBoolean($$props.fullScreen);
   $: _noBackdrop = getBoolean($$props.noBackdrop);
+  $: _persistant = getBoolean($$props.persistant);
 
   const emitEvent = (vis) => {
     if (vis) dispatch('show'); 
@@ -41,7 +42,7 @@
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
     <div class='absolute z-20 top-0 left-0 {_fullScreen ? 'h-screen w-screen cordova safe-area' : 'h-full w-full'}'>
       {#if !_noBackdrop}
-        <div class="absolute bg-dark dark:bg-light h-full w-full opacity-50" on:click={hide} />
+        <div class="absolute bg-dark dark:bg-light h-full w-full opacity-50" on:click={_persistant ? null : hide} />
       {/if}
       <aside
         in:fly="{{ x: _right ? 200 : -200, duration: 200 }}"

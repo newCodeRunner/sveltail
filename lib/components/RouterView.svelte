@@ -1,6 +1,6 @@
 <script>
   // eslint-disable-next-line object-curly-newline
-  import { afterUpdate } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
 
   import hooks from '~/src/router/hooks';
@@ -9,6 +9,8 @@
   import { isFunction, isObject } from '../js/helpers';
 
   // Globals
+  const dispatch = createEventDispatcher();
+
   let Route = null;
   let currPath = null;
   let page;
@@ -117,6 +119,7 @@
 
   afterUpdate(() => {
     if (isFunction($loader.hide)) $loader.hide();
+    dispatch("updated", currPath);
   });
 </script>
 

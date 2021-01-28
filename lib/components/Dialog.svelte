@@ -4,10 +4,10 @@
 
   const dispatch = createEventDispatcher();
 
-  let _class, _fullScreen;
+  let _class, _fullScreen, _persistant;
   $:  _class = getString($$props.class);
   $: _fullScreen = getBoolean($$props.fullScreen);
-  $: _persistent = getBoolean($$props.persistent);
+  $: _persistant = getBoolean($$props.persistant);
 
   const emitEvent = (vis) => {
     if (vis) dispatch('show'); 
@@ -38,7 +38,7 @@
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
     <div class='absolute z-20 h-screen w-screen top-0 left-0 cordova safe-area flex items-center'>
-      <div class="fixed bg-dark dark:bg-light inset-0 opacity-50" on:click={_persistent ? null : hide} />
+      <div class="fixed bg-dark dark:bg-light inset-0 opacity-50" on:click={_persistant ? null : hide} />
       <div
         in:fade="{{ duration: 200 }}"
         out:fade="{{ duration: 150 }}"

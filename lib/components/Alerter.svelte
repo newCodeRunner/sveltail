@@ -3,6 +3,7 @@
   import { fade } from 'svelte/transition';
 
   import Icon from './Icon.svelte';
+  import Input from './Input.svelte';
   import Button from './Button.svelte';
 
   import { getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
@@ -12,8 +13,12 @@
   let _msgHeight = 0;
   let _actionsHeight = 0;
   let props = null;
+
   let msg;
   let confirm;
+  let input;
+  let _inputText = null;
+  let _inputError = null;
   const dismiss = () => {
     props = null;
   };
@@ -102,11 +107,73 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     });
+    input = ({ title, message, details, icon, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve) => {
+      const html = document.querySelector('html');
+      html.classList.remove('overflow-hidden');
+      props = {
+        title: getString(title, null),
+        message: getString(message, null),
+        details: getString(details, null),
+        icon: getIcon(icon, null),
+        barColorBg: getColor(barColorBg, 'transparent'),
+        barColorText: getColor(barColorText, 'current'),
+        persistant: true,
+        actions: isArray(actions)
+          ? actions.map((i, index) => {
+              return { 
+                id: index,
+                label: i.label,
+                size: i.size,
+                icon: i.icon,
+                colorBg: i.colorBg,
+                colorText: i.colorText,
+                onClick() {
+                  resolve(i.label, _inputText);
+                }, 
+              };
+            }
+          )
+          : [
+              {
+                label: 'Okay',
+                size: 'sm',
+                colorBg: 'transparent',
+                colorText: 'primary',
+                onClick() {
+                  if (callback) {
+                    const result = callback(_inputText, _inputError);
+                    if (result === true) {
+                      resolve({ val: _inputText, err: _inputError });
+                      dismiss();
+                    } else _inputError = result;
+                  } else {
+                    resolve({ val: _inputText, err: _inputError});
+                    dismiss();
+                  }
+                },
+              },
+              {
+                label: 'Cancel',
+                size: 'sm',
+                colorBg: 'transparent',
+                colorText: 'info',
+                onClick() {
+                  reject();
+                },
+              },
+          ],
+        actionsClass: getString(actionsClass, 'justify-end items-center'),
+        showInput: true,
+        textValue: null,
+      };
+    });
   }
 
   export const alerter = {
     msg,
     confirm,
+    input,
+    dismiss,
   };
 
   if (isObject($$props.context)) {
@@ -149,9 +216,14 @@
           </div>
         {/if}
         <div class="w-full p-4" bind:clientHeight={_msgHeight}>{props.message}</div>
-        {#if props.details}
+        {#if props.details || props.showInput}
           <div class="w-full p-4 overflow-auto" style="height: calc(50vh - {_headerHeight}px - {_msgHeight}px - {_actionsHeight}px);">
-            {props.details}
+            {#if props.details}
+              <div>{props.details}</div>
+            {/if}
+            {#if props.showInput}
+              <Input bind:value={_inputText} bind:error={_inputError} class="w-full" />
+            {/if}
           </div>
         {/if}
         <div class="flex p-4 {props.actionsClass}" bind:clientHeight={_actionsHeight}>
