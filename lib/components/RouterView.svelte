@@ -1,12 +1,20 @@
 <script>
   // eslint-disable-next-line object-curly-newline
-  import { afterUpdate, createEventDispatcher } from 'svelte';
+  import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
   import { writable } from 'svelte/store';
 
   import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
   
   import { isFunction, isObject } from '../js/helpers';
+
+  if (process.env.platform === 'Electron') {
+    const onLoad = () => {
+      navigateTo('/');
+      window.removeEventListener('load', onLoad);
+    };
+    window.addEventListener('load', onLoad);
+  }
 
   // Globals
   const dispatch = createEventDispatcher();

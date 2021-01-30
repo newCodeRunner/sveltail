@@ -6,7 +6,7 @@
   import Input from './Input.svelte';
   import Button from './Button.svelte';
 
-  import { getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
+  import { getSize, getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
 
   // Globals
   let _headerHeight = 0;
@@ -46,10 +46,10 @@
               return { 
                 id: index,
                 label: i.label,
-                size: i.size,
-                icon: i.icon,
-                colorBg: i.colorBg,
-                colorText: i.colorText,
+                size: getSize(i.size, 'md'),
+                icon: getIcon(i.icon, null),
+                colorBg: getColor(i.colorBg, 'transparent'),
+                colorText: getColor(i.colorText, 'current'),
                 onClick() {
                   if (isFunction(i.onClick)) result = i.onClick();
                   dismiss();  
@@ -83,10 +83,10 @@
               return { 
                 id: index,
                 label: i.label,
-                size: i.size,
-                icon: i.icon,
-                colorBg: i.colorBg,
-                colorText: i.colorText,
+                size: getSize(i.size, 'md'),
+                icon: getIcon(i.icon, null),
+                colorBg: getColor(i.colorBg, 'transparent'),
+                colorText: getColor(i.colorText, 'current'),
                 onClick() {
                   dismiss();
                   resolve(i.label);
@@ -123,10 +123,10 @@
               return { 
                 id: index,
                 label: i.label,
-                size: i.size,
-                icon: i.icon,
-                colorBg: i.colorBg,
-                colorText: i.colorText,
+                size: getSize(i.size, 'md'),
+                icon: getIcon(i.icon, null),
+                colorBg: getColor(i.colorBg, 'transparent'),
+                colorText: getColor(i.colorText, 'current'),
                 onClick() {
                   resolve(i.label, _inputText);
                 }, 

@@ -15,6 +15,7 @@
 
   let _tabWidth = 0;
   let _tabScrollLeft = 0;
+  let _stripHeight = 0;
   let _tabContainer;
 
   const _updateScrollPosition = () => {
@@ -31,7 +32,7 @@
 </script>
 
 <div class="st-tab-container {_class}" initial={_tab}>
-  <div class="flex">
+  <div bind:clientHeight={_stripHeight} class="flex">
     <div>
       {#if _tabWidth === 0 && _tabScrollLeft > 0}
         <Button class="flex-none" size="sm" flat icon="fas fa-angle-left" on:click={_scrollLeft} />
@@ -54,7 +55,9 @@
     </div>
   </div>
   
-  <slot name="content" />
+  <div style="height: calc(100% - {_stripHeight}px);">
+    <slot name="content" />
+  </div>
 </div>
 
 <style>
