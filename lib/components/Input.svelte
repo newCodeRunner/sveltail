@@ -41,8 +41,8 @@
     
   // Validation Options
   $: _required = getBoolean($$props.required);
-  $: _min = getNumber($$props.min, null);
-  $: _max = getNumber($$props.max, null); 
+  $: _min = getString(String($$props.min), null);
+  $: _max = getString(String($$props.max), null); 
 
   let isFocused = false;
   let input = null;
@@ -51,7 +51,7 @@
   export let value = null;
 
   const validate = () => {
-    const cleanedStr = escape((value ? value : ''));
+    const cleanedStr = escape((value ? String(value) : '')).trim();
 
     let errMsg = null;
     if (_validate) {
@@ -59,25 +59,34 @@
       if (helpers.isString(result)) errMsg = result;
     }
 
-    if (_required) errMsg = !isEmpty(cleanedStr) && cleanedStr.trim() !== '' ? null : 'This is Required';
+    if (_required && !errMsg) errMsg = !isEmpty(cleanedStr) && cleanedStr.trim() !== '' ? null : 'This is Required';
 
-    if (_autoValidate) {
+    if (_autoValidate && !errMsg) {
       if (_type === 'number') {
-        error = isNumeric(cleanedStr, { no_symbols: true }) ? null : 'Only numbers are allowed';
-        if (_min) error = Number(cleanedStr) >= Number(_min) ? null : `Must be greater than or equal to ${_min}`;
-        if (_max) error = Number(cleanedStr) <= Number(_max) ? null : `Must be less than or equal to ${_max}`;
-      } else if (_type === 'tel') error = isNumeric(cleanedStr) ? null : 'Invalid Number';
-      else if (_type === 'email') error = isEmail(cleanedStr) ? null : 'Invalid Email';
-      else if (_type === 'date') error = isDate(cleanedStr) ? null : 'Invalid Date';
+        const num = Number(cleanedStr);
+        errMsg = isNumeric(cleanedStr, { no_symbols: true }) ? null : 'Only numbers are allowed';
+        if (_min && !errMsg) {
+          const min = getNumber(Number(_min), -Infinity);
+          errMsg = num >= min ? null : `Must be at least ${_min}`;
+        }
+        if (_max && !errMsg) {
+          const max = getNumber(Number(_max), Infinity);
+          errMsg = num <= max ? null : `Must be at most ${_max}`;
+        }
+      } else if (_type === 'tel') errMsg = isNumeric(cleanedStr) ? null : 'Invalid Number';
+      else if (_type === 'email') errMsg = isEmail(cleanedStr) ? null : 'Invalid Email';
+      else if (_type === 'date') errMsg = isDate(cleanedStr) ? null : 'Invalid Date';
       else if (_type === 'text' || _type === 'password') {
         if (_min || _max) {
-          error = isLength(cleanedStr, { min: _min ? _min : 0, max: _max ? _max : undefined })
+          errMsg = isLength(cleanedStr, { min: _min ? _min : 0, max: _max ? _max : undefined })
             ? null
             : _min && _max
-              ? `Must be between ${_min} and ${_max} Characters`
+              ? _min === _max
+                ? `Must be ${_min} characters`
+                : `Must be ${_min}-${_max} characters`
               : _min
-                ? `Must be at least ${_min} Characters`
-                : `Must be less than ${_max} Characters`;
+                ? `Must be at least ${_min} characters`
+                : `Must be at most ${_max} characters`;
         }
       }
     }
@@ -96,6 +105,11 @@
   };
 
   $: onChange(value);
+
+  export const isValid = () => {
+    validate();
+    return error === null;
+  };
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}
@@ -180,7 +194,6 @@
         class="
           select-none
           h-auto
-          pb-1
           {_textSize}
           {error ? 'text-danger' : 'text-light dark:text-dark'}
           {_pill ? '' : 'px-2'}

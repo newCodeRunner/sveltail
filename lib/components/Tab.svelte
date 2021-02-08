@@ -11,12 +11,14 @@
   $: _class = getString($$props.class);
   $: _tab = getString(String($$props.tab));
 
-  $: dispatch('tabClicked', _tab);
-
   let _tabWidth = 0;
   let _tabScrollLeft = 0;
   let _stripHeight = 0;
-  let _tabContainer;
+  let _tabContainer, _tabParent;
+
+  export const changeTab = (tabName) => {
+    _tabParent.dispatchEvent(new CustomEvent('tab-change', { detail: String(tabName) }));
+  };
 
   const _updateScrollPosition = () => {
     if (_tabContainer) _tabScrollLeft = Math.round(100 * _tabContainer.scrollLeft / (_tabContainer.scrollWidth - _tabContainer.clientWidth));
@@ -31,7 +33,7 @@
   };
 </script>
 
-<div class="st-tab-container {_class}" initial={_tab}>
+<div bind:this={_tabParent} class="st-tab-container {_class}" initial={_tab}>
   <div bind:clientHeight={_stripHeight} class="flex">
     <div>
       {#if _tabWidth === 0 && _tabScrollLeft > 0}

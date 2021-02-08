@@ -216,9 +216,9 @@ module.exports = (env) => {
       use: {
         loader: 'svelte-loader',
         options: {
-          dev: !PROD,
+          dev: false,
           emitCss: true,
-          hotReload: true,
+          hotReload: false,
         },
       },
     },

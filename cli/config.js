@@ -176,7 +176,7 @@ exports.default = () => {
           if (confirm) {
             const scripts = [
               { key: 'st-config', script: 'sveltail config' },
-              { key: 'st-icons', script: 'sveltail icons --path src/assets/logo.png' },
+              { key: 'st-icons', script: 'sveltail icons --logo ./src/assets/logo.png' },
               { key: 'st-dev', script: 'sveltail dev' },
               { key: 'st-build', script: 'sveltail build' },
             ];

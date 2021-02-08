@@ -25,6 +25,8 @@ module.exports = (css) => {
     };
   }
   if (!modifiedCSS.purge) modifiedCSS.purge = { content: [] };
+  else if (!modifiedCSS.purge.content) modifiedCSS.purge.content = [];
+
   modifiedCSS.purge.content.push('./src/**/*.html');
   modifiedCSS.purge.content.push('./src/**/*.svelte');
   modifiedCSS.purge.content.push('./node_modules/sveltail/lib/**/*');

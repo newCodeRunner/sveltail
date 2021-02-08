@@ -63,11 +63,14 @@
     show = ({ title, message, icon, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass }) => {
       const newTitle = getString(title, null);
       const newMessage = getString(message, null);
-      const newIcon = getIcon(icon);
+      const newIcon = getIcon(icon, null);
 
+      let notifyID;
       const foundIndex = notifications.findIndex((i) => i.title === newTitle && i.message === newMessage && i.icon === newIcon);
       if (foundIndex < 0) {
         const id = `notify-${new Date().getTime() + notifications.length}`;
+        notifyID = id;
+
         const dismiss = () => {
           notifications = [...notifications.filter((i) => i.id !== id)];
           if (isFunction(onDismiss)) onDismiss();
@@ -109,16 +112,49 @@
       } else {
         const tempArray = notifications.map((i) => i);
         tempArray[foundIndex].badge += 1;
+        notifyID = tempArray[foundIndex].id;
         notifications = tempArray;
       }
+
+      return notifyID;
     };
   }
 
+  const updateData = (id, { title, message, icon, dismissable }) => {
+    const tempArray = notifications.map((i) => i);
+    const foundIndex = tempArray.findIndex((i) => i.id === id);
+    if (foundIndex > -1) {
+      tempArray[foundIndex].title = getString(String(title), null);
+      tempArray[foundIndex].message = getString(String(message), null);
+      tempArray[foundIndex].icon = getIcon(icon, null);
+      tempArray[foundIndex].dismissable = getBoolean(dismissable);
+      notifications = tempArray;
+    }
+  };
+
+  const dismiss = (id) => {
+    const tempArray = notifications.map((i) => i);
+    const foundIndex = tempArray.findIndex((i) => i.id === id);
+    if (foundIndex > -1) {
+      tempArray.splice(foundIndex, 1);
+      notifications = tempArray;
+    }
+  };
+
+  const dismissAll = () => {
+    notifications = [];
+  };
+
+  export const notifier = {
+    show,
+    clearAll,
+    updateData,
+    dismiss,
+    dismissAll,
+  };
+
   if (isObject($$props.context)) {
-    $$props.context.notifier = readable({
-      show,
-      clearAll,
-    });
+    $$props.context.notifier = readable(notifier);
   }
 </script>
 

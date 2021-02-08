@@ -64,10 +64,9 @@ yargs(hideBin(process.argv))
     ({ logo, splash, background }) => {
       const icons = require('../cli/icons');
       icons.default(
-        chalk,
         {
-          logoPath: logo || 'src/assets/logo.png',
-          splashPath: splash || 'src/assets/logo.png',
+          logoPath: logo || './src/assets/logo.png',
+          splashPath: splash || './src/assets/logo.png',
           background: background || '#FFFFFF',
         },
       );
