@@ -1,9 +1,7 @@
 <script>
-  import { onMount } from 'svelte';
   import { register, init, getLocaleFromNavigator } from 'svelte-i18n';
 
   import languages from '~/src/i18n/index';
-
   import { getBoolean, getString, getColor } from '../js/helpers';
 
   // i18n
@@ -23,11 +21,6 @@
   $: _headerColor = getColor($$props.headerColor, 'transparent');
   
   let _headerHeight = 0;
-
-  // Load Fonts
-  onMount(() => {
-    import('../js/fonts');
-  });
 </script>
 
 <section id="st-notifier" class="relative z-10">

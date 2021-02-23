@@ -109,6 +109,11 @@ exports.default = (/* cfg */) => {
       APP_ENV: {
         // Define variables here
       },
+      entryPoints: {
+        Web: {},
+        Electron: {},
+      },
+      noIcons: false,
     },
     'electron-builder': {
       appId: packageJSON.app.id,

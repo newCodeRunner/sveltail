@@ -7,7 +7,10 @@
 
   let _class, _icon, _fontSize;
 
-  $:  _icon = getString($$props.icon, null);
+  // If webpack config
+  const noIcons = JSON.parse(process.env.noIcons);
+
+  $:  _icon = noIcons ? null : getString($$props.icon, null);
   $:  _class = getString($$props.class);
   $:  _fontSize = getFontSize($$props.size, 'md');
 

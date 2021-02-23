@@ -26,6 +26,7 @@ export { default as Notifier } from './lib/components/Notifier.svelte';
 export { default as ObserverScroll } from './lib/components/ObserverScroll.svelte';
 export { default as RouterView } from './lib/components/RouterView.svelte';
 export { default as Tab } from './lib/components/Tab.svelte';
+export { default as Select } from './lib/components/Select.svelte';
 export { default as TabHeader } from './lib/components/TabHeader.svelte';
 export { default as TabItem } from './lib/components/TabItem.svelte';
 export { default as Toggle } from './lib/components/Toggle.svelte';

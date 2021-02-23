@@ -13,6 +13,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
 const postcss = require('postcss');
@@ -62,11 +64,32 @@ watchFile(resolve(currDirectory, 'sveltail.config.js'), () => {
   updateTailwindConfig(config.tailwindcss);
 });
 
+const isObject = (value) => value && typeof value === 'object' && value.constructor === Object;
+
 module.exports = (env) => {
   let url = 'index.html';
   const { platform, mode, type } = env;
   const PROD = mode === 'production';
-  const bundle = [resolve(currDirectory, 'src', 'app.js')];
+  const entry = {
+    'main-bundle': resolve(currDirectory, 'src', 'app.js'),
+  };
+
+  // Add additional entry points
+  if (framework.entryPoints) {
+    if (framework.entryPoints.Web) {
+      if (isObject(framework.entryPoints.Web)) {
+        Object.keys(framework.entryPoints.Web).forEach((entryKey) => {
+          if (entryKey === 'main-bundle') {
+            console.log(chalk.yellow('\n Sveltail: Skipped Entry point "main-bundle" for Web, this is reserved for sveltail default.'));
+          } else {
+            entry[entryKey] = framework.entryPoints.Web[entryKey];
+          }
+        });
+      } else {
+        console.log(chalk.yellow('\n Sveltail: Skipped Entry points for Web, these must be an Object'));
+      }
+    }
+  }
 
   // Set up for purging
   process.env.NODE_ENV = mode;
@@ -75,6 +98,7 @@ module.exports = (env) => {
   process.env.PROD = PROD;
   process.env.colors = JSON.stringify(Object.assign(tailwindcss.theme.colors, tailwindcss.theme.extend.colors));
   process.env.screens = JSON.stringify(tailwindcss.theme.screens);
+  process.env.noIcons = framework.noIcons || false;
 
   const plugins = [
     new CleanWebpackPlugin(),
@@ -112,7 +136,7 @@ module.exports = (env) => {
       chunkFilename: 'css/[name].[id].css',
       ignoreOrder: false,
     }),
-    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens']),
+    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'noIcons']),
   ];
 
   if (PROD) {
@@ -138,7 +162,7 @@ module.exports = (env) => {
     );
 
     // Replace the normal entry point for webpack.
-    bundle[0] = resolve(currDirectory, '.sveltail', 'app.js');
+    entry['main-bundle'] = resolve(currDirectory, '.sveltail', 'app.js');
 
     plugins.push(
       new CopyPlugin({
@@ -174,7 +198,7 @@ module.exports = (env) => {
           this.firstTimeBuild = true;
           setTimeout(() => {
             if (platform === 'Cordova') {
-              console.log('\n Sveltail: Running Cordova');
+              console.log(chalk.green('\n Sveltail: Running Cordova'));
               const child = exec(
                 `(cd src-cordova && cordova run ${type})`,
                 { cwd: currDirectory, stdio: 'inherit' },
@@ -247,34 +271,6 @@ module.exports = (env) => {
         },
       ],
     },
-    {
-      test: /\.s[ac]ss$/i,
-      use: [
-        'style-loader',
-        'css-loader',
-        'sass-loader',
-      ],
-    },
-    {
-      test: /\.svg$/,
-      use: {
-        loader: 'file-loader',
-        options: {
-          name: 'svg/[name].[ext]',
-        },
-      },
-    },
-    {
-      test: /\.(woff(2)?|ttf|eot)$/,
-      use: [
-        {
-          loader: 'file-loader',
-          options: {
-            name: 'fonts/[name].[ext]',
-          },
-        },
-      ],
-    },
   ];
 
   // Web Config
@@ -301,13 +297,12 @@ module.exports = (env) => {
         url = `http://${server.options.host}:${server.options.port}/`;
       },
     },
-    entry: {
-      bundle,
-    },
+    entry,
     resolve: {
       alias: {
         svelte: resolve(currDirectory, 'node_modules', 'svelte'),
         sveltail: resolve(currDirectory, 'node_modules', 'sveltail'),
+        src: resolve(currDirectory, 'src'),
         '~': currDirectory,
       },
       extensions: ['.mjs', '.js', '.svelte'],
@@ -326,6 +321,10 @@ module.exports = (env) => {
       removeAvailableModules: PROD,
       removeEmptyChunks: PROD,
       minimize: PROD,
+      minimizer: [
+        new TerserPlugin(),
+        new CssMinimizerPlugin(),
+      ],
     },
     stats: {
       assets: true,

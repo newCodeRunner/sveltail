@@ -57,7 +57,7 @@
     </div>
   </div>
   
-  <div style="height: calc(100% - {_stripHeight}px);">
+  <div style="height: calc(100% - {_stripHeight}px);" class="w-full">
     <slot name="content" />
   </div>
 </div>

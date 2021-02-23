@@ -1,15 +1,12 @@
 <script>
   import { onMount } from 'svelte';
   import List from './List.svelte';
-  import { getArray, getNumber } from '../js/helpers';
 
   // Globals
-  let _width;
-  $: _width = getNumber($$props.width, null);
-
   let _el;
   let visible = false;
-  let height;
+  let _width;
+
   const toggle = () => {
     visible = !visible;
   };
@@ -36,20 +33,30 @@
   });
 </script>
 
-<div bind:this={_el} class="relative focus:outline-none">
-  <div bind:clientHeight={height} on:click={toggle}>
+<div class="relative">
+  <div on:click={toggle} bind:this={_el} bind:clientWidth={_width}>
     <slot />
   </div>
+
   {#if visible}
-    <div class="fixed md:hidden z-10 bg-dark dark:bg-light inset-0 opacity-50" on:click={hide} />
+    <div class="fixed z-10 h-screen w-screen top-0 left-0 md:hidden bg-dark dark:bg-light opacity-50" on:click={hide} />
     <div
-      class="fixed top-0 left-0 z-10 border border-1 border-black dark:border-white md:absolute md:h-auto"
-      style={`transform: translateY(${height}px); width: ${_width ? `${_width}px`: '100%'};`}
+      role="menu"
+      class="fixed md:absolute z-10 left-0 top-0 md:top-auto p-10 md:p-0 h-screen md:h-auto w-screen md:w-auto"
+      style="min-width: {_width ? `${_width}px` : '100%'};"
+      on:click={hide}
     >
-      <List class="p-10 h-full overflow-auto md:p-0 md:h-auto md:overflow-none" on:click={hide}>
-        <div class="h-full">
-          <slot name="items" />
-        </div>
+      <List
+        class="
+          h-full md:h-auto
+          min-w-full
+          p-5 md:p-0
+          overflow-auto md:overflow-none
+          border border-1 border-dark dark:border-light
+          bg-light dark:bg-dark
+        "
+      >
+        <slot name="items" />
       </List>
     </div>
   {/if}

@@ -41,8 +41,8 @@
     
   // Validation Options
   $: _required = getBoolean($$props.required);
-  $: _min = getString(String($$props.min), null);
-  $: _max = getString(String($$props.max), null); 
+  $: _min = getString($$props.min ? String($$props.min) : null, null);
+  $: _max = getString($$props.max ? String($$props.max) : null, null); 
 
   let isFocused = false;
   let input = null;
@@ -77,16 +77,20 @@
       else if (_type === 'email') errMsg = isEmail(cleanedStr) ? null : 'Invalid Email';
       else if (_type === 'date') errMsg = isDate(cleanedStr) ? null : 'Invalid Date';
       else if (_type === 'text' || _type === 'password') {
-        if (_min || _max) {
-          errMsg = isLength(cleanedStr, { min: _min ? _min : 0, max: _max ? _max : undefined })
+        if (_min && _max) {
+          errMsg = isLength(cleanedStr, { min: _min, max: _max })
             ? null
-            : _min && _max
-              ? _min === _max
+            : _min === _max
                 ? `Must be ${_min} characters`
-                : `Must be ${_min}-${_max} characters`
-              : _min
-                ? `Must be at least ${_min} characters`
-                : `Must be at most ${_max} characters`;
+                : `Must be ${_min}-${_max} characters`;
+        } else if (_min) {
+          errMsg = isLength(cleanedStr, { min: _min })
+            ? null
+            : `Must be at least ${_min} characters`;
+        } else if (_max) {
+          errMsg = isLength(cleanedStr, { max: _max })
+            ? null
+            : `Must be at most ${_max} characters`;
         }
       }
     }
@@ -99,6 +103,15 @@
   };
   const onChange = (val) => {
     dispatch('change', val);
+  };
+  const onBlur = () => {
+    validate();
+    isFocused = false;
+    dispatch('blur');
+  };
+  const onFocus = () => {
+    isFocused = true;
+    dispatch('focus');
   };
   const clearAll = () => {
     value = null
@@ -164,15 +177,10 @@
         bind:this={input}
         bind:value={value}
         style={_colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-        class="mt-2 flex-grow focus:outline-none bg-{_colorBg === 'transparent' ? '' : _colorBg} text-{_colorText} {_textSize}"
+        class="flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? '' : _colorBg} text-{_colorText} {_textSize}"
         tabindex="0"
-        on:blur={() => {
-          validate();
-          isFocused = false;
-        }}
-        on:focus={() => {
-          isFocused = true;
-        }}
+        on:blur={onBlur}
+        on:focus={onFocus}
         on:change={onChange}
       />
       <div class="flex justify-end {_width}">

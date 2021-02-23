@@ -13,19 +13,19 @@
 
   const _id = `st-check-${new Date().getTime()}-${(Math.random() * 100)}`;
   const _update = (evt) => {
-    if (!_disabled) checked = !checked; 
+    if (!_disabled) value = !value; 
     else evt.preventDefault();
   };
-  export let checked = false;
+  export let value = false;
 </script>
 
 <div class={_class}>
-  <input id={_id} type="checkbox" class="hidden" checked="{checked}" on:click={_update}>
+  <input id={_id} type="checkbox" class="hidden" checked="{value}" on:click={_update}>
   <label for={_id} class="inline-flex items-center text-{_colorText}">
     <div class="p-2 {_height} {_width}">
       <div tabindex="-1" class="h-full w-full relative border {_textSize} border-{_colorBg} bg-{_colorBg} focus:outline-none focus:border-{_colorText}" />
     </div>
-    <span class="{_textSize}">{_label}</span>
+    <span class="pr-2 {_textSize}">{_label}</span>
   </label>
 </div>
 

@@ -173,6 +173,10 @@ yargs(hideBin(process.argv))
     Options:
 
     --electron        [boolean]
+      Electron Specific:
+      --noPackage     [boolean]
+      --publish       [boolean]
+
     --cordova         [boolean]
       Cordova Specific:
         --ios         [boolean]

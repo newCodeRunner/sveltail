@@ -58,11 +58,11 @@
             }
           )
           : [{
-            label: 'Okay',
-            size: 'sm',
-            colorBg: 'transparent',
-            colorText: 'primary',
-            onClick: dismiss,
+              label: 'Okay',
+              size: 'sm',
+              colorBg: 'transparent',
+              colorText: 'current',
+              onClick: dismiss,
           }],
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
@@ -95,14 +95,14 @@
             }
           )
           : [{
-            label: 'Cancel',
-            size: 'sm',
-            colorBg: 'transparent',
-            colorText: 'primary',
-            onClick() {
-              dismiss();
-              resolve();
-            },
+              label: 'Cancel',
+              size: 'sm',
+              colorBg: 'transparent',
+              colorText: 'current',
+              onClick() {
+                dismiss();
+                resolve();
+              },
           }],
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
@@ -138,7 +138,7 @@
                 label: 'Okay',
                 size: 'sm',
                 colorBg: 'transparent',
-                colorText: 'primary',
+                colorText: 'current',
                 onClick() {
                   if (callback) {
                     const result = callback(_inputText, _inputError);
@@ -156,7 +156,7 @@
                 label: 'Cancel',
                 size: 'sm',
                 colorBg: 'transparent',
-                colorText: 'info',
+                colorText: 'current',
                 onClick() {
                   reject();
                 },

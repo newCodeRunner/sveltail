@@ -8,9 +8,6 @@
   let isReady = false;
   onMount(() => {
     isReady = true;
-
-    // Load Fonts
-    import('../js/fonts');
   });
 </script>
 

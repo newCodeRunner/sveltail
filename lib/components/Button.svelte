@@ -60,10 +60,10 @@
         ease-in-out
       transform
         hover:bg-{_colorText === 'current' ? 'info' : _colorText}
-        hover:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
+        hover:text-{_colorBg === 'transparent' ? 'light' : _colorBg}
       transform
         focus:bg-{_colorText === 'current' ? 'info' : _colorText}
-        focus:text-{_colorBg === 'transparent' ? 'white' : _colorBg}
+        focus:text-{_colorBg === 'transparent' ? 'light' : _colorBg}
       bg-{_colorBg}
       text-{_colorText}  
       {_flat ? '' : `border border-${_colorBg === 'transparent' ? _colorText : _colorBg}`}
