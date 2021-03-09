@@ -62,7 +62,7 @@
   };
 
   const afterRouteUpdate = () => {
-    isFunction(hooks.onAfter) ? hooks.onAfter() : true;;
+    if (isFunction(hooks.onAfter)) hooks.onAfter();
   };
 
   export const navigateTo = (path, afterNavigation) => {
@@ -78,7 +78,13 @@
     import('page').then((module) => {
       page = module.default;
       routes.forEach((navRoute) => {
-        page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+        if (navRoute.path) {
+          page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+        } else if (navRoute.children) {
+          navRoute.children.forEach((childRoute) => {
+            page(childRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+          });
+        }
       });
 
       page.base('/#');

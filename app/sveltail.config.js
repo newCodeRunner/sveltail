@@ -113,7 +113,12 @@ exports.default = (/* cfg */) => {
         Web: {},
         Electron: {},
       },
-      noIcons: false,
+      webpack(cfg) {
+        return cfg;
+      },
+      webpackElectron(cfg) {
+        return cfg;
+      },
     },
     'electron-builder': {
       appId: packageJSON.app.id,

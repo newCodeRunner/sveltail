@@ -127,7 +127,7 @@ module.exports = (env) => {
     }
   });
 
-  return {
+  let config = {
     watch: !PROD,
     entry,
     resolve: {
@@ -172,4 +172,9 @@ module.exports = (env) => {
     mode,
     devtool: PROD ? false : 'source-map',
   };
+
+  const userConfig = framework.webpackElectron(config);
+  config = userConfig || config;
+
+  return config;
 };

@@ -1,16 +1,12 @@
 <script>
   import { onMount } from 'svelte';
-  import { Icon } from 'sveltail';
-  import { getString, getIcon, getSize } from '../js/helpers';
+  import { getString } from '../js/helpers';
 
-  let _name, _class, _activeClass, _label, _icon, _iconRight;
+  let _name, _class, _activeClass, _label;
   $: _name = getString(String($$props.name));
   $: _class = getString($$props.class);
   $: _activeClass = getString($$props.activeClass);
   $: _label = getString($$props.label);
-  $: _icon = getIcon($$props.icon);
-  $: _iconRight = getIcon($$props.iconRight);
-  $: _size = getSize($$props.size, 'md');
 
   let _active;
   let _tabHeader;
@@ -37,16 +33,12 @@
   on:click={_activate}
 >
   <div class="flex justify-center items-center cursor-pointer px-2 {_class} {_active ? _activeClass : ''}">
-    {#if _icon}
-      <Icon icon={_icon} size={_size} />
-    {/if}
-    {#if _label}
-      <div class="mx-2 whitespace-nowrap">{_label}</div>
-    {/if}
-    {#if _iconRight}
-      <Icon icon={_iconRight} size={_size} />
-    {/if}
-
-    <slot />
+    <slot>
+      <slot name="left" />
+      {#if _label}
+        <div class="mx-2 whitespace-nowrap">{_label}</div>
+      {/if}
+      <slot name="right" />
+    </slot>
   </div> 
 </li>

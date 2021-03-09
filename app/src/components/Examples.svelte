@@ -213,28 +213,6 @@
 <Chip size="xl" label="Danger Chip" colorBg="danger" class="mx-1" icon="fas fa-download" dismissable />
 
 <br>
-<br>
-
-<h1><strong>FontAwesome Support out of the box!</strong></h1>
-<br>
-
-<h1>Sizes</h1>
-<Icon icon="fas fa-bars" size="xs" />
-<Icon icon="fas fa-bars" size="sm" />
-<Icon icon="fas fa-bars" />
-<Icon icon="fas fa-bars" size="lg" />
-<Icon icon="fas fa-bars" size="xl" />
-<Icon icon="fas fa-bars" fontSize="100" />
-
-<h1>Colors</h1>
-<Icon icon="fas fa-bars" size="xs" class="text-primary" />
-<Icon icon="fas fa-bars" size="sm" class="text-secondary" />
-<Icon icon="fas fa-bars" class="text-success" />
-<Icon icon="fas fa-bars" size="lg" class="text-info" />
-<Icon icon="fas fa-bars" size="xl" class="text-danger" />
-<Icon icon="fas fa-bars" fontSize="100" class="text-warning" />
-
-<br>
 <h1><strong>Inputs</strong></h1>
 <br>
 <h1>Sizes</h1>

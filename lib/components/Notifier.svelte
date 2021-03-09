@@ -1,15 +1,12 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { fly } from 'svelte/transition';
 
-  import Icon from '../components/Icon.svelte';
   import Button from '../components/Button.svelte';
 
-  import { getString, getIcon, getBoolean, isFunction, isNull, isObject, isArray } from '../js/helpers';
+  import { getString, getBoolean, isFunction, isNull, isObject, isArray, getWidth, getHeight } from '../js/helpers';
   import { readable } from 'svelte/store';
+  import IconDismiss from '../icons/Dismiss.svelte';
 
-  // Globals
-  const dispatch = createEventDispatcher();
   let notifications = [];
   let show;
 
@@ -19,7 +16,7 @@
 
   // Native
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
-    show = ({ title, message, icon, dismissable, timeout }) => {
+    show = ({ title, message, dismissable, timeout }) => {
       //
     };
   }
@@ -60,13 +57,12 @@
       return position;
     };
 
-    show = ({ title, message, icon, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass }) => {
+    show = ({ title, message, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass }) => {
       const newTitle = getString(title, null);
       const newMessage = getString(message, null);
-      const newIcon = getIcon(icon, null);
 
       let notifyID;
-      const foundIndex = notifications.findIndex((i) => i.title === newTitle && i.message === newMessage && i.icon === newIcon);
+      const foundIndex = notifications.findIndex((i) => i.title === newTitle && i.message === newMessage);
       if (foundIndex < 0) {
         const id = `notify-${new Date().getTime() + notifications.length}`;
         notifyID = id;
@@ -81,7 +77,6 @@
           height: 0,
           title: newTitle,
           message: newMessage,
-          icon: newIcon,
           dismissable: getBoolean(dismissable),
           dismiss,
           timer: persistant ? null : setTimeout(dismiss, timeout || 3000),
@@ -94,7 +89,6 @@
                   id: index,
                   label: i.label,
                   size: i.size,
-                  icon: i.icon,
                   colorBg: i.colorBg,
                   colorText: i.colorText,
                   onClick() {
@@ -120,13 +114,12 @@
     };
   }
 
-  const updateData = (id, { title, message, icon, dismissable }) => {
+  const updateData = (id, { title, message, dismissable }) => {
     const tempArray = notifications.map((i) => i);
     const foundIndex = tempArray.findIndex((i) => i.id === id);
     if (foundIndex > -1) {
       tempArray[foundIndex].title = getString(String(title), null);
       tempArray[foundIndex].message = getString(String(message), null);
-      tempArray[foundIndex].icon = getIcon(icon, null);
       tempArray[foundIndex].dismissable = getBoolean(dismissable);
       notifications = tempArray;
     }
@@ -175,7 +168,7 @@
       >
         <div class="relative flex">
           {#if item.badge > 1}<div class="fixed top-0 rounded left-0 st-notifier-badge text-light px-2 py-1">{item.badge}</div>{/if}
-          {#if item.icon}<Icon icon={item.icon} class="ml-1 mr-2" size="md" />{/if}
+          <slot name="icon" />
           <div>
             {#if item.title}<div>{item.title}</div>{/if}
             {#if item.message}<div>{item.message}</div>{/if}
@@ -199,7 +192,9 @@
             {/if}
           </div>
           {#if item.dismissable}
-            <span on:click={item.dismiss}><Icon class="ml-4 mr-1 cursor-pointer" icon="fas fa-times-circle" size="sm" /></span>
+            <span on:click={item.dismiss}>
+              <IconDismiss />
+            </span>
           {/if}
         </div>
       </div>

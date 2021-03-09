@@ -1,11 +1,13 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getTextSize, getArray, isString, isObject } from '../js/helpers';
+  import { getString, getBoolean, getColor, getHeight, getWidth, getTextSize, getArray, isString, isObject } from '../js/helpers';
   
-  import Icon from './Icon.svelte';
   import Menu from './Menu.svelte';
   import ListItem from './ListItem.svelte';
-import { prop_dev } from 'svelte/internal';
+
+  import IconError from '../icons/Error.svelte';
+  import IconClearable from '../icons/Clearable.svelte';
+  import IconArrowDown from '../icons/ArrowDown.svelte';
 
   // Globals
   export let error = null;
@@ -13,14 +15,12 @@ import { prop_dev } from 'svelte/internal';
 
   const dispatch = createEventDispatcher();
 
-  let _size, _class, _label, _icon, _iconRight, _pill, _rounded, _colorBg,_colorText, _height,
+  let _size, _class, _label, _pill, _rounded, _colorBg,_colorText, _height,
   _width, _textSize, _clearable, _hideHint, _required, _options, _valueKey, _labelKey;
 
   $: _size = getString($$props.size, 'md');
   $: _class = getString($$props.class);
   $: _label = getString($$props.label, null);
-  $: _icon = getIcon($$props.icon);
-  $: _iconRight = getIcon($$props.iconRight);
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
   $: _colorBg = getColor($$props.colorBg, 'transparent');
@@ -128,7 +128,7 @@ import { prop_dev } from 'svelte/internal';
         "
         on:click={focusInput}
       >
-        {#if _icon}<Icon icon={_icon} class="mx-1" size={_size} />{/if}
+        <slot name="icon" />
         <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : _height}">
           {#if _label}
             <label
@@ -165,18 +165,16 @@ import { prop_dev } from 'svelte/internal';
         />
         <div class="flex justify-end {_width}">
           {#if error}
-            <Icon icon="fas fa-info-circle" size={_size} class="text-danger" />
+            <IconError size={_size} />
           {/if}
         </div>
         {#if _clearable}
-          <div class="mx-1 cursor-pointer transition ease-in-out transform hover:scale-110" on:click={clearAll}>  
-            <Icon icon="fas fa-times-circle" class="text-{_colorText}" size={_size} />
+          <div class="mx-1 cursor-pointer" on:click={clearAll}>  
+            <IconClearable class="transition ease-in-out transform hover:scale-110" size={_size} />
           </div>
         {/if}
-        {#if _iconRight}
-          <Icon icon={_iconRight} class="text-{_colorText}" size={_size} />
-        {/if}
-        <Icon icon="fas fa-chevron-down" size={_size} />
+        <slot name="iconRight" />
+        <IconArrowDown size={_size} />
       </div>
     </Menu>
     {#if !_hideHint}

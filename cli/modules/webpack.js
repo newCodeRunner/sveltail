@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
@@ -274,7 +275,7 @@ module.exports = (env) => {
   ];
 
   // Web Config
-  const config = {
+  let config = {
     devServer: {
       writeToDisk: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
@@ -345,6 +346,9 @@ module.exports = (env) => {
     mode,
     devtool: PROD ? false : 'source-map',
   };
+
+  const userConfig = framework.webpack(config);
+  config = userConfig || config;
 
   if (PROD) delete config.devServer;
 

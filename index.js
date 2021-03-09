@@ -13,7 +13,6 @@ export { default as Checkbox } from './lib/components/Checkbox.svelte';
 export { default as Chip } from './lib/components/Chip.svelte';
 export { default as Dialog } from './lib/components/Dialog.svelte';
 export { default as Drawer } from './lib/components/Drawer.svelte';
-export { default as Icon } from './lib/components/Icon.svelte';
 export { default as Image } from './lib/components/Image.svelte';
 export { default as Input } from './lib/components/Input.svelte';
 export { default as LayoutNative } from './lib/components/LayoutNative.svelte';

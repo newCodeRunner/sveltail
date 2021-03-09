@@ -1,15 +1,20 @@
 <script>
   import { onMount } from 'svelte';
   import { fly } from 'svelte/transition';
-  import { Icon } from 'sveltail';
-  import { getColor, getString } from '../js/helpers';
+  import { getColor, getString, getHeight, getWidth } from '../js/helpers';
 
-  let _class, _label, _name, _borderColor, _textColor;
+  import IconArrowRight from '../icons/ArrowRight.svelte';
+
+  let _class, _innerClass, _label, _name, _borderColor, _textColor, _iconHeight, _iconWidth;
   $: _class = getString($$props.class);
+  $: _innerClass = getString($$props.innerClass);
   $: _label = getString($$props.label);
   $: _name = getString(String($$props.name));
-  $: _borderColor = getColor($$props.colorBorder, 'current');
+  $: _borderColor = getColor($$props.colorBorder, null);
   $: _textColor = getColor($$props.colorText, 'current');
+
+  $: _iconHeight = getHeight($$props.iconSize, 'xs');
+  $: _iconWidth = getWidth($$props.iconSize, 'xs');
 
   let _expand = false;
 
@@ -41,16 +46,18 @@
   });
 </script>
 
-<div bind:this={_accordian} class="my-2 w-full overflow-hidden border-l-2 border-{_borderColor}">
-  <div class="flex items-center p-2 cursor-pointer text-{_textColor} hover:opacity-75" on:click={_toggle}>
-    <Icon icon="fas fa-chevron-circle-right" size="sm" class="transition transform {_expand ? 'rotate-90' : 'rotate-0'}" />
-    {#if _label}
-      <span class="px-2">{_label}</span>
-    {/if}
+<div
+  bind:this={_accordian}
+  class="w-full cursor-pointer text-{_textColor} overflow-hidden {_borderColor ? `border-l-2 border-${_borderColor}` : ''}"
+>
+  <div class="{_class} flex items-center hover:bg-info" on:click={_toggle}>
+    {#if _label}<div>{_label}</div>{/if}
+    <div class="flex-1" />
+    <IconArrowRight class="p-2 transition transform {_expand ? 'rotate-90' : 'rotate-0'}" />
   </div>
   {#if _expand}
     <div
-      class="w-full {_class}" 
+      class="w-full {_innerClass}" 
       in:fly="{{ y: -20, duration: 200 }}"
       out:fly="{{ y: -20, duration: 150 }}"
     >

@@ -1,14 +1,12 @@
 <script>
-  import Icon from './Icon.svelte';
-
-  import { getString, getIcon, getBoolean, getColor, getHeight, getTextSize } from '../js/helpers';
+  import { getString, getBoolean, getColor, getHeight, getTextSize } from '../js/helpers';
+  import IconDismiss from '../icons/Dismiss.svelte';
 
   // Globals
-  let _size, _class, _icon, _label, _pill, _rounded, _dismissable, _colorBg, _colorText, _height, _textSize;
+  let _size, _class, _label, _pill, _rounded, _dismissable, _colorBg, _colorText, _height, _textSize;
 
   $: _size = getString($$props.size, 'md');
   $: _class = getString($$props.class);
-  $: _icon = getIcon($$props.icon);
   $: _label = getString($$props.label, null);
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
@@ -47,15 +45,12 @@
       {_height}
     "
   >
-    {#if _icon}<Icon icon={_icon} size={_size} />{/if}
+    <slot name="left" />  
     {#if _label}<div class="{_textSize} mx-2 whitespace-nowrap">{_label}</div>{/if}
     {#if _dismissable}
-      <Icon
-        class="cursor-pointer transition ease-in-out transform hover:scale-110"
-        icon="fas fa-times-circle"
-        size={_size}
-        on:click={dismiss}
-      />
+      <div class="cursor-pointer" on:click={dismiss}>
+        <IconDismiss size={_size} />
+      </div>
     {/if}
   </div>
 {/if}

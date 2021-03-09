@@ -4,6 +4,9 @@
   import { getString } from '../js/helpers';
   import Button from './Button.svelte';
 
+  import IconArrowLeft from '../icons/ArrowLeft.svelte';
+  import IconArrowRight from '../icons/ArrowRight.svelte';
+
   // Globals
   const dispatch = createEventDispatcher();
 
@@ -37,7 +40,9 @@
   <div bind:clientHeight={_stripHeight} class="flex">
     <div>
       {#if _tabWidth === 0 && _tabScrollLeft > 0}
-        <Button class="flex-none" size="sm" flat icon="fas fa-angle-left" on:click={_scrollLeft} />
+        <Button class="flex-none" size="sm" flat on:click={_scrollLeft}>
+          <IconArrowLeft size="sm" />
+        </Button> 
       {:else}
         <div class="w-9" />
       {/if}
@@ -50,7 +55,9 @@
     </div>
     <div>
       {#if _tabWidth === 0 && _tabScrollLeft < 99}
-        <Button class="flex-none" size="sm" flat icon="fas fa-angle-right" on:click={_scrollRight} />
+        <Button class="flex-none" size="sm" flat on:click={_scrollRight}>
+          <IconArrowRight size="sm" />
+        </Button>
         {:else}
         <div class="w-9" />
       {/if}

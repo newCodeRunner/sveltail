@@ -1,21 +1,28 @@
 <script>
-  import Icon from './Icon.svelte';
+  import { getString, getBoolean, getColor } from '../js/helpers';
 
-  import { getString, getIcon, getBoolean, getColor } from '../js/helpers';
+  import IconDismiss from '../icons/Dismiss.svelte';
 
   // Globals
-  let _class, _icon, _colorBg, _colorText, _title, _message, _dismissable;
+  let _class;
+  let _colorBg;
+  let _colorText;
+  let _title;
+  let _message;
+  let _dismissable;
+  let _iconSize;
+
   $: _class = getString($$props.class);
   $: _title = getString($$props.title, null);
   $: _message = getString($$props.message, null);
-  $: _icon = getIcon($$props.icon);
   $: _dismissable = getBoolean($$props.dismissable);
+  $: _iconSize = getString($$props.iconSize, 'md');
   $: _colorBg = getColor($$props.colorBg, 'info');
   $: _colorText = getColor($$props.colorText, 'white');
   
   let banner;
 
-  const dismiss = () => {
+  const _dismiss = () => {
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       if (banner) banner.remove();
     }
@@ -25,7 +32,6 @@
 <div bind:this={banner} role="alert" class="bg-{_colorBg} text-{_colorText} {_class}">
   <div class="flex justify-between items-center p-4">
     <div class="flex items-center">
-      {#if _icon}<Icon icon={_icon} size="md" />{/if}
       <div class="px-2">
         {#if _title}<p class="font-bold">{_title}</p>{/if}
         {#if _message}<p>{_message}</p>{/if}
@@ -33,12 +39,9 @@
       </div>
     </div>
     {#if _dismissable}
-      <Icon
-        class="cursor-pointer transition ease-in-out transform hover:scale-110"
-        icon="fas fa-times-circle"
-        size="md"
-        on:click={dismiss}
-      />
+      <div on:click={_dismiss}>
+        <IconDismiss />
+      </div>
     {/if}
   </div>
 </div>

@@ -2,11 +2,11 @@
   import { readable } from 'svelte/store';
   import { fade } from 'svelte/transition';
 
-  import Icon from './Icon.svelte';
   import Input from './Input.svelte';
   import Button from './Button.svelte';
 
-  import { getSize, getString, getIcon, getBoolean, getColor, isArray, isObject } from '../js/helpers';
+  import { getSize, getString, getBoolean, getColor, isArray, isObject, getHeight, getWidth } from '../js/helpers';
+  import IconDismiss from '../icons/Dismiss.svelte';
 
   // Globals
   let _headerHeight = 0;
@@ -30,14 +30,13 @@
 
   // Web / Hybrid
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    msg = ({ title, message, details, icon, barColorBg, barColorText, persistant, actions, actionsClass }) => {
+    msg = ({ title, message, details, barColorBg, barColorText, persistant, actions, actionsClass }) => {
       const html = document.querySelector('html');
       html.classList.add('overflow-hidden');
       props = {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
-        icon: getIcon(icon, null),
         barColorBg: getColor(barColorBg, 'transparent'),
         barColorText: getColor(barColorText, 'current'),
         persistant: getBoolean(persistant),
@@ -47,7 +46,6 @@
                 id: index,
                 label: i.label,
                 size: getSize(i.size, 'md'),
-                icon: getIcon(i.icon, null),
                 colorBg: getColor(i.colorBg, 'transparent'),
                 colorText: getColor(i.colorText, 'current'),
                 onClick() {
@@ -67,14 +65,13 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     };
-    confirm = ({ title, message, details, icon, barColorBg, barColorText, actions, actionsClass }) => new Promise((resolve) => {
+    confirm = ({ title, message, details, barColorBg, barColorText, actions, actionsClass }) => new Promise((resolve) => {
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
       props = {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
-        icon: getIcon(icon, null),
         barColorBg: getColor(barColorBg, 'transparent'),
         barColorText: getColor(barColorText, 'current'),
         persistant: true,
@@ -84,7 +81,6 @@
                 id: index,
                 label: i.label,
                 size: getSize(i.size, 'md'),
-                icon: getIcon(i.icon, null),
                 colorBg: getColor(i.colorBg, 'transparent'),
                 colorText: getColor(i.colorText, 'current'),
                 onClick() {
@@ -107,14 +103,13 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     });
-    input = ({ title, message, details, icon, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve) => {
+    input = ({ title, message, details, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve) => {
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
       props = {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
-        icon: getIcon(icon, null),
         barColorBg: getColor(barColorBg, 'transparent'),
         barColorText: getColor(barColorText, 'current'),
         persistant: true,
@@ -124,7 +119,6 @@
                 id: index,
                 label: i.label,
                 size: getSize(i.size, 'md'),
-                icon: getIcon(i.icon, null),
                 colorBg: getColor(i.colorBg, 'transparent'),
                 colorText: getColor(i.colorText, 'current'),
                 onClick() {
@@ -205,13 +199,12 @@
             class="flex h-12 px-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}"
           >
             <div class="inline-flex items-center">
-              {#if props.icon}
-                <Icon icon={props.icon} size="md" class="mx-1" />
-              {/if}
               <div>{props.title}</div>
             </div>
             {#if !props.persistant}
-              <div class="cursor-pointer" on:click={dismiss}><Icon icon="fas fa-times" size="md" /></div>
+              <div class="cursor-pointer" on:click={dismiss}>
+                <IconDismiss />
+              </div>
             {/if}
           </div>
         {/if}

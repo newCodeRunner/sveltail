@@ -2,10 +2,10 @@
   import { createEventDispatcher } from 'svelte';
   import { escape, isEmpty, isNumeric, isEmail, isDate, isLength } from 'validator';
 
-  import { getString, getIcon, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize, isFunction } from '../js/helpers';
+  import { getString, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize, isFunction } from '../js/helpers';
+  import IconError from '../icons/Error.svelte';
+  import IconClearable from '../icons/Clearable.svelte';
   
-  import Icon from './Icon.svelte';
-
   // Globals
   const dispatch = createEventDispatcher();
   const getType = (typ) => {
@@ -17,14 +17,12 @@
     return type;
   };
 
-  let _size, _class, _label, _icon, _iconRight, _pill, _rounded, _colorBg,_colorText, _height,
+  let _size, _class, _label, _pill, _rounded, _colorBg,_colorText, _height,
   _width, _textSize, _clearable, _validate, _autoValidate, _type, _hideHint, _required, _min, _max;
 
   $: _size = getString($$props.size, 'md');
   $: _class = getString($$props.class);
   $: _label = getString($$props.label, null);
-  $: _icon = getIcon($$props.icon);
-  $: _iconRight = getIcon($$props.iconRight);
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
   $: _colorBg = getColor($$props.colorBg, 'transparent');
@@ -154,7 +152,7 @@
       "
       on:click={focusInput}
     >
-      {#if _icon}<Icon icon={_icon} class="mx-1" size={_size} />{/if}
+      <slot name="icon" />
       <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : _height}">
         {#if _label}
           <label
@@ -185,17 +183,15 @@
       />
       <div class="flex justify-end {_width}">
         {#if error}
-          <Icon icon="fas fa-info-circle" size={_size} class="text-danger" />
+          <IconError size={_size} />
         {/if}
       </div>
       {#if _clearable}
-        <div class="mx-1 cursor-pointer transition ease-in-out transform hover:scale-110" on:click={clearAll}>  
-          <Icon icon="fas fa-times-circle" class="text-{_colorText}" size={_size} />
+        <div class="mx-1 cursor-pointer" on:click={clearAll}>  
+          <IconClearable class="transition ease-in-out transform hover:scale-110" size={_size} />
         </div>
       {/if}
-      {#if _iconRight}
-        <Icon icon={_iconRight} class="text-{_colorText}" size={_size} />
-      {/if}
+      <slot name="iconRight" />
     </div>
     {#if !_hideHint}
       <div

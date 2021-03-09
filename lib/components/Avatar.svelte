@@ -1,15 +1,13 @@
 <script>
-  import Icon from './Icon.svelte';
   import Image from './Image.svelte';
 
   // Globals
-  import { getString, getIcon, getBoolean, getColor, getHeight, getWidth, getFontSize, isString } from '../js/helpers';
+  import { getString, getBoolean, getColor, getHeight, getWidth, getFontSize, isString } from '../js/helpers';
   
-  let _class, _letter, _icon, _fontSize, _circle, _img, _colorBg, _colorText, _height, _width, _size;
+  let _class, _letter, _fontSize, _circle, _img, _colorBg, _colorText, _height, _width, _size;
 
   $: _size = getString($$props.size, 'md');
   $: _class = getString($$props.class);
-  $: _icon = getIcon($$props.icon);
   $: _img = getString($$props.img, null);
   $: _letter = isString($$props.letter) ? String($$props.letter).toUpperCase().substr(0, 1) : null;
   $: _circle = getBoolean($$props.circle);
@@ -25,20 +23,7 @@
 {/if}
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-  {#if _icon}
-    <Icon
-      class="
-        border
-        bg-{_colorBg}
-        text-{_colorText}
-        border-{_colorBg === 'transparent' ? _colorText : _colorBg}
-        {_circle ? 'rounded-full' : ''}
-        {_class}
-      "
-      icon={_icon}
-      size={_size}
-    />
-  {:else if _img}
+  {#if _img}
     <Image
       class="
         border
