@@ -1,14 +1,9 @@
-<script>
-  import { createEventDispatcher } from 'svelte';
-  
+<script>  
   import { getString } from '../js/helpers';
   import Button from './Button.svelte';
 
   import IconArrowLeft from '../icons/ArrowLeft.svelte';
   import IconArrowRight from '../icons/ArrowRight.svelte';
-
-  // Globals
-  const dispatch = createEventDispatcher();
 
   let _class, _tab;
   $: _class = getString($$props.class);
@@ -48,17 +43,17 @@
       {/if}
     </div>
     <div bind:this={_tabContainer} class="overflow-auto -w-20 st-tabs" on:scroll={_updateScrollPosition}>
-      <ul class="flex">
+      <ul class="flex items-center">
         <slot />
         <li bind:clientWidth={_tabWidth} class="flex-grow h-100" />
       </ul>
     </div>
     <div>
-      {#if _tabWidth === 0 && _tabScrollLeft < 99}
+      {#if _tabWidth === 0 && _tabScrollLeft < 100 }
         <Button class="flex-none" size="sm" flat on:click={_scrollRight}>
           <IconArrowRight size="sm" />
         </Button>
-        {:else}
+      {:else}
         <div class="w-9" />
       {/if}
     </div>

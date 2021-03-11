@@ -1,6 +1,7 @@
 <script>
   import { getString, getHeight, getWidth } from '../js/helpers';
 
+  let _class;
   let _height;
   let _width;
 
