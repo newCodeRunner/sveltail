@@ -248,6 +248,13 @@ module.exports = (env) => {
       },
     },
     {
+      // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
+      test: /node_modules\/svelte\/.*\.mjs$/,
+      resolve: {
+        fullySpecified: false,
+      },
+    },
+    {
       test: /\.css$/,
       use: [
         {
@@ -255,6 +262,11 @@ module.exports = (env) => {
         },
         {
           loader: 'css-loader',
+          options: {
+            // necessary if you use url('/path/to/some/asset.png|jpg|gif')
+            url: false,
+            sourceMap: !PROD,
+          },
         },
         {
           loader: 'postcss-loader',
@@ -284,7 +296,7 @@ module.exports = (env) => {
         : resolve(currDirectory, 'public', platform),
       stats: {
         assets: true,
-        children: false,
+        children: true,
         chunks: false,
         hash: false,
         modules: false,
@@ -329,7 +341,7 @@ module.exports = (env) => {
     },
     stats: {
       assets: true,
-      children: false,
+      children: true,
       chunks: false,
       hash: false,
       modules: false,
