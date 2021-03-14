@@ -42,7 +42,7 @@
         <div class="w-9" />
       {/if}
     </div>
-    <div bind:this={_tabContainer} class="overflow-auto -w-20 st-tabs" on:scroll={_updateScrollPosition}>
+    <div bind:this={_tabContainer} class="overflow-auto -w-20 no-scrollbar" on:scroll={_updateScrollPosition}>
       <ul class="flex items-center">
         <slot />
         <li bind:clientWidth={_tabWidth} class="flex-grow h-100" />
@@ -63,13 +63,3 @@
     <slot name="content" />
   </div>
 </div>
-
-<style>
-.st-tabs::-webkit-scrollbar {
-  display: none;
-}
-.st-tabs {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-</style>

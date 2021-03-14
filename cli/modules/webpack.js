@@ -14,11 +14,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const autoprefixer = require('autoprefixer');
-const postcss = require('postcss');
 
 // Find current working directory
 const currDirectory = process.cwd();
@@ -44,14 +44,6 @@ const updateTailwindConfig = (css) => {
 };
 updateTailwindConfig(tailwindcss);
 const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
-
-// Plugin to watch changes in Tailwind Config
-const postcssPlugin = postcss.plugin('postcss-assets', () => (css, result) => {
-  result.messages.push({
-    type: 'dependency',
-    file: resolve(currDirectory, '.sveltail', 'tailwind.config.js'),
-  });
-});
 
 // Update Tailwind Config on changes in sveltail.config.js
 watchFile(resolve(currDirectory, 'sveltail.config.js'), () => {
@@ -102,6 +94,19 @@ module.exports = (env) => {
   process.env.noIcons = framework.noIcons || false;
 
   const plugins = [
+    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'noIcons']),
+    new DefinePlugin({
+      'process.APP_ENV': JSON.stringify(
+        Object.assign(
+          framework.APP_ENV,
+          {
+            productName: app.name,
+            productDescription: description,
+            productVersion: version,
+          },
+        ),
+      ),
+    }),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
@@ -119,39 +124,14 @@ module.exports = (env) => {
         productDescription: description,
         cordova: platform === 'Cordova',
       },
-    }),
-    new DefinePlugin({
-      'process.APP_ENV': JSON.stringify(
-        Object.assign(
-          framework.APP_ENV,
-          {
-            productName: app.name,
-            productDescription: description,
-            productVersion: version,
-          },
-        ),
-      ),
+      inject: 'head',
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].css',
       chunkFilename: 'css/[name].[id].css',
       ignoreOrder: false,
     }),
-    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'noIcons']),
   ];
-
-  if (PROD) {
-    plugins.push(
-      new CopyPlugin({
-        patterns: [
-          {
-            from: resolve(currDirectory, 'public', platform),
-            to: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : undefined),
-          },
-        ],
-      }),
-    );
-  }
 
   if (platform === 'PWA') {
     // Create a new Entry Point for PWA mode.
@@ -185,132 +165,80 @@ module.exports = (env) => {
         swDest: 'service-worker.js',
       }),
     );
-  }
+  } else if (platform === 'Cordova' || platform === 'Electron') {
+    class OnBuildPlugin {
+      constructor(options) {
+        this.options = options;
+        this.firstTimeBuild = false;
+      }
 
-  class OnBuildPlugin {
-    constructor(options) {
-      this.options = options;
-      this.firstTimeBuild = false;
+      apply(compiler) {
+        compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
+          if (!this.firstTimeBuild) {
+            this.firstTimeBuild = true;
+            setTimeout(() => {
+              if (platform === 'Cordova') {
+                console.log(chalk.green('\n Sveltail: Running Cordova'));
+                const child = exec(
+                  `(cd src-cordova && cordova run ${type})`,
+                  { cwd: currDirectory, stdio: 'inherit' },
+                );
+                child.stdout.pipe(process.stdout);
+                child.stderr.pipe(process.stderr);
+              } else if (platform === 'Electron') {
+                console.log(chalk.green('\n Sveltail: Starting electron build process'));
+                const electronConfigPath = resolve(__dirname, 'webpackElectron.js');
+                const child = exec(
+                  `npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`,
+                  { cwd: currDirectory, stdio: 'inherit' },
+                );
+                child.stdout.pipe(process.stdout);
+                child.stderr.pipe(process.stderr);
+                child.on('exit', () => {
+                  process.stdout.pause();
+                  process.stderr.pause();
+                  if (process.platform === 'win32') {
+                    execSync(`taskkill -F -T -PID ${process.pid}`);
+                  } else {
+                    process.kill(process.pid);
+                  }
+                });
+              }
+            }, 1000);
+          }
+        });
+      }
     }
-
-    apply(compiler) {
-      compiler.hooks.afterEmit.tap('OnBuildPlugin', () => {
-        if (!this.firstTimeBuild) {
-          this.firstTimeBuild = true;
-          setTimeout(() => {
-            if (platform === 'Cordova') {
-              console.log(chalk.green('\n Sveltail: Running Cordova'));
-              const child = exec(
-                `(cd src-cordova && cordova run ${type})`,
-                { cwd: currDirectory, stdio: 'inherit' },
-              );
-              child.stdout.pipe(process.stdout);
-              child.stderr.pipe(process.stderr);
-            } else if (platform === 'Electron') {
-              console.log(chalk.green('\n Sveltail: Starting electron build process'));
-              const electronConfigPath = resolve(__dirname, 'webpackElectron.js');
-              const child = exec(
-                `npx webpack --config "${electronConfigPath}" --env mode=${mode} --env url=${url}`,
-                { cwd: currDirectory, stdio: 'inherit' },
-              );
-              child.stdout.pipe(process.stdout);
-              child.stderr.pipe(process.stderr);
-              child.on('exit', () => {
-                process.stdout.pause();
-                process.stderr.pause();
-                if (process.platform === 'win32') {
-                  execSync(`taskkill -F -T -PID ${process.pid}`);
-                } else {
-                  process.kill(process.pid);
-                }
-              });
-            }
-          }, 1000);
-        }
-      });
-    }
-  }
-
-  if (platform === 'Cordova' || platform === 'Electron') {
     plugins.push(new OnBuildPlugin());
   }
 
-  const rules = [
-    {
-      test: /\.svelte$/,
-      use: {
-        loader: 'svelte-loader',
-        options: {
-          dev: false,
-          emitCss: true,
-          hotReload: false,
-        },
-      },
-    },
-    {
-      // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-      test: /node_modules\/svelte\/.*\.mjs$/,
-      resolve: {
-        fullySpecified: false,
-      },
-    },
-    {
-      test: /\.css$/,
-      use: [
-        {
-          loader: MiniCssExtractPlugin.loader,
-        },
-        {
-          loader: 'css-loader',
-          options: {
-            // necessary if you use url('/path/to/some/asset.png|jpg|gif')
-            url: false,
-            sourceMap: !PROD,
+  if (PROD) {
+    plugins.push(
+      new CopyPlugin({
+        patterns: [
+          {
+            from: resolve(currDirectory, 'public', platform),
+            to: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : undefined),
           },
-        },
-        {
-          loader: 'postcss-loader',
-          options: {
-            postcssOptions: {
-              plugins: [
-                [
-                  tailwind,
-                  autoprefixer,
-                  postcssPlugin(),
-                ],
-              ],
-            },
-          },
-        },
-      ],
-    },
-  ];
+        ],
+      }),
+    );
+
+    plugins.push(new CssMinimizerPlugin());
+
+    plugins.push(
+      new CompressionPlugin({
+        test: /\.(html|css|js)(\?.*)?$/i, // only compressed html/css/js, skips compressing sourcemaps etc
+      }),
+    );
+  }
 
   // Web Config
   let config = {
-    devServer: {
-      writeToDisk: true,
-      open: platform !== 'Electron' && platform !== 'Cordova',
-      contentBase: platform === 'Electron'
-        ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
-        : resolve(currDirectory, 'public', platform),
-      stats: {
-        assets: true,
-        children: true,
-        chunks: false,
-        hash: false,
-        modules: false,
-        publicPath: false,
-        timings: true,
-        version: false,
-        warnings: true,
-        colors: true,
-      },
-      before(_app, server) {
-        url = `http://${server.options.host}:${server.options.port}/`;
-      },
-    },
     entry,
+    plugins,
+    mode,
+    devtool: PROD ? false : 'source-map',
     resolve: {
       alias: {
         svelte: resolve(currDirectory, 'node_modules', 'svelte'),
@@ -327,6 +255,56 @@ module.exports = (env) => {
       filename: PROD ? 'js/[name].js' : undefined,
       chunkFilename: PROD ? 'js/[id].js' : undefined,
     },
+    module: {
+      rules: [
+        {
+          test: /\.svelte$/,
+          use: {
+            loader: 'svelte-loader',
+            options: {
+              dev: false,
+              emitCss: true,
+              hotReload: false,
+            },
+          },
+        },
+        {
+          // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
+          test: /node_modules\/svelte\/.*\.mjs$/,
+          resolve: {
+            fullySpecified: false,
+          },
+        },
+        {
+          test: /\.css$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: 'css-loader',
+              options: {
+                // necessary if you use url('/path/to/some/asset.png|jpg|gif')
+                url: false,
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [
+                    [
+                      tailwind,
+                      autoprefixer,
+                    ],
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
     optimization: {
       splitChunks: !PROD ? undefined : {
         chunks: 'all',
@@ -335,8 +313,9 @@ module.exports = (env) => {
       removeEmptyChunks: PROD,
       minimize: PROD,
       minimizer: [
-        new TerserPlugin(),
-        new CssMinimizerPlugin(),
+        new TerserPlugin({
+          parallel: true,
+        }),
       ],
     },
     stats: {
@@ -351,12 +330,28 @@ module.exports = (env) => {
       warnings: true,
       colors: true,
     },
-    module: {
-      rules,
+    devServer: {
+      writeToDisk: true,
+      open: platform !== 'Electron' && platform !== 'Cordova',
+      contentBase: platform === 'Electron'
+        ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
+        : resolve(currDirectory, 'public', platform),
+      stats: {
+        assets: true,
+        children: false,
+        chunks: true,
+        hash: false,
+        modules: false,
+        publicPath: false,
+        timings: true,
+        version: false,
+        warnings: false,
+        colors: true,
+      },
+      before(_app, server) {
+        url = `http://${server.options.host}:${server.options.port}/`;
+      },
     },
-    plugins,
-    mode,
-    devtool: PROD ? false : 'source-map',
   };
 
   const userConfig = framework.webpack(config);

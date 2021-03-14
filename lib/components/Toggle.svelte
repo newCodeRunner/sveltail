@@ -32,21 +32,8 @@
     <input id={_id} type="checkbox" class="hidden" checked="{value}" on:click={_update}>
     <div class="relative inline-flex items-center {_height} {_width}">
       <div class="w-full h-1/4 rounded-full shadow-inner {value ? `bg-${_color}` : 'bg-info'}"/>
-      <div class="st-toggle-handle absolute w-1/2 h-1/2 rounded-full shadow bg-info" />
+      <div class="st-toggle-handle left-0 -top-1/2 transition duration-300 ease-in-out transform -translate-y-2/4 absolute w-1/2 h-1/2 rounded-full shadow bg-info {value ? 'translate-x-full' : ''}" />
     </div>
     <span class="ml-2 {_textSize}">{_label}</span>
   </label>
 </div>
-
-<style>
-.st-toggle-handle {
-  top: 50%;
-  left: 0%;
-  transform: translateY(-50%);
-  transition: all 0.3s ease-in-out;
-}
-
-input[type="checkbox"]:checked + div div.st-toggle-handle {
-  transform: translate(100%, -50%);
-}
-</style>

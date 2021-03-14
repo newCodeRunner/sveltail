@@ -349,3 +349,51 @@
 .-w-screen-96 {
   width: calc(100vw - 24rem);
 }
+
+.min-h-screen-25 {
+  min-height: 25vh;
+}
+.min-h-screen-50 {
+  min-height: 50vh;
+}
+.min-h-screen-75 {
+  min-height: 75vh;
+}
+.max-h-screen-25 {
+  max-height: 25vh;
+}
+.max-h-screen-50 {
+  max-height: 50vh;
+}
+.max-h-screen-75 {
+  max-height: 75vh;
+}
+
+.min-w-screen-25 {
+  min-width: 25vw;
+}
+.min-w-screen-50 {
+  min-width: 50vw;
+}
+.min-w-screen-75 {
+  min-width: 75vw;
+}
+.max-w-screen-25 {
+  max-width: 25vw;
+}
+.max-w-screen-50 {
+  max-width: 50vw;
+}
+.max-w-screen-75 {
+  max-width: 75vw;
+}
+
+/* Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

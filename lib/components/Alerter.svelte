@@ -191,7 +191,7 @@
       />
       <div
         transition:fade={{ duration: 300 }}
-        class="z-10 m-auto st-alerter rounded bg-light text-dark dark:bg-dark dark:text-light"
+        class="z-10 m-auto min-w-screen-50 max-w-screen-75 rounded bg-light text-dark dark:bg-dark dark:text-light"
       >
         {#if props.title}
           <div
@@ -237,10 +237,3 @@
     </div>
   {/if}
 {/if}
-
-<style>
-  .st-alerter {
-    min-width: 50vw;
-    max-width: 75vw;
-  }
-</style>

@@ -4,6 +4,11 @@
   import languages from '~/src/i18n/index';
   import { getBoolean, getString, getColor } from '../js/helpers';
 
+  import 'tailwindcss/tailwind.css';
+  import '../css/effects.css';
+  import '../css/helpers.css';
+  import '../css/base.css';
+
   // i18n
   languages.forEach((lang) => {
     register(lang, () => import(`~/src/i18n/languages/${lang}.js`));
@@ -49,25 +54,3 @@
     <slot name="footer" />
   </footer>
 </section>
-
-<style>
-  @import "tailwindcss/base";
-  @import "tailwindcss/components";
-  @import "tailwindcss/utilities";
-
-  @import "../css/effects.css";
-  @import "../css/helpers.css";
-
-  :global(.cordova.safe-area) {
-    padding-right: env(safe-area-inset-right, 20px);
-    padding-bottom: env(safe-area-inset-bottom, 20px);
-    padding-left: env(safe-area-inset-left, 20px);
-  }
-  :global(.cordova .safe-area-top) {
-    padding-top: env(safe-area-inset-top, 20px);
-  }
-
-  :global(html) {
-    overflow: hidden;
-  }
-</style>

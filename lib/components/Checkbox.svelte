@@ -29,7 +29,7 @@
   </label>
 </div>
 
-<style>
+<!-- <style>
   input[type="checkbox"] + label div div:after {
     color: transparent !important;
   }
@@ -45,4 +45,4 @@
   input[type="checkbox"]:checked + label div div:after {
     color: currentColor !important;
   }
-</style>
+</style> -->

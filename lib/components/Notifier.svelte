@@ -167,7 +167,7 @@
         style={getStyle(i, item.position, item.id)}
       >
         <div class="relative flex">
-          {#if item.badge > 1}<div class="fixed top-0 rounded left-0 st-notifier-badge text-light px-2 py-1">{item.badge}</div>{/if}
+          {#if item.badge > 1}<div class="fixed top-0 rounded left-0 bg-primary transform -translate-x-2/4 text-light px-2 py-1">{item.badge}</div>{/if}
           <slot name="icon" />
           <div>
             {#if item.title}<div>{item.title}</div>{/if}
@@ -201,10 +201,3 @@
     {/if}
   {/each}
 {/if}
-
-<style>
-  .st-notifier-badge {
-    background-color: #0BB5FF;
-    transform: translate(-50%, -10px);
-  }
-</style>
