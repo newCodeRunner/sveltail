@@ -7,6 +7,7 @@ const { readFileSync, writeFileSync, existsSync, mkdirSync, watchFile } = requir
 const { resolve } = require('path');
 const { exec, execSync } = require('child_process');
 const chalk = require('chalk');
+const autoprefixer = require('autoprefixer');
 
 // Webpack and Plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
@@ -14,11 +15,10 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
+const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
-const autoprefixer = require('autoprefixer');
+const CompressionPlugin = require('compression-webpack-plugin');
 
 // Find current working directory
 const currDirectory = process.cwd();
@@ -224,11 +224,9 @@ module.exports = (env) => {
       }),
     );
 
-    plugins.push(new CssMinimizerPlugin());
-
     plugins.push(
       new CompressionPlugin({
-        test: /\.(html|css|js)(\?.*)?$/i, // only compressed html/css/js, skips compressing sourcemaps etc
+        test: /\.(html|css|js|woff)(\?.*)?$/i, // only compressed html/css/js, skips compressing sourcemaps etc
       }),
     );
   }
@@ -257,13 +255,6 @@ module.exports = (env) => {
     },
     module: {
       rules: [
-        {
-          // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-          test: /node_modules\/svelte\/.*\.mjs$/,
-          resolve: {
-            fullySpecified: false,
-          },
-        },
         {
           test: /\.svelte$/,
           use: {
@@ -313,14 +304,13 @@ module.exports = (env) => {
       removeEmptyChunks: PROD,
       minimize: PROD,
       minimizer: [
-        new TerserPlugin({
-          parallel: true,
-        }),
+        new TerserPlugin(),
+        new CssMinimizerPlugin(),
       ],
     },
     stats: {
       assets: true,
-      children: true,
+      children: false,
       chunks: false,
       hash: false,
       modules: false,
@@ -341,13 +331,13 @@ module.exports = (env) => {
       stats: {
         assets: true,
         children: false,
-        chunks: true,
+        chunks: false,
         hash: false,
         modules: false,
         publicPath: false,
         timings: true,
         version: false,
-        warnings: false,
+        warnings: true,
         colors: true,
       },
       before(_app, server) {
