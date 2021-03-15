@@ -5,8 +5,9 @@
   import { getBoolean, getString, getColor } from '../js/helpers';
 
   import 'tailwindcss/tailwind.css';
-  import '../css/effects.css';
+
   import '../css/helpers.css';
+  import '../css/effects.css';
   import '../css/base.css';
 
   // i18n

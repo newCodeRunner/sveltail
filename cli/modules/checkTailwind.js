@@ -1,6 +1,8 @@
 const isArray = (value) => value && typeof value === 'object' && value.constructor === Array;
 
-module.exports = (css) => {
+module.exports = (css, cwd) => {
+  const currDirectory = cwd.replace(/\\/g, '/');
+
   const modifiedCSS = { ...css };
 
   // Update Brand Theme if user Eemoved from Preferences
@@ -24,12 +26,18 @@ module.exports = (css) => {
       content: modifiedCSS.purge,
     };
   }
-  if (!modifiedCSS.purge) modifiedCSS.purge = { content: [] };
-  else if (!modifiedCSS.purge.content) modifiedCSS.purge.content = [];
+  if (!modifiedCSS.purge) modifiedCSS.purge = { content: [], css: [] };
+  else {
+    if (!modifiedCSS.purge.content) modifiedCSS.purge.content = [];
+    if (!modifiedCSS.purge.css) modifiedCSS.purge.css = [];
+  }
 
-  modifiedCSS.purge.content.push('./src/**/*.html');
-  modifiedCSS.purge.content.push('./src/**/*.svelte');
-  modifiedCSS.purge.content.push('./node_modules/sveltail/lib/**/*');
+  modifiedCSS.purge.content.push(`${currDirectory}/src/**/*.html`);
+  modifiedCSS.purge.content.push(`${currDirectory}/src/**/*.svelte`);
+  modifiedCSS.purge.content.push(`${currDirectory}/node_modules/sveltail/lib/**/*.svelte`);
+
+  modifiedCSS.purge.css.push(`${currDirectory}/src/**/*.css`);
+  modifiedCSS.purge.css.push(`${currDirectory}/node_modules/sveltail/lib/css/**/*.css`);
 
   // Set up WhiteList
   if (!modifiedCSS.purge.options) modifiedCSS.purge.options = {};

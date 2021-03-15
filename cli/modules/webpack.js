@@ -34,7 +34,7 @@ const { tailwindcss, pwa, framework } = svelteConfig.default();
 // Create an inital tailwind.config.js file based on user values
 const updateTailwindConfig = (css) => {
   const checkCSS = require('./checkTailwind');
-  const modifiedCSS = checkCSS(css);
+  const modifiedCSS = checkCSS(css, currDirectory);
 
   if (!existsSync(resolve(currDirectory, '.sveltail'))) mkdirSync(resolve(currDirectory, '.sveltail'));
   writeFileSync(
@@ -285,7 +285,7 @@ module.exports = (env) => {
               loader: 'css-loader',
               options: {
                 // necessary if you use url('/path/to/some/asset.png|jpg|gif')
-                url: false,
+                url: true,
               },
             },
             {
@@ -300,6 +300,9 @@ module.exports = (env) => {
                   ],
                 },
               },
+            },
+            {
+              loader: 'sass-loader',
             },
           ],
         },
