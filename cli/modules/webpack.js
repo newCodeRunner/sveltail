@@ -258,17 +258,6 @@ module.exports = (env) => {
     module: {
       rules: [
         {
-          test: /\.svelte$/,
-          use: {
-            loader: 'svelte-loader',
-            options: {
-              dev: false,
-              emitCss: true,
-              hotReload: false,
-            },
-          },
-        },
-        {
           // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
           test: /node_modules\/svelte\/.*\.mjs$/,
           resolve: {
@@ -276,10 +265,21 @@ module.exports = (env) => {
           },
         },
         {
+          test: /\.svelte$/,
+          use: {
+            loader: 'svelte-loader',
+            options: {
+              dev: !PROD,
+              emitCss: true,
+              hotReload: !PROD,
+            },
+          },
+        },
+        {
           test: /\.css$/,
           use: [
             {
-              loader: MiniCssExtractPlugin.loader,
+              loader: PROD ? MiniCssExtractPlugin.loader : 'style-loader',
             },
             {
               loader: 'css-loader',
@@ -300,9 +300,6 @@ module.exports = (env) => {
                   ],
                 },
               },
-            },
-            {
-              loader: 'sass-loader',
             },
           ],
         },
@@ -335,6 +332,8 @@ module.exports = (env) => {
     },
     devServer: {
       writeToDisk: true,
+      historyApiFallback: true,
+      hot: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
       contentBase: platform === 'Electron'
         ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
