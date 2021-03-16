@@ -54,7 +54,7 @@
         <slot name="middle" />
       </div>
 
-      <div class="flex  items-center justify-end">
+      <div class="flex items-center justify-end">
         <!-- End Slot -->
         <slot name="end" />
 

@@ -12,6 +12,8 @@
   $: _noBackdrop = getBoolean($$props.noBackdrop);
   $: _persistant = getBoolean($$props.persistant);
 
+  const _isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
   const emitEvent = (vis) => {
     if (vis) dispatch('show'); 
     else dispatch('hide');
@@ -47,7 +49,7 @@
       <aside
         in:fly="{{ x: _right ? 200 : -200, duration: 200 }}"
         out:fly="{{ x: _right ? 200 : -200, duration: 150 }}"
-        class="absolute -w-12 sm:w-96 h-full bg-light dark:bg-dark {_right ? 'right-0' : ''} {_fullScreen ? 'safe-area-top' : ''}"
+        class="absolute h-full bg-light dark:bg-dark {_right ? 'right-0' : ''} {_fullScreen ? 'safe-area-top' : ''} {_isMobile ? '-w-12' : 'w-96'}"
       >
         <div class="h-full w-full {_class}">
           <slot />

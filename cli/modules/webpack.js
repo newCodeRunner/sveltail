@@ -127,8 +127,8 @@ module.exports = (env) => {
       inject: 'head',
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[name].[id].css',
+      filename: 'css/[name].[hash].css',
+      chunkFilename: 'css/[name].[id].[hash].css',
       ignoreOrder: false,
     }),
   ];
@@ -246,12 +246,15 @@ module.exports = (env) => {
       },
       extensions: ['.mjs', '.js', '.svelte'],
       mainFields: ['svelte', 'browser', 'module', 'main'],
-      symlinks: false,
+      symlinks: PROD ? false : undefined,
+      modules: [
+        resolve(currDirectory, 'node_modules'),
+      ],
     },
     output: {
       path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : ''),
-      filename: PROD ? 'js/[name].js' : undefined,
-      chunkFilename: PROD ? 'js/[id].js' : undefined,
+      filename: PROD ? 'js/[name].[contenthash].js' : undefined,
+      chunkFilename: PROD ? 'js/[name].[id].[contenthash].js' : undefined,
     },
     module: {
       rules: [
@@ -260,9 +263,11 @@ module.exports = (env) => {
           use: {
             loader: 'svelte-loader',
             options: {
-              dev: false,
+              compilerOptions: {
+                dev: !PROD,
+              },
               emitCss: true,
-              hotReload: false,
+              hotReload: !PROD,
             },
           },
         },
@@ -322,9 +327,13 @@ module.exports = (env) => {
     },
     devServer: {
       writeToDisk: true,
+      hot: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
       contentBase: platform === 'Electron'
-        ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
+        ? [
+          resolve(currDirectory, 'public', platform),
+          resolve(currDirectory, '.sveltail', 'Electron'),
+        ]
         : resolve(currDirectory, 'public', platform),
       stats: {
         assets: true,

@@ -202,8 +202,8 @@
               <div>{props.title}</div>
             </div>
             {#if !props.persistant}
-              <div class="cursor-pointer" on:click={dismiss}>
-                <IconDismiss />
+              <div on:click={dismiss}>
+                <IconDismiss class="cursor-pointer p-2" />
               </div>
             {/if}
           </div>

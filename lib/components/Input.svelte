@@ -26,7 +26,7 @@
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
   $: _colorBg = getColor($$props.colorBg, 'transparent');
-  $: _colorText = getColor($$props.colorText, 'dark');
+  $: _colorText = getColor($$props.colorText, 'current');
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
   $: _textSize = getTextSize($$props.size, 'md');
@@ -135,11 +135,14 @@
         items-center
         border
         cursor-text
-        {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
-        {error ? 'border-3 border-danger' : ''}
         bg-{_colorBg}
-        border-{_colorBg === 'transparent' ? 'dark' : _colorBg}
-        dark:border-{_colorBg === 'transparent' ? 'light' : _colorBg}
+        text-{_colorText}
+        {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
+        {error        
+          ? 'border-danger'
+          : `border-${_colorBg === 'transparent' ? 'dark' : _colorBg}
+          dark:border-${_colorBg === 'transparent' ? 'light' : _colorBg}`
+        }
         {_rounded || _pill ? 'rounded' : ''}
         {_pill ? 'rounded-full' : 'px-2'}
         {_pill && _size === 'xs' ? 'px-3' : ''}
@@ -162,8 +165,8 @@
               whitespace-nowrap
               bg-transparent
               left-0
-              text-{_colorText}
               {isFocused || value ? `top-0 text-${_size} leading-none` : _textSize}
+              {error ? 'text-danger' : ''}
             "
             for=""
           >
@@ -175,20 +178,20 @@
         bind:this={input}
         bind:value={value}
         style={_colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-        class="flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? '' : _colorBg} text-{_colorText} {_textSize}"
+        class="flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? '' : _colorBg} {_textSize}"
         tabindex="0"
         on:blur={onBlur}
         on:focus={onFocus}
         on:change={onChange}
       />
-      <div class="flex justify-end {_width}">
+      <div class="{_width} {_hideHint ? 'cursor-pointer' : ''}" title={_hideHint ? error : undefined}>
         {#if error}
-          <IconError size={_size} />
+          <IconError size={_size} class="p-2 overflow-visible {error ? 'text-danger' : ''}" />
         {/if}
       </div>
       {#if _clearable}
-        <div class="mx-1 cursor-pointer" on:click={clearAll}>  
-          <IconClearable class="transition ease-in-out transform hover:scale-110" size={_size} />
+        <div class="-mx-2 cursor-pointer {_width}" on:click={clearAll} title="Clear">  
+          <IconClearable class="p-2 transition ease-in-out transform hover:scale-110" size={_size} />
         </div>
       {/if}
       <slot name="iconRight" />

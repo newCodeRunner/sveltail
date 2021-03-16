@@ -8,6 +8,7 @@ const chalk = require('chalk');
 // Webpack and plugins
 const { DefinePlugin, EnvironmentPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const currDirectory = process.cwd();
 const packageJSON = JSON.parse(readFileSync(resolve(currDirectory, 'package.json'), 'utf-8'));
@@ -144,7 +145,7 @@ module.exports = (env) => {
     output: {
       path: PROD ? resolve(currDirectory, 'dist', 'Electron', 'unpacked') : resolve(currDirectory, '.sveltail', 'Electron'),
       filename: '[name].js',
-      chunkFilename: '[id].js',
+      chunkFilename: '[name].[id].[contenthash].js',
       libraryTarget: 'commonjs2',
     },
     externals: Object.keys(dependencies || {}),
@@ -155,10 +156,13 @@ module.exports = (env) => {
       removeAvailableModules: PROD,
       removeEmptyChunks: PROD,
       minimize: PROD,
+      minimizer: [
+        new TerserPlugin(),
+      ],
     },
     stats: {
       assets: true,
-      children: true,
+      children: false,
       chunks: false,
       hash: false,
       modules: false,
@@ -170,7 +174,7 @@ module.exports = (env) => {
     },
     plugins,
     mode,
-    devtool: PROD ? false : 'source-map',
+    devtool: false,
   };
 
   const userConfig = framework.webpackElectron(config);
