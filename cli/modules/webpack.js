@@ -260,9 +260,9 @@ module.exports = (env) => {
           use: {
             loader: 'svelte-loader',
             options: {
-              dev: !PROD,
+              dev: false,
               emitCss: true,
-              hotReload: !PROD,
+              hotReload: false,
             },
           },
         },
@@ -322,8 +322,6 @@ module.exports = (env) => {
     },
     devServer: {
       writeToDisk: true,
-      historyApiFallback: true,
-      hot: true,
       open: platform !== 'Electron' && platform !== 'Cordova',
       contentBase: platform === 'Electron'
         ? [resolve(currDirectory, 'public', platform), resolve(currDirectory, '.sveltail', 'Electron')]
