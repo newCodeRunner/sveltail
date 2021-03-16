@@ -5,9 +5,9 @@
   let _height;
   let _width;
 
-  $: _class = getString($$props.class, 'h-full w-full');
-  $: _height = getHeight($$props.size, null);
-  $: _width = getWidth($$props.size, null);
+  $: _class = getString($$props.class);
+  $: _height = getHeight($$props.size, 'md');
+  $: _width = getWidth($$props.size, 'md');
 </script>
 
 <div class="{_height} {_width} {_class}">

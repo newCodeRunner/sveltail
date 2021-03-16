@@ -21,6 +21,8 @@
   let _inputError = null;
   const dismiss = () => {
     props = null;
+    _inputError = null;
+    _inputText = null;
   };
 
   // Native
@@ -103,7 +105,7 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
       };
     });
-    input = ({ title, message, details, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve) => {
+    input = ({ title, message, details, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve, reject) => {
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
       props = {
@@ -135,13 +137,13 @@
                 colorText: 'current',
                 onClick() {
                   if (callback) {
-                    const result = callback(_inputText, _inputError);
+                    const result = callback(_inputText);
                     if (result === true) {
-                      resolve({ val: _inputText, err: _inputError });
+                      resolve(_inputText);
                       dismiss();
                     } else _inputError = result;
                   } else {
-                    resolve({ val: _inputText, err: _inputError});
+                    resolve(_inputText);
                     dismiss();
                   }
                 },
@@ -153,6 +155,7 @@
                 colorText: 'current',
                 onClick() {
                   reject();
+                  dismiss();
                 },
               },
           ],

@@ -42,7 +42,7 @@
 
 {#if visible}
   {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
-    <div class='absolute z-20 top-0 left-0 {_fullScreen ? 'h-screen w-screen cordova safe-area' : 'h-full w-full'}'>
+    <div class='absolute top-0 left-0 {_fullScreen ? 'h-screen w-screen cordova safe-area z-30' : 'h-full w-full z-20'}'>
       {#if !_noBackdrop}
         <div class="absolute bg-dark dark:bg-light h-full w-full opacity-50" on:click={_persistant ? null : hide} />
       {/if}

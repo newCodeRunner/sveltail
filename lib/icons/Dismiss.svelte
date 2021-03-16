@@ -5,7 +5,7 @@
   let _height;
   let _width;
 
-  $: _class = getString($$props.class, '');
+  $: _class = getString($$props.class);
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
 </script>
