@@ -26,9 +26,6 @@
     dispatch('click');
     evt.target.blur();
   };
-  const onBlur = () => {
-    dispatch('blur');
-  };
   
   export let loading = false;
 </script>

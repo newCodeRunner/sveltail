@@ -50,7 +50,7 @@
   bind:this={_accordian}
   class="w-full cursor-pointer text-{_textColor} overflow-hidden {_borderColor ? `border-l-2 border-${_borderColor}` : ''}"
 >
-  <div class="{_class} flex items-center hover:bg-info" on:click={_toggle}>
+  <div class="{_class} flex items-center hover:bg-info hover:text-dark dark:hover:text-light" on:click={_toggle}>
     {#if _label}<div>{_label}</div>{/if}
     <div class="flex-1" />
     <IconArrowRight class="p-2 transition transform {_expand ? 'rotate-90' : 'rotate-0'}" />

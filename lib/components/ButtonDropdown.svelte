@@ -6,7 +6,6 @@
 
   // Globals
   const dispatch = createEventDispatcher();
-  const _buttonProps = $$props;
 
   const onClick = () => {
     dispatch('click');
@@ -17,5 +16,5 @@
   <div slot="items">
     <slot />
   </div>
-  <Button {..._buttonProps} on:click={onClick} />
+  <Button label={$$props.label} size={$$props.size} on:click={onClick} />
 </Menu>
