@@ -36,6 +36,8 @@ module.exports = (css, cwd) => {
   modifiedCSS.purge.content.push(`${currDirectory}/src/**/*.svelte`);
   modifiedCSS.purge.content.push(`${currDirectory}/node_modules/sveltail/lib/**/*.svelte`);
 
+  modifiedCSS.purge.content.push(`${currDirectory}/node_modules/sveltail/lib/**/*.js`);
+
   modifiedCSS.purge.css.push(`${currDirectory}/src/**/*.css`);
   modifiedCSS.purge.css.push(`${currDirectory}/node_modules/sveltail/lib/css/**/*.css`);
 

@@ -32,10 +32,12 @@
 
   // Web / Hybrid
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    msg = ({ title, message, details, barColorBg, barColorText, persistant, actions, actionsClass }) => {
+    msg = (paramsObject) => {
+      const { title, message, details, barColorBg, barColorText, persistant, actions, actionsClass } = paramsObject;
       const html = document.querySelector('html');
+      
       html.classList.add('overflow-hidden');
-      props = {
+      props = Object.assign(paramsObject, {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
@@ -65,12 +67,14 @@
               onClick: dismiss,
           }],
         actionsClass: getString(actionsClass, 'justify-end items-center'),
-      };
+      });
     };
-    confirm = ({ title, message, details, barColorBg, barColorText, actions, actionsClass }) => new Promise((resolve) => {
+    confirm = (paramsObject) => new Promise((resolve) => {
+      const { title, message, details, barColorBg, barColorText, actions, actionsClass } = paramsObject;
+
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
-      props = {
+      props = Object.assign(paramsObject, {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
@@ -103,12 +107,14 @@
               },
           }],
         actionsClass: getString(actionsClass, 'justify-end items-center'),
-      };
+      });
     });
-    input = ({ title, message, details, barColorBg, barColorText, actions, actionsClass, callback }) => new Promise((resolve, reject) => {
+    input = (paramsObject) => new Promise((resolve, reject) => {
+      const { title, message, details, barColorBg, barColorText, actions, actionsClass, callback } = paramsObject;
+
       const html = document.querySelector('html');
       html.classList.remove('overflow-hidden');
-      props = {
+      props = Object.assign(paramsObject, {
         title: getString(title, null),
         message: getString(message, null),
         details: getString(details, null),
@@ -162,7 +168,7 @@
         actionsClass: getString(actionsClass, 'justify-end items-center'),
         showInput: true,
         textValue: null,
-      };
+      });
     });
   }
 
@@ -202,11 +208,12 @@
             class="flex h-12 px-5 items-center justify-between bg-{props.barColorBg} text-{props.barColorText}"
           >
             <div class="inline-flex items-center">
+              <slot name="icon" alert={props} />
               <div>{props.title}</div>
             </div>
             {#if !props.persistant}
-              <div on:click={dismiss}>
-                <IconDismiss class="cursor-pointer p-2" />
+              <div class="cursor-pointer" on:click={dismiss}>
+                <IconDismiss class="p-2" />
               </div>
             {/if}
           </div>

@@ -127,7 +127,7 @@ module.exports = (env) => {
     }),
     new MiniCssExtractPlugin({
       filename: 'css/[name].[fullhash].css',
-      chunkFilename: 'css/[name].[id].[chunkhash].css',
+      chunkFilename: 'css/[id].[chunkhash].css',
       ignoreOrder: false,
     }),
   ];
@@ -253,7 +253,7 @@ module.exports = (env) => {
     output: {
       path: resolve(currDirectory, 'dist', platform, platform === 'Electron' ? 'unpacked' : ''),
       filename: PROD ? 'js/[name].[contenthash].js' : undefined,
-      chunkFilename: PROD ? 'js/[name].[id].[contenthash].js' : undefined,
+      chunkFilename: PROD ? 'js/[id].[contenthash].js' : undefined,
     },
     module: {
       rules: [

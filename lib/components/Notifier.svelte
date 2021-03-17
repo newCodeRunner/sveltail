@@ -57,7 +57,9 @@
       return position;
     };
 
-    show = ({ title, message, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass }) => {
+    show = (paramsObject) => {
+      const { title, message, dismissable, position, timeout, persistant, onDismiss, actions, actionsClass } = paramsObject;
+
       const newTitle = getString(title, null);
       const newMessage = getString(message, null);
 
@@ -71,8 +73,8 @@
           notifications = [...notifications.filter((i) => i.id !== id)];
           if (isFunction(onDismiss)) onDismiss();
         };
-        
-        notifications = [...notifications, {
+
+        const newObject = Object.assign(paramsObject, {
           id,
           height: 0,
           title: newTitle,
@@ -102,7 +104,9 @@
             )
             : [],
           actionsClass: getString(actionsClass, 'justify-end'),
-        }];
+        });
+        
+        notifications = [...notifications, newObject];
       } else {
         const tempArray = notifications.map((i) => i);
         tempArray[foundIndex].badge += 1;
@@ -168,8 +172,8 @@
       >
         <div class="relative flex">
           {#if item.badge > 1}<div class="fixed top-0 rounded left-0 bg-primary transform -translate-x-2/4 text-light px-2 py-1">{item.badge}</div>{/if}
-          <slot name="icon" />
-          <div>
+          <slot name="icon" notification={item} />
+          <div class="pr-4">
             {#if item.title}<div>{item.title}</div>{/if}
             {#if item.message}<div>{item.message}</div>{/if}
 
@@ -191,10 +195,11 @@
               </div>
             {/if}
           </div>
+          <div class="flex-1" />
           {#if item.dismissable}
-            <span on:click={item.dismiss}>
-              <IconDismiss />
-            </span>
+            <div on:click={item.dismiss}>
+              <IconDismiss size="xs" class="cursor-pointer p-2 transition ease-in-out transform hover:scale-110" />
+            </div>
           {/if}
         </div>
       </div>

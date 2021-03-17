@@ -40,7 +40,7 @@
     </div>
     {#if _dismissable}
       <div on:click={_dismiss}>
-        <IconDismiss />
+        <IconDismiss size={_iconSize} />
       </div>
     {/if}
   </div>
