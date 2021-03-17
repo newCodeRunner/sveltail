@@ -33,9 +33,12 @@
   <div class="flex justify-between items-center p-4">
     <div class="flex items-center">
       <div class="px-2">
-        {#if _title}<p class="font-bold">{_title}</p>{/if}
-        {#if _message}<p>{_message}</p>{/if}
-        <slot />
+        <slot name="prepend" />
+        <slot>
+          {#if _title}<p class="font-bold">{_title}</p>{/if}
+          {#if _message}<p>{_message}</p>{/if}
+        </slot>
+        <slot name="append" />
       </div>
     </div>
     {#if _dismissable}
