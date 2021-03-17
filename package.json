@@ -10,6 +10,11 @@
   },
   "main": "index.js",
   "bin": "bin/index.js",
+  "sideEffects": [
+    "*.css",
+    "*.scss",
+    "*.sass"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/newCodeRunner/sveltail.git"

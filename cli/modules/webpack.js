@@ -91,10 +91,9 @@ module.exports = (env) => {
   process.env.PROD = PROD;
   process.env.colors = JSON.stringify(Object.assign(tailwindcss.theme.colors, tailwindcss.theme.extend.colors));
   process.env.screens = JSON.stringify(tailwindcss.theme.screens);
-  process.env.noIcons = framework.noIcons || false;
 
   const plugins = [
-    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'noIcons']),
+    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens']),
     new DefinePlugin({
       'process.APP_ENV': JSON.stringify(
         Object.assign(
@@ -127,8 +126,8 @@ module.exports = (env) => {
       inject: 'head',
     }),
     new MiniCssExtractPlugin({
-      filename: 'css/[name].[hash].css',
-      chunkFilename: 'css/[name].[id].[hash].css',
+      filename: 'css/[name].[fullhash].css',
+      chunkFilename: 'css/[name].[id].[chunkhash].css',
       ignoreOrder: false,
     }),
   ];
