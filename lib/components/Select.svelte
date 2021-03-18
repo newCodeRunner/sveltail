@@ -24,7 +24,7 @@
   $: _pill = getBoolean($$props.pill);
   $: _rounded = getBoolean($$props.rounded);
   $: _colorBg = getColor($$props.colorBg, 'transparent');
-  $: _colorText = getColor($$props.colorText, 'dark');
+  $: _colorText = getColor($$props.colorText, 'current');
   $: _height = getHeight($$props.size, 'md');
   $: _width = getWidth($$props.size, 'md');
   $: _textSize = getTextSize($$props.size, 'md');
@@ -82,6 +82,11 @@
 
   $: onChange(value);
 
+  let _visible;
+  const _toggle = ({ detail }) => {
+    _visible = detail;
+  }
+
   export const isValid = () => {
     validate();
     return error === null;
@@ -94,7 +99,7 @@
 
 {#if process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios'}
   <div>
-    <Menu>
+    <Menu on:toggle={_toggle}>
       <div slot="items">
         {#if _options.length > 0}
           {#each _options as opt, o (o)}
@@ -110,14 +115,17 @@
           inline-flex
           items-center
           cursor-pointer
-          {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
-          {error ? 'border-3 border-danger' : ''}
-          bg-{_colorBg}
           border
-          border-{_colorBg === 'transparent' ? 'dark' : _colorBg}
-          dark:border-{_colorBg === 'transparent' ? 'light' : _colorBg}
+          bg-{_colorBg}
+          text-{_colorText}
+          {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
+          {error        
+            ? 'border-danger'
+            : `border-${_colorBg === 'transparent' ? 'dark' : _colorBg}
+            dark:border-${_colorBg === 'transparent' ? 'light' : _colorBg}`
+          }
           {_rounded || _pill ? 'rounded' : ''}
-          {_pill ? 'rounded-full' : 'px-2'}
+          {_pill ? 'rounded-full' : 'pl-2'}
           {_pill && _size === 'xs' ? 'px-3' : ''}
           {_pill && _size === 'sm' ? 'px-4' : ''}
           {_pill && _size === 'md' ? 'px-5' : ''}
@@ -174,7 +182,7 @@
           </div>
         {/if}
         <slot name="iconRight" />
-        <IconArrowDown size={_size} />
+        <IconArrowDown size={_size} class="p-2 transition transform {_visible ? 'rotate-180' : 'rotate-0'}" />
       </div>
     </Menu>
     {#if !_hideHint}

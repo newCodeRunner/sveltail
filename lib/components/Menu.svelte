@@ -1,8 +1,10 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import List from './List.svelte';
 
   // Globals
+  const dispatch = createEventDispatcher();
+
   let _el;
   let visible = false;
   let _width;
@@ -10,6 +12,8 @@
   const toggle = () => {
     visible = !visible;
   };
+
+  $: dispatch('toggle', visible);
 
   export const show = () => {
     visible = true;
