@@ -18,7 +18,7 @@
   };
 
   let _size, _class, _label, _pill, _rounded, _colorBg,_colorText, _height,
-  _width, _textSize, _clearable, _validate, _autoValidate, _type, _hideHint, _required, _min, _max;
+  _width, _textSize, _clearable, _validate, _autoValidate, _type, _hideHint, _required, _min, _max, _disabled;
 
   $: _size = getString($$props.size, 'md');
   $: _class = getString($$props.class);
@@ -41,6 +41,8 @@
   $: _required = getBoolean($$props.required);
   $: _min = getString($$props.min ? String($$props.min) : null, null);
   $: _max = getString($$props.max ? String($$props.max) : null, null); 
+
+  $: _disabled = getBoolean($$props.disabled, false);
 
   let isFocused = false;
   let input = null;
@@ -100,7 +102,12 @@
     if (input) input.focus();
   };
   const onChange = (val) => {
+    error = null;
     dispatch('change', val);
+  };
+  const onClick = () => {
+    focusInput();
+    dispatch('click');
   };
   const onBlur = () => {
     validate();
@@ -134,9 +141,9 @@
         inline-flex
         items-center
         border
-        cursor-text
         bg-{_colorBg}
         text-{_colorText}
+        {_disabled ? 'cursor-not-allowed' : 'cursor-text'}
         {isFocused && !error ? 'border-2 border-black dark:border-white' : ''}
         {error        
           ? 'border-danger'
@@ -144,7 +151,7 @@
           dark:border-${_colorBg === 'transparent' ? 'light' : _colorBg}`
         }
         {_rounded || _pill ? 'rounded' : ''}
-        {_pill ? 'rounded-full' : 'px-2'}
+        {_pill ? 'rounded-full' : 'pl-2'}
         {_pill && _size === 'xs' ? 'px-3' : ''}
         {_pill && _size === 'sm' ? 'px-4' : ''}
         {_pill && _size === 'md' ? 'px-5' : ''}
@@ -153,18 +160,18 @@
         {_class}
         {_height}
       "
-      on:click={focusInput}
+      on:click={onClick}
     >
       <slot name="icon" />
       <div class="relative inline-flex items-center {isFocused || value ? 'h-full' : _height}">
         {#if _label}
           <label
             class="
-              cursor-text
               absolute
               whitespace-nowrap
               bg-transparent
               left-0
+              {_disabled ? 'cursor-not-allowed' : 'cursor-text'}
               {isFocused || value ? `top-0 text-${_size} leading-none` : _textSize}
               {error ? 'text-danger' : ''}
             "
@@ -177,9 +184,9 @@
       <input
         bind:this={input}
         bind:value={value}
-        style={_colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-        class="flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? '' : _colorBg} {_textSize}"
+        class="-{_width} focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? 'inherit' : _colorBg} {_textSize}"
         tabindex="0"
+        disabled={_disabled}
         on:blur={onBlur}
         on:focus={onFocus}
         on:change={onChange}

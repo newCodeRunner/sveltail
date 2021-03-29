@@ -1,9 +1,6 @@
 <script>
   import { LayoutNative } from 'sveltail';  
+  import '../../src-nativescript/app/app.css';
 </script>
 
 <LayoutNative />
-
-<style>
-  @import '../../src-nativescript/app/app.css';
-</style>

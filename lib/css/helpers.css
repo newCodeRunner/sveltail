@@ -397,3 +397,8 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Background */
+.bg-inherit {
+  background-color: inherit;
+}

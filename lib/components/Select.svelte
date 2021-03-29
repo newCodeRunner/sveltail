@@ -158,8 +158,7 @@
         <input
           bind:this={input}
           bind:value={value}
-          style={_colorBg === 'transparent' ? 'background-color: inherit;' : ''}
-          class="cursor-pointer flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? '' : _colorBg} text-{_colorText} {_textSize}"
+          class="cursor-pointer flex-grow focus:outline-none {_label ? 'mt-2' : ''} bg-{_colorBg === 'transparent' ? 'inherit' : _colorBg} text-{_colorText} {_textSize}"
           tabindex="0"
           readonly
           on:blur={() => {
