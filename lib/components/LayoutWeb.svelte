@@ -29,7 +29,7 @@
   let _headerHeight = 0;
 </script>
 
-<section id="st-notifier" class="relative z-10">
+<section class="relative z-10">
   <slot name="loader" />
   <slot name="utilities" />
 </section>
