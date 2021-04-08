@@ -18,3 +18,6 @@ node_modules
 
 # Package Install Files
 *package-lock.json
+
+# Designer
+design/dist

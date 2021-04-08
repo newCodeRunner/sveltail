@@ -87,9 +87,6 @@
     "eslint-plugin-svelte3": "^3.1.2"
   },
   "scripts": {
-    "sveltail-config": "sveltail config",
-    "sveltail-icons": "sveltail icons --path src/assets/logo.png",
-    "sveltail-dev": "sveltail dev",
-    "sveltail-build": "veltail build"
+    "design": "npx webpack serve --config \"./design/webpack.config.js\""
   }
 }
