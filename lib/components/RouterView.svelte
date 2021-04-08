@@ -1,6 +1,6 @@
 <script>
   // eslint-disable-next-line object-curly-newline
-  import { afterUpdate, createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
 
   import hooks from '~/src/router/hooks';
@@ -23,25 +23,43 @@
   let currPath = null;
   let page;
 
+  let navigateResolve = null;
+  let navigateReject = null;
+  let navigateCallback = null;
+
   const { loader } = $$props.context;
+
+  const reset = () => {
+    navigateResolve = null;
+    navigateReject = null;
+    navigateCallback = null;
+  };
   
-  const beforeRouteUpdate = async (ctx, next) => {
+  const beforeRouteUpdate = (ctx, next) => {
     if (isFunction($loader.show)) $loader.show();
 
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(async () => {
-          const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
+          const result = isFunction(hooks.onBefore) ? hooks.onBefore() : true;
           if (result) next();
-          else if (isFunction($loader.hide)) $loader.hide();
+          else {
+            navigateReject();
+            reset();
+            if (isFunction($loader.hide)) $loader.hide();
+          }
         });
       });
     }
 
     if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
-      const result = await isFunction(hooks.onBefore) ? hooks.onBefore() : true;
+      const result = isFunction(hooks.onBefore) ? hooks.onBefore() : true;
       if (result) next();
-      else if (isFunction($loader.hide)) $loader.hide();
+      else {
+        navigateReject();
+        reset();
+        if (isFunction($loader.hide)) $loader.hide();
+      }
     }
   };
 
@@ -50,56 +68,81 @@
     const routeIndex = routes.findIndex((i) => i.path === path);
     const { name } = routes[routeIndex > -1 ? routeIndex : routes.length - 1];
     Route = null;
+
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        import(`~/src/pages/${name}.svelte`).then((module) => {
-          Route = module.default;
-          currPath = path;
-          next();
-        });
+        import(`~/src/pages/${name}.svelte`)
+          .then((module) => {
+            Route = module.default;
+            currPath = path;
+            next();
+          })
+          .catch((err) => {
+            navigateReject(new Error('Unable to load page.'));
+            reset();
+            if (isFunction($loader.hide)) $loader.hide();
+          });
       });
     });
   };
 
   const afterRouteUpdate = () => {
     if (isFunction(hooks.onAfter)) hooks.onAfter();
+    if (isFunction(navigateCallback)) navigateCallback();
+
+    if (navigateResolve) navigateResolve();
+    reset();
+    if (isFunction($loader.hide)) $loader.hide();
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        dispatch("updated", currPath);
+      });
+    });
   };
 
-  export const navigateTo = (path, afterNavigation) => {
-    if (path !== currPath) {
-      if (routes.findIndex((i) => i.path === path) > -1) {
-        page.redirect(path);
-        if (isFunction(afterNavigation)) afterNavigation();
-      } else navigateTo('/*');
-    }
-  };
+  export const navigateTo = (path, afterNavigation) => new Promise((resolve, reject) => {
+    if (!navigateResolve && !navigateReject && !navigateCallback) {
+      if (path !== currPath) {
+        const foundIndex = routes.findIndex((i) => i.path === path);
+
+        navigateResolve = resolve;
+        navigateReject = reject;
+        if (isFunction(afterNavigation)) navigateCallback = afterNavigation;
+
+        if (foundIndex > -1) page.redirect(path);
+        else page.redirect('/*');
+      } else {
+        console.warn('Router can not redirect to same path.');
+        reject();
+      }
+    } else reject(new Error('Router busy.'));
+  });
 
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
     import('page').then((module) => {
       page = module.default;
-      routes.forEach((navRoute) => {
-        if (navRoute.path) {
-          page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
-        } else if (navRoute.children) {
-          navRoute.children.forEach((childRoute) => {
-            page(childRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
-          });
-        }
-      });
-
+      
       page.base('/#');
+      
+      routes.forEach((navRoute) => {
+        if (navRoute.path) page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+      });
+      
       page();
     });
   }
 
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
     page = {
-      redirect: async (path) => {
-        await beforeRouteUpdate(
+      redirect: (path) => new Promise((resolve, reject) => {
+        navigateResolve = resolve;
+        navigateReject = reject;
+        beforeRouteUpdate(
           null,
           () => { updateRoute({ path }, afterRouteUpdate); },
         );
-      },
+      }),
     };
     navigateTo('/');
   }
@@ -130,11 +173,6 @@
 
   $: router.set(currPath);
   $: if (isObject($$props.context)) $$props.context.router = router;
-
-  afterUpdate(() => {
-    if (isFunction($loader.hide)) $loader.hide();
-    dispatch("updated", currPath);
-  });
 </script>
 
 <svelte:component this={Route} />

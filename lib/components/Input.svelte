@@ -171,8 +171,9 @@
               whitespace-nowrap
               bg-transparent
               left-0
+              {_textSize}
               {_disabled ? 'cursor-not-allowed' : 'cursor-text'}
-              {isFocused || value ? `top-0 text-${_size} leading-none` : _textSize}
+              {isFocused || value ? 'top-0 leading-none' : ''}
               {error ? 'text-danger' : ''}
             "
             for=""
