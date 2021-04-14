@@ -77,7 +77,7 @@
             currPath = path;
             next();
           })
-          .catch((err) => {
+          .catch(() => {
             navigateReject(new Error('Unable to load page.'));
             reset();
             if (isFunction($loader.hide)) $loader.hide();
@@ -120,17 +120,21 @@
   });
 
   if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
-    import('page').then((module) => {
-      page = module.default;
-      
-      page.base('/#');
-      
-      routes.forEach((navRoute) => {
-        if (navRoute.path) page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+    import('page')
+      .then((module) => {
+        page = module.default;
+        
+        page.base('/#');
+        
+        routes.forEach((navRoute) => {
+          if (navRoute.path) page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
+        });
+        
+        page();
+      })
+      .catch(() => {
+        throw new Error('Unable to load page');
       });
-      
-      page();
-    });
   }
 
   if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
