@@ -1,9 +1,10 @@
 <script>
+  /* eslint-disable object-curly-newline */
   import { fly } from 'svelte/transition';
 
   import Button from '../components/Button.svelte';
 
-  import { getString, getBoolean, isFunction, isNull, isObject, isArray, getWidth, getHeight } from '../js/helpers';
+  import { getString, getBoolean, isFunction, isNull, isObject, isArray } from '../js/helpers';
   import { readable } from 'svelte/store';
   import IconDismiss from '../icons/Dismiss.svelte';
 
@@ -118,13 +119,25 @@
     };
   }
 
-  const updateData = (id, { title, message, dismissable }) => {
+  const updateData = (id, { title, message, dismissable, persistant, timeout, onDismiss }) => {
     const tempArray = notifications.map((i) => i);
     const foundIndex = tempArray.findIndex((i) => i.id === id);
     if (foundIndex > -1) {
       tempArray[foundIndex].title = getString(String(title), null);
       tempArray[foundIndex].message = getString(String(message), null);
       tempArray[foundIndex].dismissable = getBoolean(dismissable);
+
+      const persist = getBoolean(persistant, false);
+      const dismiss = () => {
+        notifications = [...notifications.filter((i) => i.id !== id)];
+        if (isFunction(onDismiss)) onDismiss();
+      };
+      if (persist) {
+        tempArray[foundIndex].persistant = true;
+      } else {
+        tempArray[foundIndex].timer = setTimeout(dismiss, timeout || 3000);
+      }
+
       notifications = tempArray;
     }
   };
