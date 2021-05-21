@@ -1,5 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+import { prevent_default } from 'svelte/internal';
   import { getString, getBoolean, getColor, getHeight, getWidth, getTextSize } from '../js/helpers';
 
   // Globals
@@ -23,7 +24,8 @@
   $: _disabled = getBoolean($$props.disabled);
 
   const onClick = (evt) => {
-    dispatch('click');
+    if (_disabled) evt.preventDefault();
+    else dispatch('click');
     evt.target.blur();
   };
   
@@ -50,13 +52,14 @@
       transition
         ease-in-out
       transform
-        hover:bg-{_colorText === 'current' ? 'info' : _colorText}
-        hover:text-{_colorBg === 'transparent' ? 'light' : _colorBg}
+        {!_disabled ? `hover:bg-${_colorText === 'current' ? 'info' : _colorText}` : ''}
+        {!_disabled ? `hover:text-${_colorBg === 'transparent' ? 'light' : _colorBg}` : ''}
       transform
         focus:bg-{_colorText === 'current' ? 'info' : _colorText}
         focus:text-{_colorBg === 'transparent' ? 'light' : _colorBg}
       bg-{_colorBg}
-      text-{_colorText}  
+      text-{_colorText}
+      {_disabled ? 'cursor-not-allowed' : ''}
       {_flat ? '' : `border border-${_colorBg === 'transparent' ? _colorText : _colorBg}`}
       {_rounded || _pill ? 'rounded' : ''}
       {_pill || _circle ? 'rounded-full' : ''}
@@ -69,7 +72,9 @@
     aria-label={_label ? `Button ${_label}` : 'Action Button'}
     disabled={loading || _disabled}
   >
-    <div class="st-effect-ripple bg-{_colorBg === 'transparent' ? _colorText : _colorBg}" />
+    {#if !_disabled}
+      <div class="st-effect-ripple bg-{_colorBg === 'transparent' ? _colorText : _colorBg}" />
+    {/if}
     <slot name="left" />
     <slot>
       {#if _label}<div class="{_textSize} mx-2 whitespace-nowrap">{_caps ? _label.toUpperCase() : _label}</div>{/if}

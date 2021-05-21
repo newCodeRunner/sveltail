@@ -5,9 +5,12 @@
   import IconArrowLeft from '../icons/ArrowLeft.svelte';
   import IconArrowRight from '../icons/ArrowRight.svelte';
 
-  let _class, _tab;
+  let _class;
+  let _tab;
   $: _class = getString($$props.class);
   $: _tab = getString(String($$props.tab));
+
+  export let currentTab = _tab;
 
   let _tabWidth = 0;
   let _tabScrollLeft = 0;
@@ -15,6 +18,7 @@
   let _tabContainer, _tabParent;
 
   export const changeTab = (tabName) => {
+    currentTab = tabName;
     _tabParent.dispatchEvent(new CustomEvent('tab-change', { detail: String(tabName) }));
   };
 

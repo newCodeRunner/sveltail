@@ -1,5 +1,5 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import { escape, isEmpty, isNumeric, isEmail, isDate, isLength } from 'validator';
 
   import { getString, getBoolean, getNumber, getColor, getHeight, getWidth, getTextSize, isFunction } from '../js/helpers';
@@ -36,11 +36,11 @@
   $: _autoValidate = getBoolean($$props.autoValidate);
   $: _type = getType($$props.type);
   $: _hideHint = getBoolean($$props.hideHint);
-    
+
   // Validation Options
   $: _required = getBoolean($$props.required);
   $: _min = getString($$props.min ? String($$props.min) : null, null);
-  $: _max = getString($$props.max ? String($$props.max) : null, null); 
+  $: _max = getString($$props.max ? String($$props.max) : null, null);
 
   $: _disabled = getBoolean($$props.disabled, false);
 
@@ -119,7 +119,7 @@
     dispatch('focus');
   };
   const clearAll = () => {
-    value = null
+    value = null;
   };
 
   $: onChange(value);
@@ -128,6 +128,10 @@
     validate();
     return error === null;
   };
+
+  onMount(() => {
+    if ($$props.autofocus) focusInput();
+  });
 </script>
 
 {#if process.env.platform === 'ns-android' || process.env.platform === 'ns-ios'}

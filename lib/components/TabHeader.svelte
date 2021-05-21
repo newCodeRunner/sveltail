@@ -1,8 +1,12 @@
 <script>
   import { onMount } from 'svelte';
-  import { getString } from '../js/helpers';
+  import { getString, isFunction } from '../js/helpers';
 
-  let _name, _class, _activeClass, _label;
+  let _name;
+  let _class;
+  let _activeClass;
+  let _label;
+
   $: _name = getString(String($$props.name));
   $: _class = getString($$props.class);
   $: _activeClass = getString($$props.activeClass, 'border-b-2 border-primary text-primary');
@@ -24,7 +28,7 @@
   onMount(() => {
     parent = _tabHeader;
     while (!parent.classList.contains('st-tab-container')) {
-      parent = parent.parentElement;  
+      parent = parent.parentElement;
     }
 
     const selectedTab = parent.getAttribute('initial');
