@@ -388,9 +388,8 @@
   max-width: 75vw;
 }
 
-/* Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
-  display: none;
+  display: none; /* Chrome, Safari and Opera */
 }
 
 .no-scrollbar {
