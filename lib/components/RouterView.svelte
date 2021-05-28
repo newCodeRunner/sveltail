@@ -3,7 +3,6 @@
   import { createEventDispatcher } from 'svelte';
   import { writable } from 'svelte/store';
 
-  import hooks from '~/src/router/hooks';
   import routes from '~/src/router/routes';
   
   import { isFunction, isObject } from '../js/helpers';
@@ -41,7 +40,7 @@
     if (process.env.platform !== 'ns-android' && process.env.platform !== 'ns-ios') {
       window.requestAnimationFrame(() => {
         window.requestAnimationFrame(async () => {
-          const result = isFunction(hooks.onBefore) ? hooks.onBefore() : true;
+          const result = isFunction($$props.onBefore) ? $$props.onBefore() : true;
           if (result) next();
           else {
             navigateReject();
@@ -53,7 +52,7 @@
     }
 
     if (process.env.platform === 'ns-android' || process.env.platform === 'ns-ios') {
-      const result = isFunction(hooks.onBefore) ? hooks.onBefore() : true;
+      const result = isFunction($$props.onBefore) ? $$props.onBefore() : true;
       if (result) next();
       else {
         navigateReject();
@@ -87,7 +86,7 @@
   };
 
   const afterRouteUpdate = () => {
-    if (isFunction(hooks.onAfter)) hooks.onAfter();
+    if (isFunction($$props.onAfter)) $$props.onAfter(currPath);
     if (isFunction(navigateCallback)) navigateCallback();
 
     if (navigateResolve) navigateResolve();
@@ -96,7 +95,7 @@
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        dispatch("updated", currPath);
+        dispatch('updated', currPath);
       });
     });
   };
@@ -123,13 +122,13 @@
     import('page')
       .then((module) => {
         page = module.default;
-        
+
         page.base('/#');
-        
+
         routes.forEach((navRoute) => {
           if (navRoute.path) page(navRoute.path, beforeRouteUpdate, updateRoute, afterRouteUpdate);
         });
-        
+
         page();
       })
       .catch(() => {
@@ -152,25 +151,25 @@
   }
 
   const createRouter = () => {
-		const store = writable({
+    const store = writable({
       currentPath: currPath,
       routes,
       navigateTo,
     });
-		
-		const set = (newPath) => {
+
+    const set = (newPath) => {
       store.set({
         currentPath: newPath,
         routes,
         navigateTo,
       });
-		};
-		
-		const update = (updateFunc) => {
-      set(updateFunc(currPath))
     };
-		
-		return { ...store, set, update };
+
+    const update = (updateFunc) => {
+      set(updateFunc(currPath));
+    };
+
+    return { ...store, set, update };
   };
   
   export const router = createRouter();
