@@ -38,8 +38,8 @@
   @apply relative;
 }
 .modal .modal-content:not(.modal-fullscreen) {
-  max-height: 75vh;
-  max-width: 75vw;
+  max-height: 90vh;
+  max-width: 90vw;
 }
 .modal .modal-drawer {
   @apply min-h-full;
