@@ -1,0 +1,30 @@
+.icon {
+  @apply flex !important;
+  @apply items-center;
+  @apply justify-center;
+}
+.icon-xs {
+  height: var(--size-xs);
+  width: var(--size-xs);
+  font-size: var(--font-size-xs);
+}
+.icon-sm {
+  height: var(--size-sm);
+  width: var(--size-sm);
+  font-size: var(--font-size-sm);
+}
+.icon-md {
+  height: var(--size-md);
+  width: var(--size-md);
+  font-size: var(--font-size-md);
+}
+.icon-lg {
+  height: var(--size-lg);
+  width: var(--size-lg);
+  font-size: var(--font-size-lg);
+}
+.icon-xl {
+  height: var(--size-xl);
+  width: var(--size-xl);
+  font-size: var(--font-size-xl);
+}

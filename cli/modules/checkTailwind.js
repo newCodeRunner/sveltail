@@ -6,7 +6,8 @@ module.exports = (css, cwd) => {
   const modifiedCSS = { ...css };
 
   // Update Brand Theme if user Eemoved from Preferences
-  if (!modifiedCSS.theme) modifiedCSS.extend = {};
+  if (!modifiedCSS.theme) modifiedCSS.theme = {};
+  if (!modifiedCSS.theme.colors) modifiedCSS.theme.colors = {};
   if (!modifiedCSS.theme.extend) modifiedCSS.theme.extend = {};
   if (!modifiedCSS.theme.extend.colors) modifiedCSS.extend.colors = {};
   if (!modifiedCSS.theme.extend.colors.brand) modifiedCSS.theme.extend.colors.brand = '#009999';
@@ -72,6 +73,20 @@ module.exports = (css, cwd) => {
   modifiedCSS.purge.options.safelist.push('text-success');
   modifiedCSS.purge.options.safelist.push('text-warning');
   modifiedCSS.purge.options.safelist.push('text-danger');
+
+  // Whitelist border classes
+  modifiedCSS.purge.options.safelist.push('border-transparent');
+  modifiedCSS.purge.options.safelist.push('border-current');
+  modifiedCSS.purge.options.safelist.push('border-brand');
+  modifiedCSS.purge.options.safelist.push('border-accent');
+  modifiedCSS.purge.options.safelist.push('border-primary');
+  modifiedCSS.purge.options.safelist.push('border-secondary');
+  modifiedCSS.purge.options.safelist.push('border-info');
+  modifiedCSS.purge.options.safelist.push('border-light');
+  modifiedCSS.purge.options.safelist.push('border-dark');
+  modifiedCSS.purge.options.safelist.push('border-success');
+  modifiedCSS.purge.options.safelist.push('border-warning');
+  modifiedCSS.purge.options.safelist.push('border-danger');
 
   return modifiedCSS;
 };

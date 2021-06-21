@@ -1,0 +1,55 @@
+label.radio input[type="radio"],
+label.radio span::after {
+  @apply hidden;
+}
+label.radio {
+  @apply inline-block;
+  @apply relative;
+  @apply cursor-pointer;
+  @apply border-2;
+  @apply border-solid;
+}
+label.radio span::after {
+  content: " ";
+  background-color: currentColor;
+  @apply h-5/6;
+  @apply w-5/6;
+  @apply absolute;
+  @apply top-1/2;
+  @apply left-1/2;
+  @apply transform;
+  @apply -translate-x-2/4;
+  @apply -translate-y-2/4;
+  @apply transition-all;
+}
+
+label.radio,
+label.radio span::after {
+  @apply rounded-full;
+}
+label.radio input[type="radio"]:checked + span::after {
+  @apply block;
+}
+
+/* Sizes */
+label.radio.radio-xs {
+  height: var(--size-xs);
+  width: var(--size-xs);
+}
+label.radio.radio-sm {
+  height: var(--size-sm);
+  width: var(--size-sm);
+}
+label.radio,
+label.radio.radio-md {
+  height: var(--size-md);
+  width: var(--size-md);
+}
+label.radio.radio-lg {
+  height: var(--size-lg);
+  width: var(--size-lg);
+}
+label.radio.radio-xl {
+  height: var(--size-xl);
+  width: var(--size-xl);
+}

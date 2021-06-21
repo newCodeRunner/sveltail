@@ -1,0 +1,87 @@
+.accordian {
+  @apply w-full;
+  @apply overflow-hidden;
+}
+.accordian-label {
+  @apply flex;
+  @apply justify-between;
+  @apply cursor-pointer;
+  @apply px-2;
+  @apply py-1;
+}
+.accordian-label::after {
+  content: "\276F";
+  @apply text-center;
+  @apply transition-all;
+}
+.accordian-content {
+  @apply h-0;
+  @apply transition-all;
+}
+.accordian input {
+  @apply hidden;
+}
+.accordian input:checked ~ .accordian-content {
+  @apply h-auto;
+  @apply max-h-full;
+}
+.accordian input:checked ~ .accordian-label::after {
+  @apply transform;
+  @apply rotate-90;
+}
+.accordian input ~ .accordian-label:hover {
+  background-color: var(--color-hover-bg);
+  color: var(--color-hover-text);
+}
+.accordian input:checked ~ .accordian-label {
+  background-color: var(--color-active-bg);
+  color: var(--color-active-text);
+}
+
+.accordian input:checked ~ .accordian-label:hover {
+  background-color: var(--color-active-hover-bg);
+  color: var(--color-active-hover-text);
+}
+
+/* Size */
+.accordian-label-xs {
+  min-height: var(--size-xs);
+  font-size: var(--font-size-xs);
+}
+.accordian-label-sm {
+  min-height: var(--size-sm);
+  font-size: var(--font-size-sm);
+}
+.accordian-label-md {
+  min-height: var(--size-md);
+  font-size: var(--font-size-md);
+}
+.accordian-label-lg {
+  min-height: var(--size-lg);
+  font-size: var(--font-size-lg);
+}
+.accordian-label-xl {
+  min-height: var(--size-xl);
+  font-size: var(--font-size-xl);
+}
+
+.accordian-label-xs::after {
+  height: var(--size-xs);
+  width: var(--size-xs);
+}
+.accordian-label-sm::after {
+  height: var(--size-sm);
+  width: var(--size-sm);
+}
+.accordian-label-md::after {
+  height: var(--size-md);
+  width: var(--size-md);
+}
+.accordian-label-lg::after {
+  height: var(--size-lg);
+  width: var(--size-lg);
+}
+.accordian-label-xl::after {
+  height: var(--size-xl);
+  width: var(--size-xl);
+}

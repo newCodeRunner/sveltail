@@ -1,0 +1,38 @@
+.image {
+  @apply block;
+  @apply relative;
+}
+
+.image img {
+  @apply block;
+  @apply h-auto;
+  @apply w-full;
+}
+  
+.image img.image-rounded {
+  @apply w-full !important;
+  @apply h-full !important;
+  @apply object-cover !important;
+  @apply rounded-full;
+}
+
+.image.image-xs {
+  height: var(--size-xs);
+  width: var(--size-xs);
+}
+.image.image-sm {
+  height: var(--size-sm);
+  width: var(--size-sm);
+}
+.image.image-md {
+  height: var(--size-md);
+  width: var(--size-md);
+}
+.image.image-lg {
+  height: var(--size-lg);
+  width: var(--size-lg);
+}
+.image.image-xl {
+  height: var(--size-xl);
+  width: var(--size-xl);
+}

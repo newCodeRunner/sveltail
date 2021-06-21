@@ -1,0 +1,42 @@
+.menu.menu-xs {
+  font-size: var(--font-size-xs);
+}
+.menu.menu-sm {
+  font-size: var(--font-size-sm);
+}
+.menu.menu-md {
+  font-size: var(--font-size-md);
+}
+.menu.menu-lg {
+  font-size: var(--font-size-lg);
+}
+.menu.menu-xl {
+  font-size: var(--font-size-xl);
+} 
+.menu-list {
+  @apply leading-tight;
+} 
+.menu-list li {
+  @apply rounded;
+  @apply block;
+  @apply px-4;
+  @apply py-2;
+}
+.menu-list li:hover {
+  @apply cursor-pointer;
+  background-color: var(--color-hover-bg);
+  color: var(--color-hover-text);
+}
+.menu-list li.menu-item-active {
+  background-color: var(--color-active-bg);
+  color: var(--color-active-text);
+}
+.menu-list li.menu-item-active:hover {
+  background-color: var(--color-active-hover-bg);
+  color: var(--color-active-hover-text);
+}
+.menu-label {
+  color: var(--color-active-text);
+  font-size: 75%;
+  @apply uppercase;
+}

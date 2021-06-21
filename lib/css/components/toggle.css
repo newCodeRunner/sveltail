@@ -1,0 +1,69 @@
+label.toggle input[type="checkbox"] {
+  @apply hidden;
+}
+label.toggle {
+  @apply inline-block;
+  @apply relative;
+  @apply cursor-pointer;
+}
+
+label.toggle span::before {
+  background-color: currentColor;
+  @apply opacity-20;
+  @apply h-full;
+  @apply w-full;
+  @apply left-1/2;
+}
+label.toggle.dense span::before {
+  @apply h-3/5;
+  @apply w-4/5;
+}
+label.toggle span::after {
+  background-color: currentColor;
+  height: 90%;
+  width: 45%;
+  left: 27.5%;
+}
+
+label.toggle span::before,
+label.toggle span::after {
+  content: " ";
+  @apply block;
+  @apply absolute;
+  @apply rounded-full;
+  @apply top-1/2;
+  @apply transform;
+  @apply -translate-x-2/4;
+  @apply -translate-y-2/4;
+  @apply transition-all;
+}
+
+label.toggle input[type="checkbox"]:checked + span::after {
+  left: 72.5%;
+}
+label.toggle input[type="checkbox"]:checked + span::before {
+  @apply opacity-70;
+}
+
+/* Sizes */
+label.toggle.toggle-xs {
+  height: var(--size-xs);
+  width: calc(var(--size-xs) + var(--size-xs));
+}
+label.toggle.toggle-sm {
+  height: var(--size-sm);
+  width: calc(var(--size-sm) + var(--size-sm));
+}
+label.toggle,
+label.toggle.toggle-md {
+  height: var(--size-md);
+  width: calc(var(--size-md) + var(--size-md));
+}
+label.toggle.toggle-lg {
+  height: var(--size-lg);
+  width: calc(var(--size-lg) + var(--size-lg));
+}
+label.toggle.toggle-xl {
+  height: var(--size-xl);
+  width: calc(var(--size-xl) + var(--size-xl));
+}

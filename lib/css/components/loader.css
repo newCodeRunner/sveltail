@@ -1,0 +1,28 @@
+.loader {
+    @apply items-center;
+    @apply hidden;
+    @apply flex-col;
+    @apply justify-center;
+    @apply overflow-hidden;
+    @apply fixed;
+    @apply h-screen;
+    @apply w-screen;
+    @apply z-50;
+  }
+  .loader.loader-visible {
+    @apply flex;
+  }
+  .loader .loader-background {
+    @apply absolute;
+    @apply inset-0;
+    @apply opacity-80;
+    background-color: var(--color-backdrop);
+  }
+  .loader .loader-content {
+    @apply relative;
+    @apply mx-auto;
+    @apply my-0;
+    @apply overflow-auto;
+    max-height: calc(100vh - 40px);
+    max-width: calc(100vw - 160px)
+  }

@@ -1,0 +1,122 @@
+.tabs {
+  @apply items-stretch;
+  @apply flex;
+  @apply justify-between;
+  @apply overflow-y-hidden;
+  @apply overflow-x-auto;
+  @apply whitespace-nowrap;
+  @apply select-none;
+}
+.tabs:not(.tabs-boxed, .tabs-toggle) {
+  @apply border-solid;
+  @apply border-b;
+  @apply pb-2 !important;
+}
+.tabs ul {
+  @apply items-center;
+  @apply flex;
+  @apply flex-grow;
+  @apply flex-shrink-0;
+  @apply justify-start;
+}
+
+.tabs ul,
+.tabs ul.tabs-left {
+  @apply pl-2;
+}
+.tabs ul.tabs-center {
+  @apply flex-none;
+  @apply justify-center;
+  @apply px-2;
+}
+.tabs ul.tabs-right {
+  @apply justify-end;
+  @apply pr-2;
+}
+
+.tabs li {
+  @apply p-2;
+  @apply cursor-pointer;
+  @apply block;
+}
+.tabs li:hover {
+  background-color: var(--color-hover-bg);
+  color: var(--color-hover-text);
+} 
+.tabs li.tab-active {
+  background-color: var(--color-active-bg);
+  color: var(--color-active-text);
+  @apply border-b-2;
+}
+.tabs li.tab-active:hover {
+  background-color: var(--color-active-hover-bg);
+  color: var(--color-active-hover-text);
+}
+
+.tabs.tabs-boxed ul {
+  @apply border-0;
+}
+.tabs.tabs-boxed:not(.tabs-w-full) ul {
+  @apply flex-grow-0;
+}
+.tabs.tabs-boxed:not(.tabs-w-full):after {
+  content: ' ';
+  @apply flex-grow;
+  @apply border-b;
+}
+.tabs.tabs-boxed li {
+  @apply border-b;
+  @apply rounded-t;
+}
+
+.tabs.tabs-boxed li.tab-active {
+  @apply border;
+  border-bottom-color: transparent !important;
+}
+  
+.tabs.tabs-w-full li {
+  @apply flex-grow;
+  @apply flex-shrink-0;
+}
+  
+.tabs.tabs-toggle li {
+  border-color: #dbdbdb;
+  @apply border-solid;
+  @apply border;
+}
+
+.tabs.tabs-toggle li + li {
+  margin-left: -1px;
+}
+.tabs.tabs-toggle li:first-child {
+  @apply rounded-l;
+}
+.tabs.tabs-toggle li:last-child {
+  @apply rounded-r;
+}
+.tabs.tabs-toggle.tabs-toggle-rounded li:first-child {
+  @apply rounded-tl-full;
+  @apply rounded-bl-full;
+  @apply pl-4;
+} 
+.tabs.tabs-toggle.tabs-toggle-rounded li:last-child {
+  @apply rounded-tr-full;
+  @apply rounded-br-full;
+  @apply pr-4;
+}
+
+.tabs.tabs-xs {
+  font-size: var(--font-size-xs);
+}
+.tabs.tabs-sm {
+  font-size: var(--font-size-sm);
+}
+.tabs.tabs-md {
+  font-size: var(--font-size-md);
+}
+.tabs.tabs-lg {
+  font-size: var(--font-size-lg);
+}
+.tabs.tabs-xl {
+  font-size: var(--font-size-xl);
+}

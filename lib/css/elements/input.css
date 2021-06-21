@@ -1,0 +1,4 @@
+input:invalid {
+  border-color: red; 
+  @apply border;
+}

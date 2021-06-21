@@ -1,0 +1,53 @@
+.modal {
+  @apply items-center;
+  @apply hidden;
+  @apply flex-col;
+  @apply justify-center;
+  @apply overflow-hidden;
+  @apply fixed;
+  @apply z-40;
+}
+.relative .modal {
+  @apply top-0;
+  @apply absolute;
+}
+.modal.modal-visible {
+  @apply flex;
+}
+.modal-background {
+  @apply opacity-50;
+  background-color: var(--color-backdrop);
+}
+.modal .modal-background,
+.modal .modal-drawer,
+.modal .modal-content.modal-fullscreen {
+  @apply absolute;
+}
+.modal,
+.modal .modal-background,
+.modal .modal-content.modal-fullscreen  {
+  @apply inset-0;
+}
+.modal .modal-content,
+.modal .modal-drawer {
+  @apply overflow-auto;
+}
+.modal .modal-content {
+  @apply mx-auto;
+  @apply my-0;
+  @apply relative;
+}
+.modal .modal-content:not(.modal-fullscreen) {
+  max-height: 75vh;
+  max-width: 75vw;
+}
+.modal .modal-drawer {
+  @apply min-h-full;
+  @apply max-h-full;
+}
+.modal .modal-drawer.modal-drawer-left {
+  @apply left-0;
+}
+.modal .modal-drawer.modal-drawer-right {
+  @apply right-0;
+}

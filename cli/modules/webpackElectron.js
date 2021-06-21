@@ -89,7 +89,7 @@ module.exports = (env) => {
 
   const plugins = [
     new DefinePlugin({
-      'process.APP_ENV': JSON.stringify(
+      'process.env.APP_ENV': JSON.stringify(
         Object.assign(
           framework.APP_ENV,
           {

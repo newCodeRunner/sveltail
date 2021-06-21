@@ -7,10 +7,9 @@ const { readFileSync, writeFileSync, existsSync, mkdirSync, watchFile } = requir
 const { resolve } = require('path');
 const { exec, execSync } = require('child_process');
 const chalk = require('chalk');
-const autoprefixer = require('autoprefixer');
 
 // Webpack and Plugins
-const { DefinePlugin, EnvironmentPlugin } = require('webpack');
+const { EnvironmentPlugin } = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -43,7 +42,6 @@ const updateTailwindConfig = (css) => {
   );
 };
 updateTailwindConfig(tailwindcss);
-const tailwind = require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js'));
 
 // Update Tailwind Config on changes in sveltail.config.js
 watchFile(resolve(currDirectory, 'sveltail.config.js'), () => {
@@ -91,21 +89,19 @@ module.exports = (env) => {
   process.env.PROD = PROD;
   process.env.colors = JSON.stringify(Object.assign(tailwindcss.theme.colors, tailwindcss.theme.extend.colors));
   process.env.screens = JSON.stringify(tailwindcss.theme.screens);
+  process.env.APP_ENV = JSON.stringify(
+    Object.assign(
+      framework.APP_ENV,
+      {
+        productName: app.name,
+        productDescription: description,
+        productVersion: version,
+      },
+    ),
+  );
 
   const plugins = [
-    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens']),
-    new DefinePlugin({
-      'process.APP_ENV': JSON.stringify(
-        Object.assign(
-          framework.APP_ENV,
-          {
-            productName: app.name,
-            productDescription: description,
-            productVersion: version,
-          },
-        ),
-      ),
-    }),
+    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'APP_ENV']),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
@@ -271,7 +267,7 @@ module.exports = (env) => {
           },
         },
         {
-          test: /\.css$/,
+          test: /\.(scss|css)$/,
           use: [
             {
               loader: PROD ? MiniCssExtractPlugin.loader : 'style-loader',
@@ -288,13 +284,15 @@ module.exports = (env) => {
               options: {
                 postcssOptions: {
                   plugins: [
-                    [
-                      tailwind,
-                      autoprefixer,
-                    ],
+                    require('postcss-import'),
+                    require('tailwindcss')(resolve(currDirectory, '.sveltail', 'tailwind.config.js')),
+                    require('autoprefixer'),
                   ],
                 },
               },
+            },
+            {
+              loader: 'sass-loader',
             },
           ],
         },

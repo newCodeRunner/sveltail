@@ -1,0 +1,61 @@
+
+.notify {
+  background-color: var(--color-notify-bg);
+  color: var(--color-notify-text);
+  @apply rounded;
+  @apply relative;
+  @apply p-4;
+}
+.notify-container {
+  @apply fixed;
+  @apply w-0;
+  @apply h-auto;
+  @apply z-20;
+}
+.notify-container.notify-container-top {
+  @apply top-0;
+}
+.notify-container.notify-container-bottom {
+  @apply bottom-0;
+  @apply flex;
+  @apply flex-col-reverse;
+}
+.notify-container.notify-container-center {
+  @apply left-1/2;
+  @apply -ml-12;
+}
+.notify-container.notify-container-right {
+  @apply right-12;
+}
+.notify-container-right .notify {
+  @apply transform;
+  @apply -translate-x-full;
+}
+.notify-container-center .notify {
+  @apply transform;
+  @apply -translate-x-2/4;
+}
+.notify-container .notify {
+  @apply m-6;
+}
+
+.notify > .delete {
+  @apply right-2;
+  @apply top-2;
+  @apply absolute;
+}
+
+.notify > .badge {
+  background-color: var(--color-notify-text);
+  color: var(--color-notify-bg);
+  font-size: 75%;
+  @apply px-2;
+  @apply py-1;
+  @apply rounded;
+  @apply absolute;
+  @apply top-0;
+  @apply left-0;
+  @apply transform;
+  @apply -translate-y-2/4;
+  @apply -translate-x-2/4;
+}

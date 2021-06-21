@@ -1,0 +1,71 @@
+label.checkbox input[type="checkbox"],
+label.checkbox span::after {
+  @apply hidden;
+}
+label.checkbox {
+  @apply inline-block;
+  @apply relative;
+  @apply cursor-pointer;
+  @apply border-2;
+  @apply border-solid;
+  @apply rounded;
+}
+label.checkbox span::after {
+  content: "\2714";
+  color: currentColor;
+  background-color: transparent;
+  line-height: 0.83;
+  @apply h-5/6;
+  @apply w-5/6;
+  @apply absolute;
+  @apply top-1/2;
+  @apply left-1/2;
+  @apply transform;
+  @apply -translate-x-2/4;
+  @apply -translate-y-2/4;
+  @apply transition-all;
+}
+
+label.checkbox input[type="checkbox"]:checked + span::after {
+  @apply block;
+}
+
+/* Sizes */
+label.checkbox.checkbox-xs {
+  height: var(--size-xs);
+  width: var(--size-xs);
+}
+label.checkbox.checkbox-sm {
+  height: var(--size-sm);
+  width: var(--size-sm);
+}
+label.checkbox,
+label.checkbox.checkbox-md {
+  height: var(--size-md);
+  width: var(--size-md);
+}
+label.checkbox.checkbox-lg {
+  height: var(--size-lg);
+  width: var(--size-lg);
+}
+label.checkbox.checkbox-xl {
+  height: var(--size-xl);
+  width: var(--size-xl);
+}
+
+label.checkbox.checkbox-xs span::after {
+  font-size: var(--font-size-xs);
+}
+label.checkbox.checkbox-sm span::after {
+  font-size: var(--font-size-sm);
+}
+label.checkbox span::after,
+label.checkbox.checkbox-md span::after {
+  font-size: var(--font-size-md);
+}
+label.checkbox.checkbox-lg label::after {
+  font-size: var(--font-size-lg);
+}
+label.checkbox.checkbox-xl label::after {
+  font-size: var(--font-size-xl);
+}

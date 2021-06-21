@@ -1,0 +1,42 @@
+@import "tailwindcss/base.css";
+
+/* Variables */
+@import "./variables/colors.css";
+@import "./variables/sizes.css";
+
+/* Helpers */
+@import "./helpers/colors.css";
+@import "./helpers/height.css";
+@import "./helpers/scroll.css";
+@import "./helpers/width.css";
+
+@import "tailwindcss/components.css";
+
+@import './components/accordian.css';
+@import './components/breadcrumb.css';
+@import './components/checkbox.css';
+@import './components/dropdown.css';
+@import './components/loader.css';
+@import './components/menu.css';
+@import './components/modal.css';
+@import './components/radio.css';
+@import './components/tabs.css';
+@import './components/toggle.css';
+
+@import './elements/bar.css';
+@import './elements/box.css';
+@import './elements/button.css';
+@import './elements/content.css';
+@import './elements/help.css';
+@import './elements/icon.css';
+@import './elements/image.css';
+@import './elements/input.css';
+@import './elements/notify.css';
+@import './elements/progress.css';
+@import './elements/select.css';
+@import './elements/table.css';
+@import './elements/tag.css';
+
+@import './bulma.css';
+
+@import "tailwindcss/utilities.css";

@@ -1,0 +1,29 @@
+.bar {
+  @apply flex;
+  @apply items-center;
+}
+
+.bar-title-xs, .bar-title-sm, .bar-title-md, .bar-title-lg, .bar-title-xl {
+  @apply font-bold;
+  @apply tracking-wide;
+}
+.bar-title-xs {
+  line-height: var(--size-xs);
+  font-size: var(--font-size-xs);
+}
+.bar-title-sm {
+  line-height: var(--size-sm);
+  font-size: var(--font-size-sm);
+}
+.bar-title-md {
+  line-height: var(--size-md);
+  font-size: var(--font-size-md);
+}
+.bar-title-lg {
+  line-height: var(--size-lg);
+  font-size: var(--font-size-lg);
+}
+.bar-title-xl {
+  line-height: var(--size-xl);
+  font-size: var(--font-size-xl);
+}

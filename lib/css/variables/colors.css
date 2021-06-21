@@ -1,0 +1,17 @@
+:root {
+  --color-backdrop: #9CA3AF;
+
+  --color-divider: #64748B;
+
+  --color-notify-bg: #64748B;
+  --color-notify-text: #F8FAFC;
+
+  --color-hover-bg: #F8FAFC;
+  --color-hover-text: #64748B;
+
+  --color-active-bg: #E2E8F0;
+  --color-active-text: #334155;
+
+  --color-active-hover-bg: #CBD5E1;
+  --color-active-hover-text: #1E293B;
+}

@@ -1,0 +1,4 @@
+select:invalid {
+  border-color: red; 
+  @apply border;
+}

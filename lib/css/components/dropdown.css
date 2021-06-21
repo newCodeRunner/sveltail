@@ -1,0 +1,54 @@
+.dropdown {
+  @apply inline-block;
+  @apply relative;
+  @apply align-top
+}
+.dropdown.is-active :first-child:not(.dropdown-menu, .dropdown-menu-item),
+.dropdown.dropdown-hover:hover :first-child:not(.dropdown-menu, .dropdown-menu-item) {
+  background-color: var(--color-active-bg);
+  color: var(--color-active-text);
+}
+.dropdown-menu {
+  @apply origin-top-right;
+  @apply absolute;
+  @apply right-0;
+  @apply shadow-lg;
+  @appky ring-1;
+  @apply ring-opacity-5;
+  @apply focus:outline-none;
+  @apply hidden;
+}
+.dropdown.is-active .dropdown-menu,
+.dropdown.dropdown-hover:hover .dropdown-menu {
+  @apply z-10;
+  @apply block;
+}
+.dropdown-menu-item {
+  @apply block;
+  @apply px-4;
+  @apply py-2;
+}
+.dropdown-menu-item:hover {
+  background-color: var(--color-hover-bg);
+  color: var(--color-hover-text);
+  @apply cursor-pointer;
+}
+
+.dropdown.dropdown-right .dropdown-menu {
+  @apply left-auto;
+  @apply right-0;
+}
+
+.dropdown.dropdown-up .dropdown-menu {
+  padding-top: initial;
+  @apply bottom-full;
+  @apply pb-4;
+  @apply top-auto;
+}
+.dropdown-menu-divider {
+  background-color: var(--color-divider);
+  @apply border-0;
+  @apply block;
+  @apply h-px;
+  @apply mx-2;
+}
