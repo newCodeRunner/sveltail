@@ -8,6 +8,7 @@
   @apply select-none;
 }
 .tabs:not(.tabs-boxed, .tabs-toggle) {
+  border-color: var(--color-active-text);
   @apply border-solid;
   @apply border-b;
   @apply pb-2 !important;
@@ -46,6 +47,7 @@
 .tabs li.tab-active {
   background-color: var(--color-active-bg);
   color: var(--color-active-text);
+  border-color: var(--color-active-text);
   @apply border-b-2;
 }
 .tabs li.tab-active:hover {
@@ -61,16 +63,19 @@
 }
 .tabs.tabs-boxed:not(.tabs-w-full):after {
   content: ' ';
+  border-color: var(--color-active-text);
   @apply flex-grow;
   @apply border-b;
 }
 .tabs.tabs-boxed li {
+  border-color: var(--color-active-text);
   @apply border-b;
   @apply rounded-t;
 }
 
 .tabs.tabs-boxed li.tab-active {
   @apply border;
+  border-color: var(--color-active-text);
   border-bottom-color: transparent !important;
 }
   

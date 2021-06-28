@@ -22,34 +22,12 @@ exports.default = (/* cfg */) => {
           md: '768px',
           lg: '1024px',
         },
-        colors: { // Add the colors you want to use in tailwind
-          gray: colors.gray,
-        },
-        extend: {
-          // Extend the colors you want to use in tailwind.
-          // By default the framework uses below, you can change the hex values or add new colors.
-          colors: {
-            brand: '#68b0ab',
-            accent: '#e6b89c',
-            primary: '#0496ff',
-            secondary: '#5eb1bf',
-            info: '#818181',
-            light: '#ffffff',
-            dark: '#000000',
-            success: '#90be6d',
-            warning: '#ff9f1c',
-            danger: '#d81159',
-          },
-        },
       },
       future: {
         removeDeprecatedGapUtilities: true,
         purgeLayersByDefault: true,
       },
       darkMode: 'media',
-      purge: {
-        layers: ['base', 'components', 'utilities'],
-      },
     },
     pwa: {
       manifest: {

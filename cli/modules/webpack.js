@@ -87,8 +87,6 @@ module.exports = (env) => {
 
   process.env.platform = platform;
   process.env.PROD = PROD;
-  process.env.colors = JSON.stringify(Object.assign(tailwindcss.theme.colors, tailwindcss.theme.extend.colors));
-  process.env.screens = JSON.stringify(tailwindcss.theme.screens);
   process.env.APP_ENV = JSON.stringify(
     Object.assign(
       framework.APP_ENV,
@@ -101,7 +99,7 @@ module.exports = (env) => {
   );
 
   const plugins = [
-    new EnvironmentPlugin(['platform', 'PROD', 'colors', 'screens', 'APP_ENV']),
+    new EnvironmentPlugin(['platform', 'PROD', 'APP_ENV']),
     new CleanWebpackPlugin(),
     new CopyPlugin({
       patterns: [
